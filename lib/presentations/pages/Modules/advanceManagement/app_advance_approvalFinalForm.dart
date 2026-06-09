@@ -117,7 +117,7 @@ class _AdvanceApprovalForm2State extends State<AdvanceApprovalForm2> {
       CommonSnackBar.show(
         context: context,
         title: "Error",
-        message: "Failed",
+        message: "Failed with exception $e",
         type: SnackBarType.error,
       );
     } finally {
@@ -181,6 +181,7 @@ class _AdvanceApprovalForm2State extends State<AdvanceApprovalForm2> {
     setState(() {});
   }
 
+////BUILD 
   @override
   Widget build(BuildContext context) {
     final base64 = data?["PathnameBase64"]; ////BASE-64 IMAGE PATH

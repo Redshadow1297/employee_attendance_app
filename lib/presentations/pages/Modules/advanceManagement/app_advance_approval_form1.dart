@@ -616,8 +616,7 @@ import 'package:open_file/open_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS
-// ─────────────────────────────────────────────────────────────
+
 class _DS {
   static const Color brandStart = Color(0xFF14B8A6);
   static const Color brandMid = Color(0xFF0D9488);
@@ -644,9 +643,7 @@ class _DS {
   // static const double r24 = 24;
 }
 
-// ─────────────────────────────────────────────────────────────
-//  SCREEN
-// ─────────────────────────────────────────────────────────────
+
 class ApprovalFormScreen extends StatefulWidget {
   final int transId;
   final int empPk;
@@ -781,6 +778,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     return true;
   }
 
+//APPROVE ADVANCE
   Future<void> _approveAdvance() async {
     if (!_validateReason()) return;
     try {
@@ -814,6 +812,8 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     }
   }
 
+
+//REJECT ADVANCE
   Future<void> _rejectAdvance() async {
     if (!_validateReason()) return;
     try {
@@ -882,9 +882,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     await OpenFile.open(_downloadedFilePath!);
   }
 
-  // ─────────────────────────────────────────────────────────
   //  BUILD
-  // ─────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
