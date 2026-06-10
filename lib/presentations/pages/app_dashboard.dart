@@ -1,4 +1,5 @@
 // // ignore_for_file: avoid_print, use_build_context_synchronously, deprecated_member_use, unused_local_variable
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 // import 'dart:async';
 // import 'dart:convert';
@@ -1100,6 +1101,7 @@ import 'package:new_design_demo/core/app_services/PunchInOut/punch_controller.da
 import 'package:new_design_demo/core/app_services/app_permission_services.dart';
 import 'package:new_design_demo/core/app_services/auth_repo.dart';
 import 'package:new_design_demo/core/constants/modulesconfig.dart';
+import 'package:new_design_demo/data/databaseHelper.dart';
 import 'package:new_design_demo/presentations/common_widgets/alert_box.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'package:new_design_demo/presentations/pages/QuickAcessMenusScreens/app_timecard_calendar.dart';
@@ -1158,6 +1160,9 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   // ── Date
   String liveDayDate = DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now());
 
+  // StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+
   String employeeCode = '';
   String employeename = '';
   String welcomeName = '';
@@ -1170,9 +1175,11 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   String? lastLoginTime;
   bool hasNewWallPost = false;
   Timer? _wallPostTimer;
+  Timer? connCheckTimer;
   late final imageProvider = _buildBase64Image(profilePhoto);
   List<dynamic> moduleList = [];
   bool isLoadingModules = false;
+  bool isoffline = false;
 
   late PunchController _punchController;
 
@@ -1187,6 +1194,21 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   @override
   void initState() {
     super.initState();
+
+    //INTERNET CHECK
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      List<ConnectivityResult> results,
+    ) async {
+      bool hasInternet = await AppServices.checkInternet(context);
+
+      if (!mounted) return;
+
+      setState(() {
+        isoffline = !hasInternet;
+      });
+
+      print("Internet Status : $hasInternet");
+    });
 
     // Header entrance
     final headerCtrl = AnimationController(
@@ -1211,34 +1233,91 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
       end: 1.08,
     ).animate(CurvedAnimation(parent: pulseCtrl, curve: Curves.easeInOut));
 
+    //PUNCH IN  CONTROLS
     _punchController = PunchController(
       context: context,
       onStateChanged: () {
         if (mounted) setState(() {});
       },
-      getOfflineRecords: () async => [],
-      deleteOfflineRecord: (int id) async {},
-      saveOfflineRecord: (record) async {},
+      getOfflineRecords: () async {
+        final users = await DataBaseHelper().getUsers();
+        return users
+            .map(
+              (u) => OfflinePunchRecord(
+                localId: u.id ?? 0,
+                locationPk: u.location_PK ?? '',
+                empPk: u.emp_PK ?? '',
+                status: u.status ?? '',
+                address: u.address ?? '',
+                companyPk: u.company_PK ?? '',
+                attendanceDate: u.attendanceDate ?? '',
+                latitude: u.latitude ?? '',
+                inOrOut: u.inOrOUT ?? '0',
+                timeCard: u.timeCard ?? '1',
+                applicationDate: u.applicationDate ?? '',
+                longitude: u.Longitude ?? '',
+                allowTracking: u.allowTracking ?? '',
+                inTime: u.inTime ?? '',
+                outTime: u.outTime ?? '',
+                deviceId: u.device_Id ?? '',
+                data: u.data ?? 'OFFLine',
+                location: u.location ?? 'OFF',
+                battery: u.battery ?? '0',
+              ),
+            )
+            .toList();
+      },
+      //Delete
+      deleteOfflineRecord: (int id) async {
+        await DataBaseHelper().delete(id);
+      },
+
+      //Save Offline Punch
+      saveOfflineRecord: (record) async {
+        final user = User(
+          record.locationPk,
+          record.empPk,
+          record.status,
+          record.address,
+          record.companyPk,
+          record.attendanceDate,
+          record.latitude,
+          record.inOrOut,
+          record.timeCard,
+          record.applicationDate,
+          record.longitude,
+          record.allowTracking,
+          record.inTime,
+          record.outTime,
+          record.deviceId,
+          record.data,
+          record.location,
+          record.battery,
+        );
+        await DataBaseHelper().add(user);
+      },
     );
 
     _initDashboard();
 
-    _wallPostTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+    _wallPostTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       fetchWallPostData();
     });
   }
 
+  //DISPOSE
   @override
   void dispose() {
     _headerAnim?.dispose();
     _pulseAnim?.dispose();
     _wallPostTimer?.cancel();
+    _connectivitySubscription?.cancel();
     super.dispose();
   }
 
   //InitDashboard
   Future<void> _initDashboard() async {
-    bool isValid = await AppServices.validatePunchRequirements();
+    bool isValid = await AppServices.validatePunchRequirements(context);
     if (!isValid) {
       if (mounted) {
         CommonSnackBar.show(
@@ -1252,6 +1331,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     }
     await _loadUserData();
     await _punchController.loadUserPrefs();
+    await _punchController.syncOfflineRecords();
     if (emppk != null) {
       await _punchController.getTodaysAttendanceState(emppk: emppk!);
       await _fetchModules();
@@ -1308,6 +1388,18 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     } catch (_) {}
   }
 
+  //Connection checking
+  // Returns a list of connectivity results (custom wrapper for existing checks)
+  Future<List<ConnectivityResult>> getCustomConnectivityList() async {
+    try {
+      final ConnectivityResult result =
+          (await Connectivity().checkConnectivity()) as ConnectivityResult;
+      return [result];
+    } catch (_) {
+      return [];
+    }
+  }
+
   //Wallpost data
   Future<void> fetchWallPostData() async {
     try {
@@ -1323,7 +1415,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
       }
     } catch (_) {}
   }
-
 
   // ── MODULE MAP
   final Map<int, ModuleUIConfig> moduleUIMap = {
@@ -1464,7 +1555,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
 
   // ─────────────────────────────────────────────────────────
   //  HEADER
-
 
   Widget _buildHeader(bool isDark) {
     return FadeTransition(
@@ -1747,7 +1837,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   // ─────────────────────────────────────────────────────────
   //  SECTION LABEL
 
-
   Widget _sectionLabel(String title, bool isDark) {
     return Row(
       children: [
@@ -1776,7 +1865,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   // ─────────────────────────────────────────────────────────
   //  PUNCH IN/OUT CARD
 
-  
   Widget _timeInOutCard(bool isDark) {
     final String inTimeDisplay = _punchController.inTimeVal.isNotEmpty
         ? _punchController.inTimeVal
@@ -1984,7 +2072,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   // ─────────────────────────────────────────────────────────
   //  LEAVE BALANCE CARD
 
-
   Widget _leaveBalanceCard(bool isDark) {
     const double totalLeaves = 29;
     const double usedLeaves = 10;
@@ -2187,8 +2274,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   }
 
   // ─────────────────────────────────────────────────────────
-  //  QUICK ACCESS 
-
+  //  QUICK ACCESS
 
   Widget _quickAccessSection(bool isDark) {
     return Column(
@@ -2308,7 +2394,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   }
 
   // ─────────────────────────────────────────────────────────
-  //  MODULE GRID 
+  //  MODULE GRID
 
   SliverWidget _moduleGridSliver(bool isDark) {
     if (isLoadingModules) {
@@ -2527,3 +2613,21 @@ class _PremiumHeaderDelegate extends SliverPersistentHeaderDelegate {
 
 // Typedef alias so the sliver grid return type works cleanly
 typedef SliverWidget = Widget;
+
+
+
+/////Offline Pinch Flow
+///
+/////USER OFFLINE  ::
+//  1. onPunchTapped() -> _checkConnectivity() -> isOnline = false
+//  2. _performInPunch() / _performOutPunch() -> saveOfflineRecord() call
+//  3. saveOfflineRecord() -> DataBaseHelper().add(user) -> SQLite madhye save
+//  4. Notification: "Offline Punch Saved"
+//  5. UI update hoto (inTimeVal set hoto)
+//
+//  USER ONLINE   ::
+//  6. _initDashboard() -> _punchController.syncOfflineRecords() call
+//  7. syncOfflineRecords() -> getOfflineRecords() -> DB madhun records gheto
+//  8. Pratyek record -> PunchService.syncOfflineRecord() -> server la POST
+//  9. Success  -> deleteOfflineRecord() = DB madhun delete
+//  10. Done! Server la sync 

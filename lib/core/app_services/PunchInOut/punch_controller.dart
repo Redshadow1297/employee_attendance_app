@@ -152,7 +152,7 @@ class PunchController {
     await _getCurrentDate();
 
     //  Sync any pending offline records first
-    await _syncOfflineRecords();
+    await syncOfflineRecords();
 
     _setLoading(false);
 
@@ -210,6 +210,28 @@ class PunchController {
           type: SnackBarType.error,
         );
       }
+    } else {
+      final record = _buildOfflineRecord(
+        inOrOut: "0",
+        inTime: nowTime,
+        outTime: "",
+      );
+
+      await saveOfflineRecord(record);
+
+      await _showOfflineNotification(isInPunch: true);
+
+      // UI update immediately
+      inTimeVal = nowTime;
+      outTimeVal = "";
+
+      onStateChanged();
+
+      if (isAllowTrackingValue == "1") {
+        await TrackingService().startTracking();
+      }
+
+      _showSavedDialog();
     }
   }
   // ═══════════════════════════════════════════════════════════
@@ -269,7 +291,7 @@ class PunchController {
   //  Reads all local records and submits them online.
   // ═══════════════════════════════════════════════════════════
 
-  Future<void> _syncOfflineRecords() async {
+  Future<void> syncOfflineRecords() async {
     if (!isOnline) return;
 
     final records = await getOfflineRecords();
@@ -312,7 +334,6 @@ class PunchController {
 
   // ═══════════════════════════════════════════════════════════
   //  DEVICE DATA REFRESH
-
 
   Future<void> _refreshDeviceData() async {
     // Battery
@@ -387,7 +408,7 @@ class PunchController {
   }
 
   // ═══════════════════════════════════════════════════════════
-  //  DATE HELPER 
+  //  DATE HELPER
 
   Future<void> _getCurrentDate() async {
     currentDate = DateFormat("dd/MM/yyyy").format(DateTime.now());

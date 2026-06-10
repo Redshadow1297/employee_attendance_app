@@ -1,8 +1,10 @@
-// ignore_for_file: unrelated_type_equality_checks
+// ignore_for_file: use_build_context_synchronously, unrelated_type_equality_checks
 
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AppServices {
@@ -60,25 +62,33 @@ class AppServices {
   }
 
   // ---------------- INTERNET ----------------
-  static Future<bool> checkInternet() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
+  static Future<bool> checkInternet(BuildContext context) async {
+    final connectivityResults = await Connectivity().checkConnectivity();
 
-    if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResults.contains(ConnectivityResult.none)) {
+      if (context.mounted) {
+        CommonSnackBar.show(
+          title: "No Internet",
+          message: "You are offline",
+          type: SnackBarType.warning,
+          context: context,
+        );
+      }
       return false;
     }
 
     try {
       final result = await InternetAddress.lookup('google.com');
 
-      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+      return result.isNotEmpty && result.first.rawAddress.isNotEmpty;
     } on SocketException {
       return false;
     }
   }
 
   /////============================= AppServices result check  CombinedAllMethods ============================
-  static Future<bool> validatePunchRequirements() async {
-    bool hasInternet = await AppServices.checkInternet();
+  static Future<bool> validatePunchRequirements(BuildContext context) async {
+    bool hasInternet = await AppServices.checkInternet(context);
     if (!hasInternet) return false;
 
     bool hasLocation = await AppServices.checkLocationService();
@@ -87,6 +97,6 @@ class AppServices {
     bool hasNotification = await AppServices.checkNotificationPermission();
     if (!hasNotification) return false;
 
-    return true; //when all permissions get granted then return true 
+    return true; //when all permissions get granted then return true
   }
 }

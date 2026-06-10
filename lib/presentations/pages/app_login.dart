@@ -359,7 +359,7 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
-    AppServices.checkInternet();
+    AppServices.checkInternet(context);
     AppServices.checkNotificationPermission();
   }
 
