@@ -266,7 +266,6 @@ class PunchController {
   }
   // ═══════════════════════════════════════════════════════════
   //  OFFLINE SYNC
-  //  Mirrors old test() / testOUT() / testOUTInit() methods.
   //  Reads all local records and submits them online.
   // ═══════════════════════════════════════════════════════════
 
@@ -313,9 +312,7 @@ class PunchController {
 
   // ═══════════════════════════════════════════════════════════
   //  DEVICE DATA REFRESH
-  //  Mirrors old _getGeoLocationPosition / GetAddressFromLatLong /
-  //  updateBatteryLevel / initPlatformDevice
-  // ═══════════════════════════════════════════════════════════
+
 
   Future<void> _refreshDeviceData() async {
     // Battery
@@ -377,8 +374,7 @@ class PunchController {
   }
 
   // ═══════════════════════════════════════════════════════════
-  //  CONNECTIVITY CHECK  (mirrors old Connectioncheck)
-  // ═══════════════════════════════════════════════════════════
+  //  CONNECTIVITY CHECK ═
 
   Future<void> _checkConnectivity() async {
     try {
@@ -391,8 +387,7 @@ class PunchController {
   }
 
   // ═══════════════════════════════════════════════════════════
-  //  DATE HELPER  (mirrors old _getCurrentDate)
-  // ═══════════════════════════════════════════════════════════
+  //  DATE HELPER 
 
   Future<void> _getCurrentDate() async {
     currentDate = DateFormat("dd/MM/yyyy").format(DateTime.now());
@@ -433,7 +428,6 @@ class PunchController {
         }
       } else {
         print("Attendance not available yet. Keeping current values.");
-
         // DO NOTHING
         // inTimeVal = '';
         // outTimeVal = '';
@@ -591,18 +585,6 @@ class PunchController {
     );
     const iosSettings = DarwinInitializationSettings();
 
-    // // old positional (v16 and below)
-    // plugin.show(0, 'Title', 'Body', notifDetails, payload: 'x');
-
-    // new named (v17+)
-    plugin.show(
-      id: 0,
-      title: 'Title',
-      body: 'Body',
-      notificationDetails: NotificationDetails(),
-      payload: 'x',
-    );
-
     const androidDetails = AndroidNotificationDetails(
       'punch_channel',
       'Punch Notifications',
@@ -611,7 +593,6 @@ class PunchController {
     );
     const notifDetails = NotificationDetails(android: androidDetails);
 
-    // v17+: show() uses named parameters — id, title, body, details are named
     await plugin.show(
       id: 0,
       title: 'Attendance',

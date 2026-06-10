@@ -1461,7 +1461,7 @@ import 'package:flutter/material.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:intl/intl.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
-import 'package:new_design_demo/core/app_services/whatsappTwillioNotification.dart';
+// import 'package:new_design_demo/core/app_services/whatsappTwillioNotification.dart';
 import 'package:new_design_demo/presentations/common_widgets/alert_box.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_timePicker.dart';
@@ -1695,13 +1695,13 @@ class _AttendanceScreenState extends State<AttendanceScreen>
           message: result,
           type: SnackBarType.success,
         );
-        String whatsappMessage =
-            """Attendance Application :\n👤 Name: $empname\n📅 From: ${_checkInController.text}\n📅 To: ${_checkOutController.text}\n📊 Attendance Date: $date\n📝 Reason: ${_reasonController.text}\n📊 Application Date : $currentDtTime""";
-        try {
-          await sendWhatsAppDirect(whatsappMessage);
-        } catch (e) {
-          debugPrint("WhatsApp Error: $e");
-        }
+        // String whatsappMessage =
+        //     """Attendance Application :\n👤 Name: $empname\n📅 From: ${_checkInController.text}\n📅 To: ${_checkOutController.text}\n📊 Attendance Date: $date\n📝 Reason: ${_reasonController.text}\n📊 Application Date : $currentDtTime""";
+        // try {
+        //   await sendWhatsAppDirect(whatsappMessage);
+        // } catch (e) {
+        //   debugPrint("WhatsApp Error: $e");
+        // }
         _checkInController.clear();
         _checkOutController.clear();
         _reasonController.clear();
