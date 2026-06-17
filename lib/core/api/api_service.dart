@@ -223,7 +223,7 @@ class ApiService {
     return response.data;
   }
 
-  // ----------------------- Get Employee Search By Name && Employee Code ---------------------------POST
+  // ----------------------- Get Todays Attendance date time ---------------------------POST
   static Future<dynamic> getTodaysAttendance(Map<String, dynamic> data) async {
     final response = await ApiClient.post(
       ApiConstants.getTodaysAttendance,

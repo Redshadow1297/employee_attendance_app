@@ -335,10 +335,8 @@
 //   }
 // }
 
-
 // ////// New UI
 // ignore_for_file: deprecated_member_use
-
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -350,17 +348,17 @@ import 'package:new_design_demo/core/api/api_constants.dart';
 // ─────────────────────────────────────────────────────────────
 class _DS {
   static const Color brandStart = Color(0xFF14B8A6);
-  static const Color brandMid   = Color(0xFF0D9488);
-  static const Color brandDeep  = Color(0xFF0F766E);
+  static const Color brandMid = Color(0xFF0D9488);
+  static const Color brandDeep = Color(0xFF0F766E);
 
   static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight    = Color(0xFFFFFFFF);
-  static const Color borderLight  = Color(0xFFE2E8F0);
+  static const Color cardLight = Color(0xFFFFFFFF);
+  static const Color borderLight = Color(0xFFE2E8F0);
 
-  static const Color surfaceDark  = Color(0xFF0F172A);
-  static const Color cardDark     = Color(0xFF1E293B);
-  static const Color borderDark   = Color(0xFF334155);
-  static const Color inputDark    = Color(0xFF263244);
+  static const Color surfaceDark = Color(0xFF0F172A);
+  static const Color cardDark = Color(0xFF1E293B);
+  static const Color borderDark = Color(0xFF334155);
+  static const Color inputDark = Color(0xFF263244);
 
   // static const double r16 = 16;
   static const double r20 = 20;
@@ -379,22 +377,25 @@ class WallPostScreen extends StatefulWidget {
 
 class _WallPostScreenState extends State<WallPostScreen>
     with SingleTickerProviderStateMixin {
-
   List<Map<String, dynamic>> posts = [];
-  bool isLoading       = true;
-  bool showCreatePost  = false;
+  bool isLoading = true;
+  bool showCreatePost = false;
 
   final TextEditingController postController = TextEditingController();
 
   // Slide animation for create-post panel
   late final AnimationController _panelCtrl = AnimationController(
-    vsync: this, duration: const Duration(milliseconds: 300),
+    vsync: this,
+    duration: const Duration(milliseconds: 300),
   );
   late final Animation<Offset> _panelSlide = Tween<Offset>(
-    begin: const Offset(0, -0.04), end: Offset.zero,
+    begin: const Offset(0, -0.04),
+    end: Offset.zero,
   ).animate(CurvedAnimation(parent: _panelCtrl, curve: Curves.easeOut));
-  late final Animation<double> _panelFade =
-      CurvedAnimation(parent: _panelCtrl, curve: Curves.easeOut);
+  late final Animation<double> _panelFade = CurvedAnimation(
+    parent: _panelCtrl,
+    curve: Curves.easeOut,
+  );
 
   // ── LOGIC (unchanged) ────────────────────────────────────────
   @override
@@ -426,7 +427,7 @@ class _WallPostScreenState extends State<WallPostScreen>
     setState(() => isLoading = true);
     final data = await getWallPosts();
     setState(() {
-      posts     = data;
+      posts = data;
       isLoading = false;
     });
   }
@@ -438,6 +439,22 @@ class _WallPostScreenState extends State<WallPostScreen>
     } else {
       _panelCtrl.reverse();
     }
+  }
+
+  //GET INITIALS FOR NAMES WALLPOST
+  String getInitials(String? name) {
+    if (name == null || name.trim().isEmpty) {
+      return "?";
+    }
+
+    return name
+        .trim()
+        .split(' ')
+        .where((e) => e.isNotEmpty)
+        .take(2)
+        .map((e) => e[0])
+        .join()
+        .toUpperCase();
   }
 
   // ─────────────────────────────────────────────────────────
@@ -485,12 +502,21 @@ class _WallPostScreenState extends State<WallPostScreen>
       child: Stack(
         children: [
           // Decor circles
-          Positioned(right: -40, top: -40,
-            child: _decorCircle(160, Colors.white.withOpacity(0.06))),
-          Positioned(left: -20, bottom: 10,
-            child: _decorCircle(90, Colors.white.withOpacity(0.04))),
-          Positioned(right: 70, bottom: 0,
-            child: _decorCircle(60, Colors.white.withOpacity(0.04))),
+          Positioned(
+            right: -40,
+            top: -40,
+            child: _decorCircle(160, Colors.white.withOpacity(0.06)),
+          ),
+          Positioned(
+            left: -20,
+            bottom: 10,
+            child: _decorCircle(90, Colors.white.withOpacity(0.04)),
+          ),
+          Positioned(
+            right: 70,
+            bottom: 0,
+            child: _decorCircle(60, Colors.white.withOpacity(0.04)),
+          ),
 
           SafeArea(
             bottom: false,
@@ -509,8 +535,11 @@ class _WallPostScreenState extends State<WallPostScreen>
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: Colors.white24),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: Colors.white, size: 16),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: Colors.white,
+                        size: 16,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -536,7 +565,9 @@ class _WallPostScreenState extends State<WallPostScreen>
                             if (!isLoading)
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(20),
@@ -545,8 +576,11 @@ class _WallPostScreenState extends State<WallPostScreen>
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(Icons.feed_outlined,
-                                        color: Colors.white70, size: 12),
+                                    const Icon(
+                                      Icons.feed_outlined,
+                                      color: Colors.white70,
+                                      size: 12,
+                                    ),
                                     const SizedBox(width: 5),
                                     Text(
                                       "${posts.length} Team Updates",
@@ -569,7 +603,9 @@ class _WallPostScreenState extends State<WallPostScreen>
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
                           decoration: BoxDecoration(
                             color: showCreatePost
                                 ? Colors.white.withOpacity(0.30)
@@ -578,7 +614,8 @@ class _WallPostScreenState extends State<WallPostScreen>
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.15),
-                                blurRadius: 10, offset: const Offset(0, 4),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
@@ -586,7 +623,9 @@ class _WallPostScreenState extends State<WallPostScreen>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                showCreatePost ? Icons.close_rounded : Icons.add_rounded,
+                                showCreatePost
+                                    ? Icons.close_rounded
+                                    : Icons.add_rounded,
                                 size: 18,
                                 color: showCreatePost
                                     ? Colors.white
@@ -619,7 +658,8 @@ class _WallPostScreenState extends State<WallPostScreen>
   }
 
   Widget _decorCircle(double size, Color color) => Container(
-    width: size, height: size,
+    width: size,
+    height: size,
     decoration: BoxDecoration(shape: BoxShape.circle, color: color),
   );
 
@@ -637,7 +677,8 @@ class _WallPostScreenState extends State<WallPostScreen>
             color: isDark
                 ? Colors.black.withOpacity(0.35)
                 : _DS.brandStart.withOpacity(0.12),
-            blurRadius: 20, offset: const Offset(0, 8),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -655,19 +696,24 @@ class _WallPostScreenState extends State<WallPostScreen>
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: _DS.brandStart.withOpacity(0.35), blurRadius: 8,
+                      color: _DS.brandStart.withOpacity(0.35),
+                      blurRadius: 8,
                     ),
                   ],
                 ),
-                child: const Icon(Icons.edit_outlined,
-                    color: Colors.white, size: 17),
+                child: const Icon(
+                  Icons.edit_outlined,
+                  color: Colors.white,
+                  size: 17,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
                 "Create a Post",
                 style: TextStyle(
                   color: isDark ? Colors.white : const Color(0xFF0F172A),
-                  fontSize: 15, fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
@@ -679,7 +725,8 @@ class _WallPostScreenState extends State<WallPostScreen>
               color: isDark ? _DS.inputDark : const Color(0xFFF1F5F9),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                  color: isDark ? _DS.borderDark : _DS.borderLight),
+                color: isDark ? _DS.borderDark : _DS.borderLight,
+              ),
             ),
             child: TextField(
               controller: postController,
@@ -743,10 +790,13 @@ class _WallPostScreenState extends State<WallPostScreen>
           gradient: gradient,
           borderRadius: BorderRadius.circular(12),
           boxShadow: gradient != null
-              ? [BoxShadow(
-                  color: _DS.brandStart.withOpacity(0.30),
-                  blurRadius: 10, offset: const Offset(0, 4),
-                )]
+              ? [
+                  BoxShadow(
+                    color: _DS.brandStart.withOpacity(0.30),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
               : [],
         ),
         child: Row(
@@ -754,10 +804,14 @@ class _WallPostScreenState extends State<WallPostScreen>
           children: [
             Icon(icon, size: 15, color: textColor),
             const SizedBox(width: 6),
-            Text(label,
+            Text(
+              label,
               style: TextStyle(
-                color: textColor, fontSize: 13, fontWeight: FontWeight.w600,
-              )),
+                color: textColor,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),
@@ -773,8 +827,10 @@ class _WallPostScreenState extends State<WallPostScreen>
           children: [
             CircularProgressIndicator(color: _DS.brandStart, strokeWidth: 2.5),
             SizedBox(height: 16),
-            Text("Loading posts…",
-              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+            Text(
+              "Loading posts…",
+              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+            ),
           ],
         ),
       );
@@ -791,15 +847,19 @@ class _WallPostScreenState extends State<WallPostScreen>
                 color: _DS.brandStart.withOpacity(0.10),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.feed_outlined,
-                  color: _DS.brandStart, size: 36),
+              child: const Icon(
+                Icons.feed_outlined,
+                color: _DS.brandStart,
+                size: 36,
+              ),
             ),
             const SizedBox(height: 14),
             Text(
               "No posts yet",
               style: TextStyle(
                 color: isDark ? Colors.white54 : Colors.black38,
-                fontSize: 15, fontWeight: FontWeight.w600,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 6),
@@ -829,23 +889,27 @@ class _WallPostScreenState extends State<WallPostScreen>
 
   // ─── WALL POST CARD ──────────────────────────────────────
   Widget _wallPostCard(Map<String, dynamic> post, bool isDark, int index) {
-    final name     = post["Name"]           ?? "";
-    final title    = post["Title"]          ?? "";
+    final name = post["Name"] ?? "";
+    final title = post["Title"] ?? "";
     final postTime = post["ActualPostTime"] ?? "";
-    final postText = post["PostText"]       ?? "";
-    final photo    = post["photo"]          ?? "";
-    final isNew    = post["IsNew"] == true;
+    final postText = post["PostText"] ?? "";
+    final photo = post["photo"] ?? "";
+    final isNew = post["IsNew"] == true;
 
     // Avatar initials
-    final initials = name.isNotEmpty
-        ? name.trim().split(' ').take(2).map((w) => w[0]).join().toUpperCase()
-        : "?";
+    // final initials = name.isNotEmpty
+    //     ? name.trim().split(' ').take(2).map((w) => w[0]).join().toUpperCase()
+    //     : "?";
+    final initials = getInitials(post["Name"]);
 
     // Color from index
     final avatarColors = [
-      const Color(0xFF3B82F6), const Color(0xFF8B5CF6),
-      const Color(0xFF10B981), const Color(0xFFF59E0B),
-      const Color(0xFFEF4444), const Color(0xFF06B6D4),
+      const Color(0xFF3B82F6),
+      const Color(0xFF8B5CF6),
+      const Color(0xFF10B981),
+      const Color(0xFFF59E0B),
+      const Color(0xFFEF4444),
+      const Color(0xFF06B6D4),
     ];
     final avatarColor = avatarColors[index % avatarColors.length];
 
@@ -865,9 +929,10 @@ class _WallPostScreenState extends State<WallPostScreen>
             color: isDark
                 ? Colors.black.withOpacity(0.28)
                 : (isNew
-                    ? _DS.brandStart.withOpacity(0.08)
-                    : Colors.black.withOpacity(0.05)),
-            blurRadius: 16, offset: const Offset(0, 6),
+                      ? _DS.brandStart.withOpacity(0.08)
+                      : Colors.black.withOpacity(0.05)),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -882,16 +947,19 @@ class _WallPostScreenState extends State<WallPostScreen>
               children: [
                 // Avatar
                 Container(
-                  width: 42, height: 42,
+                  width: 42,
+                  height: 42,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [avatarColor.withOpacity(0.8), avatarColor],
-                      begin: Alignment.topLeft, end: Alignment.bottomRight,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: avatarColor.withOpacity(0.30), blurRadius: 8,
+                        color: avatarColor.withOpacity(0.30),
+                        blurRadius: 8,
                       ),
                     ],
                   ),
@@ -918,20 +986,26 @@ class _WallPostScreenState extends State<WallPostScreen>
                             child: Text(
                               name,
                               style: TextStyle(
-                                color: isDark ? Colors.white : const Color(0xFF0F172A),
-                                fontSize: 14, fontWeight: FontWeight.w700,
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xFF0F172A),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
                           if (isNew)
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
                               decoration: BoxDecoration(
                                 color: _DS.brandStart.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                    color: _DS.brandStart.withOpacity(0.4)),
+                                  color: _DS.brandStart.withOpacity(0.4),
+                                ),
                               ),
                               child: const Text(
                                 "NEW",
@@ -959,9 +1033,11 @@ class _WallPostScreenState extends State<WallPostScreen>
                       const SizedBox(height: 3),
                       Row(
                         children: [
-                          Icon(Icons.access_time_rounded,
-                              size: 11,
-                              color: isDark ? Colors.white30 : Colors.black26),
+                          Icon(
+                            Icons.access_time_rounded,
+                            size: 11,
+                            color: isDark ? Colors.white30 : Colors.black26,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             postTime,
@@ -980,8 +1056,7 @@ class _WallPostScreenState extends State<WallPostScreen>
           ),
 
           // Divider
-          Divider(height: 1,
-              color: isDark ? _DS.borderDark : _DS.borderLight),
+          Divider(height: 1, color: isDark ? _DS.borderDark : _DS.borderLight),
 
           // ── Post content
           Padding(

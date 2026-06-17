@@ -359,7 +359,7 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
-    AppServices.checkInternet(context);
+    AppServices.checkInternet();
     AppServices.checkNotificationPermission();
   }
 
@@ -372,48 +372,52 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _login() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
+    try {
+      if (!_formKey.currentState!.validate()) return;
+      setState(() => _isLoading = true);
 
-    bool success = await AuthRepo.login(
-      usernameController.text.trim(),
-      passwordController.text.trim(),
-    );
+      bool success = await AuthRepo.login(
+        usernameController.text.trim(),
+        passwordController.text.trim(),
+      );
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
+      if (!mounted) return;
+      setState(() => _isLoading = false);
 
-    if (success) {
-      await AuthRepo.saveLoginStatus(true);
+      if (success) {
+        await AuthRepo.saveLoginStatus(true);
+        CommonSnackBar.show(
+          context: context,
+          title: "Login",
+          message: "Login Successful.",
+          type: SnackBarType.success,
+        );
+
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRoutes.dashboard,
+          (route) => false,
+        );
+      } else {
+        CommonSnackBar.show(
+          context: context,
+          title: "Login Failed",
+          message: "Invalid username or password",
+          type: SnackBarType.error,
+        );
+      }
+    } catch (ex) {
       CommonSnackBar.show(
         context: context,
-        title: "Login",
-        message: "Login Successful.",
-        type: SnackBarType.success,
-      );
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (_) => const AppDashboardScreen()),
-      // );
-
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRoutes.dashboard,
-        (route) => false,
-      );
-    } else {
-      CommonSnackBar.show(
-        context: context,
-        title: "Login Failed",
-        message: "Invalid username or password",
+        message: " Eception :: $ex",
+        title: "ERROR",
         type: SnackBarType.error,
       );
+      debugPrint("Exception Occurred During Login :: $ex");
     }
   }
 
-  // ─────────────────────────────────────────────────────────
   //  BUILD
-  // ─────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -529,7 +533,7 @@ class _LoginScreenState extends State<LoginScreen>
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Image.asset(
-                    "lib/resources/images/People Scope Logo.png",
+                    "lib/resources/icons/ic_launcher.png",
                     fit: BoxFit.contain,
                   ),
                 ),

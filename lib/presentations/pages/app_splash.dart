@@ -323,8 +323,7 @@
 //   }
 // }
 
-
-//NEW UI 
+//NEW UI
 
 // ignore_for_file: deprecated_member_use
 
@@ -339,8 +338,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 //  DESIGN TOKENS
 // ─────────────────────────────────────────────────────────────
 const Color _brandStart = Color(0xFF14B8A6);
-const Color _brandMid   = Color(0xFF0D9488);
-const Color _brandDeep  = Color(0xFF0F766E);
+const Color _brandMid = Color(0xFF0D9488);
+const Color _brandDeep = Color(0xFF0F766E);
 
 // ─────────────────────────────────────────────────────────────
 //  SPLASH SCREEN
@@ -353,7 +352,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-
   late AnimationController _mainCtrl;
   late AnimationController _floatCtrl;
   late AnimationController _dotCtrl;
@@ -361,8 +359,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
-  late Animation<double> _floatAnim;
-  late Animation<double> _pulseAnim;
 
   // ── Logic (unchanged) ────────────────────────────────────
   @override
@@ -374,36 +370,36 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _initAnimations() {
     _mainCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000))
-      ..forward();
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..forward();
 
     _floatCtrl = AnimationController(
-        vsync: this, duration: const Duration(seconds: 3))
-      ..repeat(reverse: true);
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
 
     _dotCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 900))
-      ..repeat();
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat();
 
     _pulseCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1600))
-      ..repeat(reverse: true);
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    )..repeat(reverse: true);
 
-    _fadeAnim  = CurvedAnimation(parent: _mainCtrl, curve: Curves.easeOut);
+    _fadeAnim = CurvedAnimation(parent: _mainCtrl, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.12), end: Offset.zero,
+      begin: const Offset(0, 0.12),
+      end: Offset.zero,
     ).animate(CurvedAnimation(parent: _mainCtrl, curve: Curves.easeOutCubic));
 
-    _floatAnim = Tween<double>(begin: -8.0, end: 8.0).animate(
-      CurvedAnimation(parent: _floatCtrl, curve: Curves.easeInOut));
-
-    _pulseAnim = Tween<double>(begin: 1.0, end: 1.06).animate(
-      CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut));
   }
 
   Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 4));
-    final prefs     = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     if (!mounted) return;
     Navigator.pushReplacement(
@@ -445,20 +441,31 @@ class _SplashScreenState extends State<SplashScreen>
           ),
 
           // ── Decorative circles
-          const Positioned(top: -80,  left: -50,
-              child: _GlowCircle(size: 220, opacity: 0.10)),
-          const Positioned(bottom: -70, right: -40,
-              child: _GlowCircle(size: 200, opacity: 0.08)),
-          const Positioned(top: 140,  right: -60,
-              child: _GlowCircle(size: 130, opacity: 0.06)),
+          const Positioned(
+            top: -80,
+            left: -50,
+            child: _GlowCircle(size: 220, opacity: 0.10),
+          ),
+          const Positioned(
+            bottom: -70,
+            right: -40,
+            child: _GlowCircle(size: 200, opacity: 0.08),
+          ),
+          const Positioned(
+            top: 140,
+            right: -60,
+            child: _GlowCircle(size: 130, opacity: 0.06),
+          ),
 
           // ── Mesh dot pattern (top-right)
           Positioned(
-            top: 60, right: 20,
+            top: 60,
+            right: 20,
             child: Opacity(
               opacity: 0.12,
               child: SizedBox(
-                width: 100, height: 100,
+                width: 100,
+                height: 100,
                 child: CustomPaint(painter: _DotGridPainter()),
               ),
             ),
@@ -474,32 +481,39 @@ class _SplashScreenState extends State<SplashScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Floating + pulsing logo
-                    AnimatedBuilder(
-                      animation: Listenable.merge([_floatAnim, _pulseAnim]),
-                      builder: (_, child) => Transform.translate(
-                        offset: Offset(0, _floatAnim.value),
-                        child: Transform.scale(
-                          scale: _pulseAnim.value,
-                          child: child,
-                        ),
+                    // AnimatedBuilder(
+                    //   animation: Listenable.merge([_floatAnim, _pulseAnim]),
+                    //   builder: (_, child) => Transform.translate(
+                    //     offset: Offset(0, _floatAnim.value),
+                    //     child: Transform.scale(
+                    //       scale: _pulseAnim.value,
+                    //       child: child,
+                    //     ),
+                    //   ),
+                    //   child: const _AppIconWidget(),
+                    // ),
+                    Image(
+                      image: AssetImage(
+                        "lib/resources/icons/peoplescopeicon.png",
                       ),
-                      child: const _AppIconWidget(),
+                      alignment: AlignmentGeometry.center,
+                      fit:BoxFit.fill,
+                      gaplessPlayback: true,
                     ),
 
-                    const SizedBox(height: 32),
+                    // const SizedBox(height: 32),
+                    // // App name
+                    // const Text(
+                    //   "PeopleScope",
+                    //   style: TextStyle(
+                    //     color: Colors.white,
+                    //     fontSize: 30,
+                    //     fontWeight: FontWeight.w800,
+                    //     letterSpacing: -0.5,
+                    //   ),
+                    // ),
 
-                    // App name
-                    const Text(
-                      "PeopleScope",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 100),
 
                     // Tagline chips
                     Row(
@@ -524,20 +538,28 @@ class _SplashScreenState extends State<SplashScreen>
 
           // ── Bottom copyright
           Positioned(
-            bottom: 28, left: 0, right: 0,
-            child: Column(children: [
-              Container(
-                width: 40, height: 1,
-                color: Colors.white24,
-                margin: const EdgeInsets.only(bottom: 10),
-              ),
-              const Text(
-                "© 2026 PeopleScope. All rights reserved.",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white38, fontSize: 11,
-                    fontWeight: FontWeight.w400),
-              ),
-            ]),
+            bottom: 28,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 1,
+                  color: Colors.white24,
+                  margin: const EdgeInsets.only(bottom: 10),
+                ),
+                const Text(
+                  "© 2026 PeopleScope. All rights reserved.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white38,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -552,9 +574,14 @@ class _SplashScreenState extends State<SplashScreen>
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white24),
       ),
-      child: Text(label, style: const TextStyle(
-        color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w500,
-      )),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white70,
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 }
@@ -574,11 +601,15 @@ class _GlowCircle extends StatefulWidget {
 class _GlowCircleState extends State<_GlowCircle>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl = AnimationController(
-    vsync: this, duration: const Duration(seconds: 4),
+    vsync: this,
+    duration: const Duration(seconds: 4),
   )..repeat(reverse: true);
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -587,9 +618,11 @@ class _GlowCircleState extends State<_GlowCircle>
       builder: (_, __) => Opacity(
         opacity: widget.opacity + (_ctrl.value * 0.08),
         child: Container(
-          width: widget.size.w, height: widget.size.h,
+          width: widget.size.w,
+          height: widget.size.h,
           decoration: const BoxDecoration(
-            shape: BoxShape.circle, color: Colors.white,
+            shape: BoxShape.circle,
+            color: Colors.white,
           ),
         ),
       ),
@@ -598,74 +631,8 @@ class _GlowCircleState extends State<_GlowCircle>
 }
 
 // ─────────────────────────────────────────────────────────────
-//  APP ICON WIDGET
-// ─────────────────────────────────────────────────────────────
-class _AppIconWidget extends StatelessWidget {
-  const _AppIconWidget();
+//  BOUNCING DOTS 
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.20),
-            blurRadius: 28, offset: const Offset(0, 12),
-          ),
-          BoxShadow(
-            color: _brandStart.withOpacity(0.30),
-            blurRadius: 40, spreadRadius: 4,
-          ),
-        ],
-      ),
-      child: SizedBox(
-        width: 90.w, height: 90.h,
-        child: GridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          physics: const NeverScrollableScrollPhysics(),
-          children: const [
-            _IconTile(color: _brandStart,          icon: Icons.calendar_today_rounded),
-            _IconTile(color: Color(0xFF8B5CF6),    icon: Icons.access_time_rounded),
-            _IconTile(color: Color(0xFF3B82F6),    icon: Icons.people_rounded),
-            _IconTile(color: Color(0xFFF59E0B),    icon: Icons.trending_up_rounded),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _IconTile extends StatelessWidget {
-  final Color   color;
-  final IconData icon;
-  const _IconTile({required this.color, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft, end: Alignment.bottomRight,
-          colors: [color, color.withOpacity(0.75)],
-        ),
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(color: color.withOpacity(0.35), blurRadius: 8),
-        ],
-      ),
-      child: Icon(icon, color: Colors.white, size: 22),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────
-//  BOUNCING DOTS (logic unchanged)
-// ─────────────────────────────────────────────────────────────
 class _BouncingDots extends StatelessWidget {
   final AnimationController controller;
   const _BouncingDots({required this.controller});
@@ -679,7 +646,7 @@ class _BouncingDots extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: List.generate(3, (i) {
             final delay = i * 0.25;
-            final val   = sin((controller.value - delay) * 2 * pi).abs();
+            final val = sin((controller.value - delay) * 2 * pi).abs();
             return AnimatedContainer(
               duration: const Duration(milliseconds: 60),
               margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -704,20 +671,21 @@ class _BouncingDots extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  DOT GRID PAINTER (decorative mesh)
-// ─────────────────────────────────────────────────────────────
+//  DOT GRID PAINTER 
+
 class _DotGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.white;
-    const step  = 16.0;
-    const r     = 2.0;
+    const step = 16.0;
+    const r = 2.0;
     for (double x = 0; x < size.width; x += step) {
       for (double y = 0; y < size.height; y += step) {
         canvas.drawCircle(Offset(x, y), r, paint);
       }
     }
   }
+
   @override
   bool shouldRepaint(_) => false;
 }

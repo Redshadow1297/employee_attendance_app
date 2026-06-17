@@ -597,6 +597,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     }
   }
 
+///Attendance Count Status And Leave
   int getStatusCount(String status) =>
       newCalendarData.where((e) => (e["empstatus"] ?? "") == status).length;
 
@@ -924,8 +925,9 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
   Widget _attendanceSummaryBar(bool isDark) {
     final summaryItems = [
       _SummaryItem("Present", getStatusCount("P"),  const Color(0xFF059669), Icons.check_circle_outline_rounded),
-      _SummaryItem("Absent",  getStatusCount("A"),  const Color(0xFFDC2626), Icons.cancel_outlined),
-      _SummaryItem("Leave",   getStatusCount("CL"), const Color(0xFFD97706), Icons.beach_access_outlined),
+      _SummaryItem("Absent",  getStatusCount("AB"),  const Color(0xFFDC2626), Icons.cancel_outlined),
+      _SummaryItem("Paid Leave",   getStatusCount("PL"), const Color.fromARGB(255, 179, 176, 20), Icons.paid),
+       _SummaryItem("On Duty",   getStatusCount("OD"), const Color(0xFFD97706), Icons.beach_access_outlined),
       _SummaryItem("Week Off",getStatusCount("WO"), const Color(0xFF475569), Icons.weekend_outlined),
     ];
 

@@ -441,7 +441,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         ApiConstants.getUserProfile,
         query: {"Emp_PK": emppk},
       );
-      final data = response.data;
+      // final data = response.data["GetUserProfileResult"]; ////For Demo To Client
+      final data = response.data;   //OTHER CLIENT
       if (data != null && data is List && data.isNotEmpty) {
         setState(() {
           userData  = data[0];
