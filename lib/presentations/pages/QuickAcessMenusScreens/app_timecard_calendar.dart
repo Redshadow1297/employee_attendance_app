@@ -438,30 +438,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 import 'package:new_design_demo/presentations/pages/app_dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS  (mirrors app_dashboard_screen.dart)
-// ─────────────────────────────────────────────────────────────
-class _DS {
-  static const Color brandStart  = Color(0xFF14B8A6);
-  static const Color brandMid    = Color(0xFF0D9488);
-  static const Color brandDeep   = Color(0xFF0F766E);
-
-  static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight    = Color(0xFFFFFFFF);
-  static const Color borderLight  = Color(0xFFE2E8F0);
-
-  static const Color surfaceDark  = Color(0xFF0F172A);
-  static const Color cardDark     = Color(0xFF1E293B);
-  static const Color borderDark   = Color(0xFF334155);
-
-  // static const double r12 = 12;
-  // static const double r16 = 16;
-  static const double r20 = 20;
-  // static const double r24 = 24;
-}
 
 // ─────────────────────────────────────────────────────────────
 //  STATUS CONFIG
@@ -610,7 +589,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       helpText: "Select Month",
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(primary: _DS.brandStart),
+          colorScheme: const ColorScheme.light(primary: DS.brandStart),
         ),
         child: child!,
       ),
@@ -632,7 +611,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDark ? _DS.surfaceDark : _DS.surfaceLight,
+      backgroundColor: isDark ? DS.surfaceDark : DS.surfaceLight,
       body: Column(
         children: [
           _header(isDark),
@@ -654,7 +633,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [_DS.brandStart, _DS.brandMid, _DS.brandDeep],
+          colors: [DS.brandStart, DS.brandMid, DS.brandDeep],
           stops: [0.0, 0.5, 1.0],
         ),
       ),
@@ -780,7 +759,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.5,
                   color: isSun || isSat
-                      ? _DS.brandStart.withOpacity(0.8)
+                      ? DS.brandStart.withOpacity(0.8)
                       : (isDark ? Colors.white54 : const Color(0xFF64748B)),
                 ),
               ),
@@ -797,7 +776,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(color: _DS.brandStart, strokeWidth: 2.5),
+          CircularProgressIndicator(color: DS.brandStart, strokeWidth: 2.5),
           SizedBox(height: 16),
           Text("Loading attendance…",
             style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
@@ -814,9 +793,9 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: isDark ? _DS.cardDark : _DS.cardLight,
-            borderRadius: BorderRadius.circular(_DS.r20),
-            border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+            color: isDark ? DS.cardDark : DS.cardLight,
+            borderRadius: BorderRadius.circular(DS.r20),
+            border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
             boxShadow: [
               BoxShadow(
                 color: isDark
@@ -828,7 +807,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(_DS.r20),
+            borderRadius: BorderRadius.circular(DS.r20),
             child: GridView.builder(
               padding: const EdgeInsets.all(10),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -936,9 +915,9 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
-          color: isDark ? _DS.cardDark : _DS.cardLight,
-          borderRadius: BorderRadius.circular(_DS.r20),
-          border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+          color: isDark ? DS.cardDark : DS.cardLight,
+          borderRadius: BorderRadius.circular(DS.r20),
+          border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
           boxShadow: [
             BoxShadow(
               color: isDark

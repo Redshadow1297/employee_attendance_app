@@ -23,9 +23,9 @@ class DS {
   static const Color green1 = Color(0xFF10B981);
   static const Color innerDark = Color(0xFF0F172A);
 
+  static const double r20 = 20;
   static const double r12 = 12;
   static const double r16 = 16;
-  static const double r20 = 20;
   static const double r24 = 24;
   static const double headerHeight = 230;
   static const double r14 = 14;
