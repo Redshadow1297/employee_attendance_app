@@ -1089,7 +1089,6 @@
 // NEW UI????
 // ignore_for_file: unrelated_type_equality_checks, avoid_print, use_build_context_synchronously, deprecated_member_use, unused_local_variable
 
-
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -1099,6 +1098,7 @@ import 'package:new_design_demo/core/api/api_constants.dart';
 import 'package:new_design_demo/core/app_services/PunchInOut/punch_controller.dart';
 import 'package:new_design_demo/core/app_services/app_permission_services.dart';
 import 'package:new_design_demo/core/app_services/auth_repo.dart';
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 import 'package:new_design_demo/core/constants/modulesconfig.dart';
 import 'package:new_design_demo/presentations/common_widgets/alert_box.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
@@ -1108,29 +1108,10 @@ import 'package:new_design_demo/presentations/pages/app_profile.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS
-// ─────────────────────────────────────────────────────────────
-class _DS {
-  static const Color brandStart   = Color(0xFF14B8A6);
-  static const Color accentGreen  = Color(0xFF10B981);
-  static const Color accentOrange = Color(0xFFF59E0B);
-  static const Color accentRed    = Color(0xFFEF4444);
-  static const Color accentBlue   = Color(0xFF3B82F6);
-  static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight    = Color(0xFFFFFFFF);
-  static const Color borderLight  = Color(0xFFE2E8F0);
-  static const Color surfaceDark  = Color(0xFF0F172A);
-  static const Color cardDark     = Color(0xFF1E293B);
-  static const Color borderDark   = Color(0xFF334155);
-  static const double r20 = 20;
-  static const double r24 = 24;
-  static const double headerHeight = 230;
-}
+  
 
-// ─────────────────────────────────────────────────────────────
+  
 //  SCREEN
-// ─────────────────────────────────────────────────────────────
 class AppDashboardScreen extends StatefulWidget {
   const AppDashboardScreen({super.key});
 
@@ -1140,18 +1121,17 @@ class AppDashboardScreen extends StatefulWidget {
 
 class _AppDashboardScreenState extends State<AppDashboardScreen>
     with TickerProviderStateMixin {
-
   // ── Data
-  String liveDayDate  = DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now());
+  String liveDayDate = DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now());
   String employeeCode = '';
-  String welcomeName  = '';
-  int?   emppk;
-  int?   loginiddetails;
+  String welcomeName = '';
+  int? emppk;
+  int? loginiddetails;
   Map<String, dynamic>? loginDetails;
   String? lastLoginTime;
-  bool hasNewWallPost   = false;
+  bool hasNewWallPost = false;
   List<dynamic> moduleList = [];
-  bool isLoadingModules    = false;
+  bool isLoadingModules = false;
   Timer? _wallPostTimer;
 
   PunchController? _punchController;
@@ -1159,11 +1139,11 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   // ── Animations
   AnimationController? _headerAnim;
   AnimationController? _pulseAnim;
-  Animation<double>?   _headerFade;
-  Animation<Offset>?   _headerSlide;
-  Animation<double>?   _pulseScale;
+  Animation<double>? _headerFade;
+  Animation<Offset>? _headerSlide;
+  Animation<double>? _pulseScale;
 
-  // ─────────────────────────────────────────────────────────
+ 
   @override
   void initState() {
     super.initState();
@@ -1174,11 +1154,11 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
       vsync: this,
       duration: const Duration(milliseconds: 700),
     )..forward();
-    _headerAnim  = headerCtrl;
-    _headerFade  = CurvedAnimation(parent: headerCtrl, curve: Curves.easeOut);
+    _headerAnim = headerCtrl;
+    _headerFade = CurvedAnimation(parent: headerCtrl, curve: Curves.easeOut);
     _headerSlide = Tween<Offset>(
       begin: const Offset(0, -0.06),
-      end:   Offset.zero,
+      end: Offset.zero,
     ).animate(CurvedAnimation(parent: headerCtrl, curve: Curves.easeOut));
 
     // Pulse ring on punch button
@@ -1186,10 +1166,11 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
-    _pulseAnim  = pulseCtrl;
-    _pulseScale = Tween<double>(begin: 1.0, end: 1.08).animate(
-      CurvedAnimation(parent: pulseCtrl, curve: Curves.easeInOut),
-    );
+    _pulseAnim = pulseCtrl;
+    _pulseScale = Tween<double>(
+      begin: 1.0,
+      end: 1.08,
+    ).animate(CurvedAnimation(parent: pulseCtrl, curve: Curves.easeInOut));
 
     // Wall post polling
     _wallPostTimer = Timer.periodic(const Duration(seconds: 10), (_) {
@@ -1205,9 +1186,8 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     super.dispose();
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  INITIALIZE
-  // ─────────────────────────────────────────────────────────
   Future<void> _initialize() async {
     await _loadUserData();
 
@@ -1219,7 +1199,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
 
     await _initDashboard();
-    debugPrint("_initialize ▶ complete");
+    debugPrint("_initialize :: complete");
   }
 
   Future<void> _initDashboard() async {
@@ -1228,9 +1208,9 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
       if (mounted) {
         CommonSnackBar.show(
           context: context,
-          title:   "Permission Required",
+          title: "Permission Required",
           message: "Please enable Location, Internet and Notifications",
-          type:    SnackBarType.warning,
+          type: SnackBarType.warning,
         );
       }
       return;
@@ -1245,18 +1225,17 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     }
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  DATA FETCHERS
-  // ─────────────────────────────────────────────────────────
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      employeeCode   = prefs.getString('employeecode') ?? '';
-      welcomeName    = prefs.getString('welcomeName')  ?? '';
-      emppk          = prefs.getInt('emppk');
+      employeeCode = prefs.getString('employeecode') ?? '';
+      welcomeName = prefs.getString('welcomeName') ?? '';
+      emppk = prefs.getInt('emppk');
       loginiddetails = prefs.getInt('loginid');
     });
-    debugPrint("_loadUserData ▶ emppk=$emppk  code=$employeeCode");
+    debugPrint("_loadUserData   :: emppk=$emppk  code=$employeeCode");
   }
 
   Future<void> _fetchModules() async {
@@ -1267,7 +1246,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
         query: {"Emp_PK": emppk},
       );
       setState(() {
-        moduleList      = response.data["ModuleList"] ?? [];
+        moduleList = response.data["ModuleList"] ?? [];
         isLoadingModules = false;
       });
     } catch (e) {
@@ -1284,7 +1263,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
       );
       if (response.data is List && (response.data as List).isNotEmpty) {
         setState(() {
-          loginDetails  = response.data[0];
+          loginDetails = response.data[0];
           lastLoginTime = loginDetails?['LogDateTime'];
         });
       }
@@ -1310,26 +1289,90 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     }
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  MODULE MAP
-  // ─────────────────────────────────────────────────────────
+ 
   final Map<int, ModuleUIConfig> moduleUIMap = {
-    1:  ModuleUIConfig(icon: Icons.forum_outlined,           iconColor: Colors.lightBlueAccent,  iconBgColor: Color(0xFFE3F2FD), subtitle: "Team updates",           route: "/wallpost"),
-    2:  ModuleUIConfig(icon: Icons.calendar_today_outlined,  iconColor: Colors.greenAccent,      iconBgColor: Color(0xFFE8F5E9), subtitle: "Manage Your Leaves",     route: "/leave"),
-    3:  ModuleUIConfig(icon: Icons.description_outlined,     iconColor: Colors.deepOrangeAccent, iconBgColor: Color(0xFFFFF3E0), subtitle: "Track attendance",       route: "/attendance"),
-    5:  ModuleUIConfig(icon: Icons.receipt_long_outlined,    iconColor: Colors.purpleAccent,     iconBgColor: Color(0xFFF3E5F5), subtitle: "View Payslips",          route: "/payslip"),
-    13: ModuleUIConfig(icon: Icons.location_on_outlined,     iconColor: Colors.tealAccent,       iconBgColor: Color(0xFFE0F7FA), subtitle: "Employee Tracking",      route: "/employeeTracking"),
-    18: ModuleUIConfig(icon: Icons.fact_check_outlined,      iconColor: Colors.blueGrey,         iconBgColor: Color(0xFFECEFF1), subtitle: "Supervisor Attendance",  route: "/supervisorAttendance"),
-    17: ModuleUIConfig(icon: Icons.attach_money_outlined,    iconColor: Colors.greenAccent,      iconBgColor: Color(0xFFF3E5F5), subtitle: "Advance Management",     route: "/advance"),
-    19: ModuleUIConfig(icon: Icons.assignment_outlined,      iconColor: Colors.indigoAccent,     iconBgColor: Color(0xFFE8EAF6), subtitle: "Visit Report",           route: "/visitreport"),
-    15: ModuleUIConfig(icon: Icons.badge_outlined,           iconColor: Colors.redAccent,        iconBgColor: Color(0xFFFFEBEE), subtitle: "Visitor Management",     route: "/visitorManagement"),
-    29: ModuleUIConfig(icon: Icons.request_quote_outlined,   iconColor: Colors.tealAccent,       iconBgColor: Color(0xFFE0F7FA), subtitle: "ReImbursement",          route: "/reimbursement"),
-    16: ModuleUIConfig(icon: Icons.directions_car_outlined,  iconColor: Colors.orangeAccent,     iconBgColor: Color(0xFFFFF8E1), subtitle: "Vehicle Requisition",    route: "/vehicleRequisition"),
+    1: ModuleUIConfig(
+      icon: Icons.forum_outlined,
+      iconColor: Colors.lightBlueAccent,
+      iconBgColor: Color(0xFFE3F2FD),
+      subtitle: "Team updates",
+      route: "/wallpost",
+    ),
+    2: ModuleUIConfig(
+      icon: Icons.calendar_today_outlined,
+      iconColor: Colors.greenAccent,
+      iconBgColor: Color(0xFFE8F5E9),
+      subtitle: "Manage Your Leaves",
+      route: "/leave",
+    ),
+    3: ModuleUIConfig(
+      icon: Icons.description_outlined,
+      iconColor: Colors.deepOrangeAccent,
+      iconBgColor: Color(0xFFFFF3E0),
+      subtitle: "Track attendance",
+      route: "/attendance",
+    ),
+    5: ModuleUIConfig(
+      icon: Icons.receipt_long_outlined,
+      iconColor: Colors.purpleAccent,
+      iconBgColor: Color(0xFFF3E5F5),
+      subtitle: "View Payslips",
+      route: "/payslip",
+    ),
+    13: ModuleUIConfig(
+      icon: Icons.location_on_outlined,
+      iconColor: Colors.tealAccent,
+      iconBgColor: Color(0xFFE0F7FA),
+      subtitle: "Employee Tracking",
+      route: "/employeeTracking",
+    ),
+    18: ModuleUIConfig(
+      icon: Icons.fact_check_outlined,
+      iconColor: Colors.blueGrey,
+      iconBgColor: Color(0xFFECEFF1),
+      subtitle: "Supervisor Attendance",
+      route: "/supervisorAttendance",
+    ),
+    17: ModuleUIConfig(
+      icon: Icons.attach_money_outlined,
+      iconColor: Colors.greenAccent,
+      iconBgColor: Color(0xFFF3E5F5),
+      subtitle: "Advance Management",
+      route: "/advance",
+    ),
+    19: ModuleUIConfig(
+      icon: Icons.assignment_outlined,
+      iconColor: Colors.indigoAccent,
+      iconBgColor: Color(0xFFE8EAF6),
+      subtitle: "Visit Report",
+      route: "/visitreport",
+    ),
+    15: ModuleUIConfig(
+      icon: Icons.badge_outlined,
+      iconColor: Colors.redAccent,
+      iconBgColor: Color(0xFFFFEBEE),
+      subtitle: "Visitor Management",
+      route: "/visitorManagement",
+    ),
+    29: ModuleUIConfig(
+      icon: Icons.request_quote_outlined,
+      iconColor: Colors.tealAccent,
+      iconBgColor: Color(0xFFE0F7FA),
+      subtitle: "ReImbursement",
+      route: "/reimbursement",
+    ),
+    16: ModuleUIConfig(
+      icon: Icons.directions_car_outlined,
+      iconColor: Colors.orangeAccent,
+      iconBgColor: Color(0xFFFFF8E1),
+      subtitle: "Vehicle Requisition",
+      route: "/vehicleRequisition",
+    ),
   };
 
-  // ─────────────────────────────────────────────────────────
-  //  BUILD
-  // ─────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -1340,7 +1383,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
         return false;
       },
       child: Scaffold(
-        backgroundColor: isDark ? _DS.surfaceDark : _DS.surfaceLight,
+        backgroundColor: isDark ? DS.surfaceDark : DS.surfaceLight,
         body: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
@@ -1348,7 +1391,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
               pinned: true,
               delegate: _PremiumHeaderDelegate(
                 minHeight: 80,
-                maxHeight: _DS.headerHeight,
+                maxHeight: DS.headerHeight,
                 child: _buildHeader(isDark),
               ),
             ),
@@ -1378,31 +1421,39 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  HEADER
-  // ─────────────────────────────────────────────────────────
   Widget _buildHeader(bool isDark) {
     return FadeTransition(
-      opacity:  _headerFade  ?? const AlwaysStoppedAnimation(1.0),
+      opacity: _headerFade ?? const AlwaysStoppedAnimation(1.0),
       child: SlideTransition(
         position: _headerSlide ?? const AlwaysStoppedAnimation(Offset.zero),
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
-              end:   Alignment.bottomRight,
+              end: Alignment.bottomRight,
               colors: [Color(0xFF14B8A6), Color(0xFF0D9488), Color(0xFF0F766E)],
-              stops:  [0.0, 0.55, 1.0],
+              stops: [0.0, 0.55, 1.0],
             ),
           ),
           child: Stack(
             children: [
-              Positioned(right: -40, top: -40,
-                  child: _decorCircle(180, Colors.white.withOpacity(0.06))),
-              Positioned(right: 60,  top:  20,
-                  child: _decorCircle(90,  Colors.white.withOpacity(0.04))),
-              Positioned(left: -30,  bottom: -20,
-                  child: _decorCircle(130, Colors.white.withOpacity(0.04))),
+              Positioned(
+                right: -40,
+                top: -40,
+                child: _decorCircle(180, Colors.white.withOpacity(0.06)),
+              ),
+              Positioned(
+                right: 60,
+                top: 20,
+                child: _decorCircle(90, Colors.white.withOpacity(0.04)),
+              ),
+              Positioned(
+                left: -30,
+                bottom: -20,
+                child: _decorCircle(130, Colors.white.withOpacity(0.04)),
+              ),
               SafeArea(
                 bottom: false,
                 child: Padding(
@@ -1416,20 +1467,33 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                           // Avatar
                           GestureDetector(
                             onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => ProfileScreen()),
+                              MaterialPageRoute(
+                                builder: (_) => ProfileScreen(),
+                              ),
                             ),
                             child: Container(
                               decoration: BoxDecoration(
-                                shape:  BoxShape.circle,
-                                border: Border.all(color: Colors.white38, width: 2),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white38,
+                                  width: 2,
+                                ),
                                 boxShadow: const [
-                                  BoxShadow(color: Colors.black26, blurRadius: 12, offset: Offset(0, 4)),
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 12,
+                                    offset: Offset(0, 4),
+                                  ),
                                 ],
                               ),
                               child: const CircleAvatar(
                                 radius: 26,
                                 backgroundColor: Colors.white24,
-                                child: Icon(Icons.person, color: Colors.white, size: 28),
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
                               ),
                             ),
                           ),
@@ -1440,23 +1504,34 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  welcomeName.isNotEmpty ? welcomeName : "Employee Name",
+                                  welcomeName.isNotEmpty
+                                      ? welcomeName
+                                      : "Employee Name",
                                   style: const TextStyle(
-                                    color: Colors.white, fontSize: 17,
-                                    fontWeight: FontWeight.w700, letterSpacing: 0.2,
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.2,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.15),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
-                                    employeeCode.isNotEmpty ? "# $employeeCode" : "Code —",
+                                    employeeCode.isNotEmpty
+                                        ? "# $employeeCode"
+                                        : "Code —",
                                     style: const TextStyle(
-                                      color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w500,
+                                      color: Colors.white70,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
@@ -1465,7 +1540,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                           ),
                           // Notification
                           _headerAction(
-                            icon:  Icons.notifications_outlined,
+                            icon: Icons.notifications_outlined,
                             badge: hasNewWallPost,
                             onTap: () {
                               setState(() => hasNewWallPost = false);
@@ -1475,18 +1550,20 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                           const SizedBox(width: 8),
                           // Logout
                           _headerAction(
-                            icon:  Icons.power_settings_new_rounded,
+                            icon: Icons.power_settings_new_rounded,
                             onTap: () {
                               showModernDialog(
-                                type:        DialogType.warning,
-                                context:     context,
-                                title:       "Sign Out",
-                                message:     "Are you sure you want to sign out?",
+                                type: DialogType.warning,
+                                context: context,
+                                title: "Sign Out",
+                                message: "Are you sure you want to sign out?",
                                 confirmText: "Sign Out",
                                 onConfirm: () async {
                                   await AuthRepo.saveLoginStatus(false);
                                   Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                                    MaterialPageRoute(
+                                      builder: (_) => const LoginScreen(),
+                                    ),
                                     (r) => false,
                                   );
                                 },
@@ -1498,14 +1575,20 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                       const Spacer(),
                       const Text(
                         "Good day!  👋",
-                        style: TextStyle(color: Colors.white60, fontSize: 18, fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                          color: Colors.white60,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       const Text(
                         "Welcome Back",
                         style: TextStyle(
-                          color: Colors.white, fontSize: 24,
-                          fontWeight: FontWeight.w800, letterSpacing: -0.3,
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.3,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -1514,7 +1597,10 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                           _headerChip(Icons.today_outlined, liveDayDate),
                           const SizedBox(width: 8),
                           if (lastLoginTime != null)
-                            _headerChip(Icons.access_time_outlined, "Last: $lastLoginTime"),
+                            _headerChip(
+                              Icons.access_time_outlined,
+                              "Last: $lastLoginTime",
+                            ),
                         ],
                       ),
                     ],
@@ -1529,11 +1615,16 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   }
 
   Widget _decorCircle(double size, Color color) => Container(
-    width: size, height: size,
+    width: size,
+    height: size,
     decoration: BoxDecoration(shape: BoxShape.circle, color: color),
   );
 
-  Widget _headerAction({required IconData icon, bool badge = false, required VoidCallback onTap}) {
+  Widget _headerAction({
+    required IconData icon,
+    bool badge = false,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -1546,9 +1637,9 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color:        Colors.white.withOpacity(0.15),
+                  color: Colors.white.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(14),
-                  border:       Border.all(color: Colors.white24),
+                  border: Border.all(color: Colors.white24),
                 ),
                 child: Icon(icon, color: Colors.white, size: 20),
               ),
@@ -1556,12 +1647,14 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           ),
           if (badge)
             Positioned(
-              right: 2, top: 2,
+              right: 2,
+              top: 2,
               child: Container(
-                width: 9, height: 9,
+                width: 9,
+                height: 9,
                 decoration: BoxDecoration(
-                  color:  _DS.accentRed,
-                  shape:  BoxShape.circle,
+                  color: DS.accentRed,
+                  shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 1.5),
                 ),
               ),
@@ -1575,36 +1668,48 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color:        Colors.white.withOpacity(0.15),
+        color: Colors.white.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
-        border:       Border.all(color: Colors.white24),
+        border: Border.all(color: Colors.white24),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 12, color: Colors.white70),
           const SizedBox(width: 5),
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w500)),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  SECTION LABEL
-  // ─────────────────────────────────────────────────────────
   Widget _sectionLabel(String title, bool isDark) {
     return Row(
       children: [
         Container(
-          width: 4, height: 18,
-          decoration: BoxDecoration(color: _DS.brandStart, borderRadius: BorderRadius.circular(4)),
+          width: 4,
+          height: 18,
+          decoration: BoxDecoration(
+            color: DS.brandStart,
+            borderRadius: BorderRadius.circular(4),
+          ),
         ),
         const SizedBox(width: 10),
         Text(
           title,
           style: TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w700, letterSpacing: 0.1,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.1,
             color: isDark ? Colors.white : const Color(0xFF1E293B),
           ),
         ),
@@ -1612,17 +1717,27 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  PUNCH IN/OUT CARD
-  // ─────────────────────────────────────────────────────────
   Widget _timeInOutCard(bool isDark) {
-    final String inTimeDisplay  = (_punchController?.inTimeVal.isNotEmpty  ?? false) ? _punchController!.inTimeVal  : "--:--";
-    final String outTimeDisplay = (_punchController?.outTimeVal.isNotEmpty ?? false) ? _punchController!.outTimeVal : "--:--";
-    final bool isCheckedIn  = (_punchController?.inTimeVal.isNotEmpty  ?? false) && (_punchController?.outTimeVal.isEmpty ?? true);
-    final bool isCheckedOut = (_punchController?.outTimeVal.isNotEmpty ?? false);
-    final bool isLoading    = _punchController?.isPunchLoading ?? false;
-    final Color actionColor = isCheckedIn ? _DS.accentRed : _DS.accentGreen;
-    final String actionLabel = isCheckedIn ? "Long press to Check Out" : "Long press to Check In";
+    final String inTimeDisplay =
+        (_punchController?.inTimeVal.isNotEmpty ?? false)
+        ? _punchController!.inTimeVal
+        : "--:--";
+    final String outTimeDisplay =
+        (_punchController?.outTimeVal.isNotEmpty ?? false)
+        ? _punchController!.outTimeVal
+        : "--:--";
+    final bool isCheckedIn =
+        (_punchController?.inTimeVal.isNotEmpty ?? false) &&
+        (_punchController?.outTimeVal.isEmpty ?? true);
+    final bool isCheckedOut =
+        (_punchController?.outTimeVal.isNotEmpty ?? false);
+    final bool isLoading = _punchController?.isPunchLoading ?? false;
+    final Color actionColor = isCheckedIn ? DS.accentRed : DS.accentGreen;
+    final String actionLabel = isCheckedIn
+        ? "Long press to Check Out"
+        : "Long press to Check In";
 
     return _premiumCard(
       isDark: isDark,
@@ -1635,8 +1750,12 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
               _statusPill(isCheckedIn, isCheckedOut),
               if (isLoading)
                 const SizedBox(
-                  width: 18, height: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: _DS.brandStart),
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: DS.brandStart,
+                  ),
                 ),
             ],
           ),
@@ -1650,24 +1769,40 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
               onLongPress: (isLoading || _punchController == null)
                   ? null
                   : () async {
-                      await _punchController!.onPunchTapped(isPunchIn: !isCheckedIn);
+                      await _punchController!.onPunchTapped(
+                        isPunchIn: !isCheckedIn,
+                      );
                       await Future.delayed(const Duration(milliseconds: 1500));
-                      await _punchController!.getTodaysAttendanceState(emppk: emppk!);
+                      await _punchController!.getTodaysAttendanceState(
+                        emppk: emppk!,
+                      );
                       if (mounted) setState(() {});
                     },
               child: Container(
-                width: 108, height: 108,
+                width: 108,
+                height: 108,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
-                    colors: [actionColor.withOpacity(0.25), actionColor.withOpacity(0.05)],
+                    colors: [
+                      actionColor.withOpacity(0.25),
+                      actionColor.withOpacity(0.05),
+                    ],
                   ),
                   border: Border.all(color: actionColor, width: 2.5),
                   boxShadow: [
-                    BoxShadow(color: actionColor.withOpacity(0.4), blurRadius: 24, spreadRadius: 2),
+                    BoxShadow(
+                      color: actionColor.withOpacity(0.4),
+                      blurRadius: 24,
+                      spreadRadius: 2,
+                    ),
                   ],
                 ),
-                child: Icon(Icons.fingerprint_rounded, size: 56, color: actionColor),
+                child: Icon(
+                  Icons.fingerprint_rounded,
+                  size: 56,
+                  color: actionColor,
+                ),
               ),
             ),
           ),
@@ -1677,7 +1812,8 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
             actionLabel,
             style: TextStyle(
               color: isDark ? Colors.white38 : Colors.black38,
-              fontSize: 11, fontWeight: FontWeight.w500,
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
             ),
           ),
 
@@ -1688,9 +1824,27 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           // Check In / Out times
           Row(
             children: [
-              Expanded(child: _timeColumn("Check In",  inTimeDisplay,  _DS.accentGreen, isDark)),
-              Container(width: 1, height: 44, color: isDark ? Colors.white10 : Colors.black12),
-              Expanded(child: _timeColumn("Check Out", outTimeDisplay, _DS.accentRed,   isDark)),
+              Expanded(
+                child: _timeColumn(
+                  "Check In",
+                  inTimeDisplay,
+                  DS.accentGreen,
+                  isDark,
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 44,
+                color: isDark ? Colors.white10 : Colors.black12,
+              ),
+              Expanded(
+                child: _timeColumn(
+                  "Check Out",
+                  outTimeDisplay,
+                  DS.accentRed,
+                  isDark,
+                ),
+              ),
             ],
           ),
         ],
@@ -1699,34 +1853,50 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   }
 
   Widget _statusPill(bool isCheckedIn, bool isCheckedOut) {
-    final Color   color;
-    final String  label;
+    final Color color;
+    final String label;
     final IconData icon;
 
     if (isCheckedOut) {
-      color = _DS.accentRed;   label = "Checked Out"; icon = Icons.logout_rounded;
+      color = DS.accentRed;
+      label = "Checked Out";
+      icon = Icons.logout_rounded;
     } else if (isCheckedIn) {
-      color = _DS.accentGreen; label = "Working";     icon = Icons.work_outline_rounded;
+      color = DS.accentGreen;
+      label = "Working";
+      icon = Icons.work_outline_rounded;
     } else {
-      color = Colors.grey;     label = "Absent";      icon = Icons.remove_circle_outline;
+      color = Colors.grey;
+      label = "Absent";
+      icon = Icons.remove_circle_outline;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        color:        color.withOpacity(0.12),
+        color: color.withOpacity(0.12),
         borderRadius: BorderRadius.circular(20),
-        border:       Border.all(color: color.withOpacity(0.35)),
+        border: Border.all(color: color.withOpacity(0.35)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(width: 7, height: 7,
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+          Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
           const SizedBox(width: 6),
           Icon(icon, size: 13, color: color),
           const SizedBox(width: 5),
-          Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );
@@ -1735,27 +1905,35 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   Widget _timeColumn(String label, String time, Color color, bool isDark) {
     return Column(
       children: [
-        Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: TextStyle(
+            color: color,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: 6),
         Text(
           time,
           style: TextStyle(
             color: isDark ? Colors.white : const Color(0xFF0F172A),
-            fontSize: 22, fontWeight: FontWeight.w800, letterSpacing: 1,
+            fontSize: 22,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1,
           ),
         ),
       ],
     );
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  LEAVE BALANCE CARD
-  // ─────────────────────────────────────────────────────────
   Widget _leaveBalanceCard(bool isDark) {
-    const double totalLeaves     = 29;
-    const double usedLeaves      = 10;
+    const double totalLeaves = 29;
+    const double usedLeaves = 10;
     const double remainingLeaves = totalLeaves - usedLeaves;
-    final double progress        = usedLeaves / totalLeaves;
+    final double progress = usedLeaves / totalLeaves;
 
     return _premiumCard(
       isDark: isDark,
@@ -1771,9 +1949,18 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                     colors: [Colors.green.shade400, Colors.green.shade600],
                   ),
                   borderRadius: BorderRadius.circular(14),
-                  boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.35), blurRadius: 10)],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green.withOpacity(0.35),
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
-                child: const Icon(Icons.event_available_rounded, color: Colors.white, size: 22),
+                child: const Icon(
+                  Icons.event_available_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -1784,26 +1971,44 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                       "Leave Balance",
                       style: TextStyle(
                         color: isDark ? Colors.white : const Color(0xFF0F172A),
-                        fontSize: 15, fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
                       "FY 2025–26",
-                      style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 11),
+                      style: TextStyle(
+                        color: isDark ? Colors.white38 : Colors.black38,
+                        fontSize: 11,
+                      ),
                     ),
                   ],
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [Colors.green.shade400, Colors.green.shade700]),
+                  gradient: LinearGradient(
+                    colors: [Colors.green.shade400, Colors.green.shade700],
+                  ),
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.35), blurRadius: 10)],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green.withOpacity(0.35),
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
                 child: Text(
                   "${remainingLeaves.toInt()} Days",
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ],
@@ -1827,7 +2032,12 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                       colors: [Color(0xFF34D399), Color(0xFF059669)],
                     ),
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.4), blurRadius: 6)],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.green.withOpacity(0.4),
+                        blurRadius: 6,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -1836,11 +2046,35 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           const SizedBox(height: 18),
           Row(
             children: [
-              Expanded(child: _leaveStatTile("Used",      "${usedLeaves.toInt()}",      _DS.accentOrange, Icons.arrow_upward_rounded,    isDark)),
+              Expanded(
+                child: _leaveStatTile(
+                  "Used",
+                  "${usedLeaves.toInt()}",
+                  DS.accentOrange,
+                  Icons.arrow_upward_rounded,
+                  isDark,
+                ),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: _leaveStatTile("Remaining", "${remainingLeaves.toInt()}", _DS.accentGreen,  Icons.check_circle_outline,    isDark)),
+              Expanded(
+                child: _leaveStatTile(
+                  "Remaining",
+                  "${remainingLeaves.toInt()}",
+                  DS.accentGreen,
+                  Icons.check_circle_outline,
+                  isDark,
+                ),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: _leaveStatTile("Total",     "${totalLeaves.toInt()}",     _DS.accentBlue,   Icons.calendar_month_outlined, isDark)),
+              Expanded(
+                child: _leaveStatTile(
+                  "Total",
+                  "${totalLeaves.toInt()}",
+                  DS.accentBlue,
+                  Icons.calendar_month_outlined,
+                  isDark,
+                ),
+              ),
             ],
           ),
         ],
@@ -1848,29 +2082,49 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
-  Widget _leaveStatTile(String label, String value, Color color, IconData icon, bool isDark) {
+  Widget _leaveStatTile(
+    String label,
+    String value,
+    Color color,
+    IconData icon,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
       decoration: BoxDecoration(
-        color:        isDark ? Colors.white.withOpacity(0.05) : color.withOpacity(0.07),
+        color: isDark
+            ? Colors.white.withOpacity(0.05)
+            : color.withOpacity(0.07),
         borderRadius: BorderRadius.circular(14),
-        border:       Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Column(
         children: [
           Icon(icon, size: 16, color: color),
           const SizedBox(height: 6),
-          Text(value, style: TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.w800)),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
           const SizedBox(height: 2),
-          Text(label, style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 11)),
+          Text(
+            label,
+            style: TextStyle(
+              color: isDark ? Colors.white38 : Colors.black38,
+              fontSize: 11,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  QUICK ACCESS
-  // ─────────────────────────────────────────────────────────
   Widget _quickAccessSection(bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1882,16 +2136,38 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           physics: const BouncingScrollPhysics(),
           child: Row(
             children: [
-              _quickPill(Icons.calendar_today_rounded, "My Calendar",  const Color(0xFFF59E0B),
-                  () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MyCalendarScreen()))),
-              _quickPill(Icons.campaign_rounded,       "Team Updates", const Color(0xFF3B82F6),
-                  () => Navigator.pushNamed(context, "/wallpost")),
-              _quickPill(Icons.group_rounded,          "Team Members", const Color(0xFF10B981),
-                  () => _wip()),
-              _quickPill(Icons.support_agent_rounded,  "Contact HR",   const Color(0xFF06B6D4),
-                  () => _wip()),
-              _quickPill(Icons.bar_chart_rounded,      "Analytics",    const Color(0xFFA855F7),
-                  () => _wip()),
+              _quickPill(
+                Icons.calendar_today_rounded,
+                "My Calendar",
+                const Color(0xFFF59E0B),
+                () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const MyCalendarScreen()),
+                ),
+              ),
+              _quickPill(
+                Icons.campaign_rounded,
+                "Team Updates",
+                const Color(0xFF3B82F6),
+                () => Navigator.pushNamed(context, "/wallpost"),
+              ),
+              _quickPill(
+                Icons.group_rounded,
+                "Team Members",
+                const Color(0xFF10B981),
+                () => _wip(),
+              ),
+              _quickPill(
+                Icons.support_agent_rounded,
+                "Contact HR",
+                const Color(0xFF06B6D4),
+                () => _wip(),
+              ),
+              _quickPill(
+                Icons.bar_chart_rounded,
+                "Analytics",
+                const Color(0xFFA855F7),
+                () => _wip(),
+              ),
             ],
           ),
         ),
@@ -1901,41 +2177,55 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
 
   void _wip() => CommonSnackBar.show(
     context: context,
-    title:   "Coming Soon",
+    title: "Coming Soon",
     message: "This feature is under development.",
-    type:    SnackBarType.warning,
+    type: SnackBarType.warning,
   );
 
-  Widget _quickPill(IconData icon, String label, Color color, VoidCallback onTap) {
+  Widget _quickPill(
+    IconData icon,
+    String label,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin:   const EdgeInsets.only(right: 10),
-        padding:  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color:        color.withOpacity(0.10),
+          color: color.withOpacity(0.10),
           borderRadius: BorderRadius.circular(16),
-          border:       Border.all(color: color.withOpacity(0.25)),
+          border: Border.all(color: color.withOpacity(0.25)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding:    const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: color.withOpacity(0.15), shape: BoxShape.circle),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.15),
+                shape: BoxShape.circle,
+              ),
               child: Icon(icon, color: color, size: 22),
             ),
             const SizedBox(height: 8),
-            Text(label, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  MODULE GRID
-  // ─────────────────────────────────────────────────────────
   Widget _moduleGridSliver(bool isDark) {
     if (isLoadingModules) {
       return SliverToBoxAdapter(
@@ -1944,11 +2234,17 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           child: Center(
             child: Column(
               children: [
-                const CircularProgressIndicator(color: _DS.brandStart, strokeWidth: 2.5),
+                const CircularProgressIndicator(
+                  color: DS.brandStart,
+                  strokeWidth: 2.5,
+                ),
                 const SizedBox(height: 14),
                 Text(
                   "Loading modules…",
-                  style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13),
+                  style: TextStyle(
+                    color: isDark ? Colors.white38 : Colors.black38,
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),
@@ -1962,18 +2258,15 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 190,
-          crossAxisSpacing:   14,
-          mainAxisSpacing:    14,
-          childAspectRatio:   1 / 1.18,
+          crossAxisSpacing: 14,
+          mainAxisSpacing: 14,
+          childAspectRatio: 1 / 1.18,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final module = moduleList[index];
-            final int pk = module["Module_PK"];
-            return _moduleCard(module, moduleUIMap[pk], isDark);
-          },
-          childCount: moduleList.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final module = moduleList[index];
+          final int pk = module["Module_PK"];
+          return _moduleCard(module, moduleUIMap[pk], isDark);
+        }, childCount: moduleList.length),
       ),
     );
   }
@@ -1982,17 +2275,22 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     final Color iconColor = config?.iconColor ?? Colors.blueAccent;
 
     return GestureDetector(
-      onTap: () { if (config != null) Navigator.pushNamed(context, config.route); },
+      onTap: () {
+        if (config != null) Navigator.pushNamed(context, config.route);
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color:        isDark ? _DS.cardDark : _DS.cardLight,
-          borderRadius: BorderRadius.circular(_DS.r20),
-          border:       Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+          color: isDark ? DS.cardDark : DS.cardLight,
+          borderRadius: BorderRadius.circular(DS.r20),
+          border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
           boxShadow: [
             BoxShadow(
-              color:      isDark ? Colors.black.withOpacity(0.35) : iconColor.withOpacity(0.08),
-              blurRadius: 18, offset: const Offset(0, 6),
+              color: isDark
+                  ? Colors.black.withOpacity(0.35)
+                  : iconColor.withOpacity(0.08),
+              blurRadius: 18,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
@@ -2000,14 +2298,14 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment:  MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 padding: const EdgeInsets.all(11),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin:  Alignment.topLeft,
-                    end:    Alignment.bottomRight,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                     colors: [
                       iconColor.withOpacity(isDark ? 0.25 : 0.18),
                       iconColor.withOpacity(isDark ? 0.10 : 0.08),
@@ -2016,25 +2314,34 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: iconColor.withOpacity(0.2)),
                 ),
-                child: Icon(config?.icon ?? Icons.help_outline, size: 24, color: iconColor),
+                child: Icon(
+                  config?.icon ?? Icons.help_outline,
+                  size: 24,
+                  color: iconColor,
+                ),
               ),
               const SizedBox(height: 16),
               Text(
                 module["Module_Name"],
                 style: TextStyle(
                   color: isDark ? Colors.white : const Color(0xFF1E293B),
-                  fontSize: 13, fontWeight: FontWeight.w700, height: 1.2,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
                 ),
-                maxLines: 2, overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
               Text(
                 config?.subtitle ?? "",
                 style: TextStyle(
                   color: isDark ? Colors.white38 : Colors.black38,
-                  fontSize: 10, fontWeight: FontWeight.w500,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
                 ),
-                maxLines: 1, overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               const Spacer(),
               Align(
@@ -2042,9 +2349,14 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                 child: Container(
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.12), shape: BoxShape.circle,
+                    color: iconColor.withOpacity(0.12),
+                    shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.arrow_forward_ios_rounded, size: 11, color: iconColor),
+                  child: Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 11,
+                    color: iconColor,
+                  ),
                 ),
               ),
             ],
@@ -2054,21 +2366,24 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  PREMIUM CARD WRAPPER
-  // ─────────────────────────────────────────────────────────
   Widget _premiumCard({required bool isDark, required Widget child}) {
     return Container(
-      width:   double.infinity,
+      width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color:        isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r24),
-        border:       Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r24),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
-            color:      isDark ? Colors.black.withOpacity(0.35) : Colors.black.withOpacity(0.06),
-            blurRadius: 20, spreadRadius: 0, offset: const Offset(0, 8),
+            color: isDark
+                ? Colors.black.withOpacity(0.35)
+                : Colors.black.withOpacity(0.06),
+            blurRadius: 20,
+            spreadRadius: 0,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -2077,11 +2392,8 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   }
 }
 
-
-
-// ─────────────────────────────────────────────────────────────
-//  SLIVER HEADER DELEGATE
-// ─────────────────────────────────────────────────────────────
+  
+//  SLIVER HEADER DELEGATE 
 class _PremiumHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final double maxHeight;
@@ -2093,11 +2405,17 @@ class _PremiumHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.child,
   });
 
-  @override double get minExtent => minHeight;
-  @override double get maxExtent => maxHeight;
+  @override
+  double get minExtent => minHeight;
+  @override
+  double get maxExtent => maxHeight;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return SizedBox.expand(child: child);
   }
 
@@ -2105,5 +2423,5 @@ class _PremiumHeaderDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(_PremiumHeaderDelegate old) =>
       minHeight != old.minHeight ||
       maxHeight != old.maxHeight ||
-      child     != old.child;
+      child != old.child;
 }

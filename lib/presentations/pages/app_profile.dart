@@ -363,28 +363,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS
-// ─────────────────────────────────────────────────────────────
-class _DS {
-  static const Color brandStart = Color(0xFF14B8A6);
-  static const Color brandMid   = Color(0xFF0D9488);
-  static const Color brandDeep  = Color(0xFF0F766E);
-
-  static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight    = Color(0xFFFFFFFF);
-  static const Color borderLight  = Color(0xFFE2E8F0);
-
-  static const Color surfaceDark  = Color(0xFF0F172A);
-  static const Color cardDark     = Color(0xFF1E293B);
-  static const Color borderDark   = Color(0xFF334155);
-
-  // static const double r16 = 16;
-  static const double r20 = 20;
-  // static const double r24 = 24;
-}
 
 // ─── SECTION CONFIG ──────────────────────────────────────────
 class _SectionConfig {
@@ -475,7 +455,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? _DS.surfaceDark : _DS.surfaceLight,
+      backgroundColor: isDark ? DS.surfaceDark : DS.surfaceLight,
       body: isLoading
           ? _loadingState()
           : userData == null
@@ -556,7 +536,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(color: _DS.brandStart, strokeWidth: 2.5),
+          CircularProgressIndicator(color: DS.brandStart, strokeWidth: 2.5),
           SizedBox(height: 16),
           Text("Loading profile…",
               style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
@@ -573,11 +553,11 @@ class _ProfileScreenState extends State<ProfileScreen>
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: _DS.brandStart.withOpacity(0.1),
+              color: DS.brandStart.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.person_off_outlined,
-                color: _DS.brandStart, size: 40),
+                color: DS.brandStart, size: 40),
           ),
           const SizedBox(height: 16),
           Text("No Profile Data",
@@ -596,7 +576,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       expandedHeight: 280,
       pinned: true,
       stretch: true,
-      backgroundColor: _DS.brandDeep,
+      backgroundColor: DS.brandDeep,
       leading: GestureDetector(
         onTap: () => Navigator.pop(context),
         child: Container(
@@ -620,7 +600,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [_DS.brandStart, _DS.brandMid, _DS.brandDeep],
+                  colors: [DS.brandStart, DS.brandMid, DS.brandDeep],
                   stops: [0.0, 0.5, 1.0],
                 ),
               ),
@@ -710,9 +690,9 @@ class _ProfileScreenState extends State<ProfileScreen>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r20),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r20),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -786,9 +766,9 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r20),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r20),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -833,7 +813,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             ),
           ),
 
-          Divider(height: 1, color: isDark ? _DS.borderDark : _DS.borderLight),
+          Divider(height: 1, color: isDark ? DS.borderDark : DS.borderLight),
 
           // Rows
           ...filtered.asMap().entries.map((e) {
@@ -884,7 +864,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           Divider(
             height: 1,
             indent: 16, endIndent: 16,
-            color: isDark ? _DS.borderDark : _DS.borderLight,
+            color: isDark ? DS.borderDark : DS.borderLight,
           ),
       ],
     );

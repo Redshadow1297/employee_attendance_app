@@ -289,14 +289,9 @@
 //   }
 // }
 
-
-
-
-
 // ignore_for_file: dangling_library_doc_comments
 
-////NEW UI 
-
+////NEW UI
 
 // lib/presentations/common_widgets/modern_punch_dialog.dart
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
@@ -304,63 +299,87 @@
 import 'package:flutter/material.dart';
 
 const Color _brandStart = Color(0xFF14B8A6);
-const Color _brandDeep  = Color(0xFF0F766E);
+const Color _brandDeep = Color(0xFF0F766E);
 
 enum PunchDialogType { checkIn, checkOut, locationOff, savedOffline }
 
 extension _PunchDialogConfig on PunchDialogType {
   IconData get icon {
     switch (this) {
-      case PunchDialogType.checkIn:       return Icons.login_rounded;
-      case PunchDialogType.checkOut:      return Icons.logout_rounded;
-      case PunchDialogType.locationOff:   return Icons.location_off_rounded;
-      case PunchDialogType.savedOffline:  return Icons.cloud_done_rounded;
+      case PunchDialogType.checkIn:
+        return Icons.login_rounded;
+      case PunchDialogType.checkOut:
+        return Icons.logout_rounded;
+      case PunchDialogType.locationOff:
+        return Icons.location_off_rounded;
+      case PunchDialogType.savedOffline:
+        return Icons.cloud_done_rounded;
     }
   }
 
   // Per-type accent + gradient
   Color get accentColor {
     switch (this) {
-      case PunchDialogType.checkIn:       return const Color(0xFF10B981);
-      case PunchDialogType.checkOut:      return const Color(0xFFEF4444);
-      case PunchDialogType.locationOff:   return const Color(0xFFF59E0B);
-      case PunchDialogType.savedOffline:  return _brandStart;
+      case PunchDialogType.checkIn:
+        return const Color(0xFF10B981);
+      case PunchDialogType.checkOut:
+        return const Color(0xFFEF4444);
+      case PunchDialogType.locationOff:
+        return const Color(0xFFF59E0B);
+      case PunchDialogType.savedOffline:
+        return _brandStart;
     }
   }
 
   List<Color> get gradient {
     switch (this) {
-      case PunchDialogType.checkIn:      return [const Color(0xFF10B981), const Color(0xFF059669)];
-      case PunchDialogType.checkOut:     return [const Color(0xFFEF4444), const Color(0xFFDC2626)];
-      case PunchDialogType.locationOff:  return [const Color(0xFFF59E0B), const Color(0xFFD97706)];
-      case PunchDialogType.savedOffline: return [_brandStart, _brandDeep];
+      case PunchDialogType.checkIn:
+        return [const Color(0xFF10B981), const Color(0xFF059669)];
+      case PunchDialogType.checkOut:
+        return [const Color(0xFFEF4444), const Color(0xFFDC2626)];
+      case PunchDialogType.locationOff:
+        return [const Color(0xFFF59E0B), const Color(0xFFD97706)];
+      case PunchDialogType.savedOffline:
+        return [_brandStart, _brandDeep];
     }
   }
 
   String get title {
     switch (this) {
-      case PunchDialogType.checkIn:       return "Confirm Check In";
-      case PunchDialogType.checkOut:      return "Confirm Check Out";
-      case PunchDialogType.locationOff:   return "Location Required";
-      case PunchDialogType.savedOffline:  return "Saved Offline";
+      case PunchDialogType.checkIn:
+        return "Confirm Check In";
+      case PunchDialogType.checkOut:
+        return "Confirm Check Out";
+      case PunchDialogType.locationOff:
+        return "Location Required";
+      case PunchDialogType.savedOffline:
+        return "Saved Offline";
     }
   }
 
   String get message {
     switch (this) {
-      case PunchDialogType.checkIn:       return "Are you sure you want to punch in now?";
-      case PunchDialogType.checkOut:      return "Are you sure you want to punch out now?";
-      case PunchDialogType.locationOff:   return "Location services are off. Please enable GPS to continue.";
-      case PunchDialogType.savedOffline:  return "Attendance saved offline. It will sync automatically when online.";
+      case PunchDialogType.checkIn:
+        return "Are you sure you want to punch in now?";
+      case PunchDialogType.checkOut:
+        return "Are you sure you want to punch out now?";
+      case PunchDialogType.locationOff:
+        return "Location services are off. Please enable GPS to continue.";
+      case PunchDialogType.savedOffline:
+        return "Attendance saved offline. It will sync automatically when online.";
     }
   }
 
   String get confirmLabel {
     switch (this) {
-      case PunchDialogType.checkIn:       return "Yes, Check In";
-      case PunchDialogType.checkOut:      return "Yes, Check Out";
-      case PunchDialogType.locationOff:   return "Enable Location";
-      case PunchDialogType.savedOffline:  return "Got It";
+      case PunchDialogType.checkIn:
+        return "Yes, Check In";
+      case PunchDialogType.checkOut:
+        return "Yes, Check Out";
+      case PunchDialogType.locationOff:
+        return "Enable Location";
+      case PunchDialogType.savedOffline:
+        return "Got It";
     }
   }
 
@@ -405,8 +424,8 @@ class ModernPunchDialog {
 // ─────────────────────────────────────────────────────────────
 class _PunchDialogWidget extends StatelessWidget {
   final PunchDialogType type;
-  final VoidCallback    onConfirmed;
-  final VoidCallback?   onCancelled;
+  final VoidCallback onConfirmed;
+  final VoidCallback? onCancelled;
 
   const _PunchDialogWidget({
     required this.type,
@@ -416,9 +435,9 @@ class _PunchDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark  = Theme.of(context).brightness == Brightness.dark;
-    final accent  = type.accentColor;
-    final grads   = type.gradient;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accent = type.accentColor;
+    final grads = type.gradient;
 
     return Center(
       child: Material(
@@ -449,7 +468,8 @@ class _PunchDialogWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: grads),
                   borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(24)),
+                    top: Radius.circular(24),
+                  ),
                 ),
               ),
 
@@ -460,19 +480,25 @@ class _PunchDialogWidget extends StatelessWidget {
                   children: [
                     // ── Icon with glow ring
                     Container(
-                      width: 72, height: 72,
+                      width: 72,
+                      height: 72,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: RadialGradient(colors: [
-                          accent.withOpacity(0.22),
-                          accent.withOpacity(0.05),
-                        ]),
+                        gradient: RadialGradient(
+                          colors: [
+                            accent.withOpacity(0.22),
+                            accent.withOpacity(0.05),
+                          ],
+                        ),
                         border: Border.all(
-                            color: accent.withOpacity(0.30), width: 1.5),
+                          color: accent.withOpacity(0.30),
+                          width: 1.5,
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: accent.withOpacity(0.28),
-                            blurRadius: 18, spreadRadius: 2,
+                            blurRadius: 18,
+                            spreadRadius: 2,
                           ),
                         ],
                       ),
@@ -528,7 +554,7 @@ class _PunchDialogWidget extends StatelessWidget {
                         ],
                         Expanded(
                           child: _ConfirmBtn(
-                            label:  type.confirmLabel,
+                            label: type.confirmLabel,
                             colors: grads,
                             accent: accent,
                             onTap: () {
@@ -554,9 +580,9 @@ class _PunchDialogWidget extends StatelessWidget {
 //  BUTTONS
 // ─────────────────────────────────────────────────────────────
 class _ConfirmBtn extends StatelessWidget {
-  final String       label;
-  final List<Color>  colors;
-  final Color        accent;
+  final String label;
+  final List<Color> colors;
+  final Color accent;
   final VoidCallback onTap;
 
   const _ConfirmBtn({
@@ -603,7 +629,7 @@ class _ConfirmBtn extends StatelessWidget {
 }
 
 class _CancelBtn extends StatelessWidget {
-  final bool         isDark;
+  final bool isDark;
   final VoidCallback onTap;
 
   const _CancelBtn({required this.isDark, required this.onTap});

@@ -297,30 +297,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_design_demo/core/app_services/app_permission_services.dart';
 import 'package:new_design_demo/core/app_services/auth_repo.dart';
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'package:new_design_demo/routes/app_routes.dart';
 
-// ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS  (consistent with dashboard & calendar)
-// ─────────────────────────────────────────────────────────────
-class _DS {
-  static const Color brandStart = Color(0xFF14B8A6);
-  static const Color brandMid = Color(0xFF0D9488);
-  static const Color brandDeep = Color(0xFF0F766E);
 
-  static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color borderLight = Color(0xFFE2E8F0);
-
-  static const Color surfaceDark = Color(0xFF0F172A);
-  static const Color cardDark = Color(0xFF1E293B);
-  static const Color borderDark = Color(0xFF334155);
-  static const Color inputDark = Color(0xFF263244);
-
-  static const double r14 = 14;
-  // static const double r20 = 20;
-  static const double r24 = 24;
-}
 
 // ─────────────────────────────────────────────────────────────
 //  SCREEN
@@ -425,7 +406,7 @@ class _LoginScreenState extends State<LoginScreen>
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
-        backgroundColor: isDark ? _DS.surfaceDark : _DS.surfaceLight,
+        backgroundColor: isDark ? DS.surfaceDark : DS.surfaceLight,
         body: Stack(
           children: [
             // ── Full-screen teal gradient top half
@@ -474,7 +455,7 @@ class _LoginScreenState extends State<LoginScreen>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [_DS.brandStart, _DS.brandMid, _DS.brandDeep],
+              colors: [DS.brandStart, DS.brandMid, DS.brandDeep],
               stops: [0.0, 0.5, 1.0],
             ),
           ),
@@ -601,10 +582,10 @@ class _LoginScreenState extends State<LoginScreen>
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: isDark ? _DS.cardDark : _DS.cardLight,
-              borderRadius: BorderRadius.circular(_DS.r24),
+              color: isDark ? DS.cardDark : DS.cardLight,
+              borderRadius: BorderRadius.circular(DS.r24),
               border: Border.all(
-                color: isDark ? _DS.borderDark : _DS.borderLight,
+                color: isDark ? DS.borderDark : DS.borderLight,
               ),
               boxShadow: [
                 BoxShadow(
@@ -629,12 +610,12 @@ class _LoginScreenState extends State<LoginScreen>
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [_DS.brandStart, _DS.brandDeep],
+                            colors: [DS.brandStart, DS.brandDeep],
                           ),
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: [
                             BoxShadow(
-                              color: _DS.brandStart.withOpacity(0.35),
+                              color: DS.brandStart.withOpacity(0.35),
                               blurRadius: 10,
                             ),
                           ],
@@ -725,7 +706,7 @@ class _LoginScreenState extends State<LoginScreen>
           width: 3,
           height: 14,
           decoration: BoxDecoration(
-            color: _DS.brandStart,
+            color: DS.brandStart,
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -784,32 +765,32 @@ class _LoginScreenState extends State<LoginScreen>
               )
             : null,
         filled: true,
-        fillColor: isDark ? _DS.inputDark : const Color(0xFFF1F5F9),
+        fillColor: isDark ? DS.inputDark : const Color(0xFFF1F5F9),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r14),
+          borderRadius: BorderRadius.circular(DS.r14),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r14),
+          borderRadius: BorderRadius.circular(DS.r14),
           borderSide: BorderSide(
-            color: isDark ? _DS.borderDark : _DS.borderLight,
+            color: isDark ? DS.borderDark : DS.borderLight,
             width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r14),
-          borderSide: const BorderSide(color: _DS.brandStart, width: 1.8),
+          borderRadius: BorderRadius.circular(DS.r14),
+          borderSide: const BorderSide(color: DS.brandStart, width: 1.8),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r14),
+          borderRadius: BorderRadius.circular(DS.r14),
           borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r14),
+          borderRadius: BorderRadius.circular(DS.r14),
           borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1.8),
         ),
       ),
@@ -825,17 +806,17 @@ class _LoginScreenState extends State<LoginScreen>
           gradient: _isLoading
               ? null
               : const LinearGradient(
-                  colors: [_DS.brandStart, _DS.brandDeep],
+                  colors: [DS.brandStart, DS.brandDeep],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
-          color: _isLoading ? (_DS.brandStart.withOpacity(0.5)) : null,
-          borderRadius: BorderRadius.circular(_DS.r14),
+          color: _isLoading ? (DS.brandStart.withOpacity(0.5)) : null,
+          borderRadius: BorderRadius.circular(DS.r14),
           boxShadow: _isLoading
               ? []
               : [
                   BoxShadow(
-                    color: _DS.brandStart.withOpacity(0.40),
+                    color: DS.brandStart.withOpacity(0.40),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -847,7 +828,7 @@ class _LoginScreenState extends State<LoginScreen>
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_DS.r14),
+              borderRadius: BorderRadius.circular(DS.r14),
             ),
           ),
           child: _isLoading

@@ -615,7 +615,7 @@
 
 
 
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 //ONLINE PUNCHES ONLY
 import 'package:flutter/material.dart';
@@ -640,13 +640,13 @@ class PunchController {
   String inTimeVal = '';
   String outTimeVal = '';
   bool isPunchLoading = false;
-
-  // ── Cached user prefs
   String _empPk = '';
   String _employeeCode = '';
   String _locationPk = '';
   String _companyPk = '';
   String _deviceId = '';
+  String _punchAddr = '';
+  String _batteryPercentage = '';
 
   PunchController({
     required this.context,
@@ -663,7 +663,7 @@ class PunchController {
     _locationPk   = (prefs.getInt('locationpk') ?? 0).toString();
     _companyPk    = (prefs.getInt('companypk')  ?? 0).toString();
     _deviceId     =  prefs.getString('deviceId') ?? 'DEVICE';
-    debugPrint('PunchController ▶ prefs loaded '
+    debugPrint('PunchController   :: prefs loaded '
         'emp=$_empPk  code=$_employeeCode  loc=$_locationPk  company=$_companyPk');
   }
 
@@ -675,7 +675,7 @@ class PunchController {
       final String attendanceDate =
           DateFormat("dd/MM/yyyy").format(DateTime.now());
 
-      debugPrint('getTodaysAttendanceState ▶ Emp_PK=$emppk  Date=$attendanceDate');
+      debugPrint('getTodaysAttendanceState   :: Emp_PK=$emppk  Date=$attendanceDate');
 
       final response = await ApiClient.post(
         ApiConstants.getTodaysAttendance,
@@ -685,8 +685,8 @@ class PunchController {
         },
       );
 
-      debugPrint('TodaysAttendance ▶ status=${response.statusCode}');
-      debugPrint('TodaysAttendance ▶ raw=${response.data}');
+      debugPrint('TodaysAttendance   :: status=${response.statusCode}');
+      debugPrint('TodaysAttendance   :: raw=${response.data}');
 
       if (response.statusCode == 200) {
         _parseTodayAttendance(response.data);
@@ -701,7 +701,7 @@ class PunchController {
     try {
       final dynamic result = data["TodaysAttendanceResult"];
       if (result == null || result is! List || result.isEmpty) {
-        debugPrint('_parseTodayAttendance ▶ No attendance data today');
+        debugPrint('_parseTodayAttendance   :: No attendance data today');
         return;
       }
 
@@ -712,7 +712,7 @@ class PunchController {
       if (apiInTime.isNotEmpty) inTimeVal = apiInTime;
       if(apiOutTime.isNotEmpty) outTimeVal = apiOutTime;
 
-      debugPrint('_parseTodayAttendance ▶ InTime=$inTimeVal  OutTime=$outTimeVal');
+      debugPrint('_parseTodayAttendance   :: InTime=$inTimeVal  OutTime=$outTimeVal');
       onStateChanged();
     } catch (e) {
       debugPrint('_parseTodayAttendance error: $e');
@@ -734,7 +734,7 @@ class PunchController {
         _setLoading(false);
       },
       onCancelled: () {
-        debugPrint('PunchController ▶ User cancelled.');
+        debugPrint('PunchController   :: User cancelled.');
       },
     );
   }
@@ -771,8 +771,8 @@ class PunchController {
         longitude:       position?.longitude.toString() ?? '0',
         locationPk:      _locationPk,
         companyPk:       _companyPk,
-        address:         '',
-        batteryLevel:    '',
+        address:         _punchAddr,  //NEED TO SEND THE PUNCH IN/OUT LOCATION
+        batteryLevel:    _batteryPercentage,  //NEED TO SEND THE BATTERY PERCENTAGE
         data:            'ONLINE',
         location:        gpsAvailable ? 'ON' : 'OFF',
         inTime:          isPunchIn ? now : inTimeVal,
@@ -785,7 +785,7 @@ class PunchController {
           ? await PunchService.punchIn(req)
           : await PunchService.punchOut(req);
 
-      debugPrint('PunchController ▶ API response: $statusMsg');
+      debugPrint('PunchController   :: API response: $statusMsg');
 
       // 4. Handle result
       if (_isSuccessResponse(statusMsg)) {
@@ -812,7 +812,7 @@ class PunchController {
         );
       }
     } catch (e) {
-      debugPrint('PunchController ▶ error: $e');
+      debugPrint('PunchController   :: error: $e');
       _showSnackBar(
         title:   "Something Went Wrong",
         message: "Please try again.",

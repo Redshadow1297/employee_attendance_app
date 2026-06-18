@@ -342,28 +342,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
-
-// ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS
-// ─────────────────────────────────────────────────────────────
-class _DS {
-  static const Color brandStart = Color(0xFF14B8A6);
-  static const Color brandMid = Color(0xFF0D9488);
-  static const Color brandDeep = Color(0xFF0F766E);
-
-  static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color borderLight = Color(0xFFE2E8F0);
-
-  static const Color surfaceDark = Color(0xFF0F172A);
-  static const Color cardDark = Color(0xFF1E293B);
-  static const Color borderDark = Color(0xFF334155);
-  static const Color inputDark = Color(0xFF263244);
-
-  // static const double r16 = 16;
-  static const double r20 = 20;
-  // static const double r24 = 24;
-}
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 
 // ─────────────────────────────────────────────────────────────
 //  SCREEN
@@ -465,7 +444,7 @@ class _WallPostScreenState extends State<WallPostScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? _DS.surfaceDark : _DS.surfaceLight,
+      backgroundColor: isDark ? DS.surfaceDark : DS.surfaceLight,
       body: Stack(
         children: [
           Column(
@@ -495,7 +474,7 @@ class _WallPostScreenState extends State<WallPostScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [_DS.brandStart, _DS.brandMid, _DS.brandDeep],
+          colors: [DS.brandStart, DS.brandMid, DS.brandDeep],
           stops: [0.0, 0.5, 1.0],
         ),
       ),
@@ -629,7 +608,7 @@ class _WallPostScreenState extends State<WallPostScreen>
                                 size: 18,
                                 color: showCreatePost
                                     ? Colors.white
-                                    : _DS.brandDeep,
+                                    : DS.brandDeep,
                               ),
                               const SizedBox(width: 6),
                               Text(
@@ -639,7 +618,7 @@ class _WallPostScreenState extends State<WallPostScreen>
                                   fontSize: 13,
                                   color: showCreatePost
                                       ? Colors.white
-                                      : _DS.brandDeep,
+                                      : DS.brandDeep,
                                 ),
                               ),
                             ],
@@ -669,14 +648,14 @@ class _WallPostScreenState extends State<WallPostScreen>
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r20),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r20),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
                 ? Colors.black.withOpacity(0.35)
-                : _DS.brandStart.withOpacity(0.12),
+                : DS.brandStart.withOpacity(0.12),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -691,12 +670,12 @@ class _WallPostScreenState extends State<WallPostScreen>
                 padding: const EdgeInsets.all(9),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [_DS.brandStart, _DS.brandDeep],
+                    colors: [DS.brandStart, DS.brandDeep],
                   ),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: _DS.brandStart.withOpacity(0.35),
+                      color: DS.brandStart.withOpacity(0.35),
                       blurRadius: 8,
                     ),
                   ],
@@ -722,10 +701,10 @@ class _WallPostScreenState extends State<WallPostScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             decoration: BoxDecoration(
-              color: isDark ? _DS.inputDark : const Color(0xFFF1F5F9),
+              color: isDark ? DS.inputDark : const Color(0xFFF1F5F9),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: isDark ? _DS.borderDark : _DS.borderLight,
+                color: isDark ? DS.borderDark : DS.borderLight,
               ),
             ),
             child: TextField(
@@ -761,7 +740,7 @@ class _WallPostScreenState extends State<WallPostScreen>
                 label: "Publish",
                 icon: Icons.send_rounded,
                 gradient: const LinearGradient(
-                  colors: [_DS.brandStart, _DS.brandDeep],
+                  colors: [DS.brandStart, DS.brandDeep],
                 ),
                 textColor: Colors.white,
                 onTap: _toggleCreatePost,
@@ -792,7 +771,7 @@ class _WallPostScreenState extends State<WallPostScreen>
           boxShadow: gradient != null
               ? [
                   BoxShadow(
-                    color: _DS.brandStart.withOpacity(0.30),
+                    color: DS.brandStart.withOpacity(0.30),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -825,7 +804,7 @@ class _WallPostScreenState extends State<WallPostScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(color: _DS.brandStart, strokeWidth: 2.5),
+            CircularProgressIndicator(color: DS.brandStart, strokeWidth: 2.5),
             SizedBox(height: 16),
             Text(
               "Loading posts…",
@@ -844,12 +823,12 @@ class _WallPostScreenState extends State<WallPostScreen>
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: _DS.brandStart.withOpacity(0.10),
+                color: DS.brandStart.withOpacity(0.10),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.feed_outlined,
-                color: _DS.brandStart,
+                color: DS.brandStart,
                 size: 36,
               ),
             ),
@@ -877,7 +856,7 @@ class _WallPostScreenState extends State<WallPostScreen>
 
     return RefreshIndicator(
       onRefresh: loadPosts,
-      color: _DS.brandStart,
+      color: DS.brandStart,
       child: ListView.builder(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         itemCount: posts.length,
@@ -916,12 +895,12 @@ class _WallPostScreenState extends State<WallPostScreen>
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r20),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r20),
         border: Border.all(
           color: isNew
-              ? _DS.brandStart.withOpacity(0.5)
-              : (isDark ? _DS.borderDark : _DS.borderLight),
+              ? DS.brandStart.withOpacity(0.5)
+              : (isDark ? DS.borderDark : DS.borderLight),
           width: isNew ? 1.5 : 1.0,
         ),
         boxShadow: [
@@ -929,7 +908,7 @@ class _WallPostScreenState extends State<WallPostScreen>
             color: isDark
                 ? Colors.black.withOpacity(0.28)
                 : (isNew
-                      ? _DS.brandStart.withOpacity(0.08)
+                      ? DS.brandStart.withOpacity(0.08)
                       : Colors.black.withOpacity(0.05)),
             blurRadius: 16,
             offset: const Offset(0, 6),
@@ -1001,16 +980,16 @@ class _WallPostScreenState extends State<WallPostScreen>
                                 vertical: 3,
                               ),
                               decoration: BoxDecoration(
-                                color: _DS.brandStart.withOpacity(0.15),
+                                color: DS.brandStart.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: _DS.brandStart.withOpacity(0.4),
+                                  color: DS.brandStart.withOpacity(0.4),
                                 ),
                               ),
                               child: const Text(
                                 "NEW",
                                 style: TextStyle(
-                                  color: _DS.brandStart,
+                                  color: DS.brandStart,
                                   fontSize: 9,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 0.5,
@@ -1056,7 +1035,7 @@ class _WallPostScreenState extends State<WallPostScreen>
           ),
 
           // Divider
-          Divider(height: 1, color: isDark ? _DS.borderDark : _DS.borderLight),
+          Divider(height: 1, color: isDark ? DS.borderDark : DS.borderLight),
 
           // ── Post content
           Padding(
@@ -1079,8 +1058,8 @@ class _WallPostScreenState extends State<WallPostScreen>
               photo.toString() != "System.Byte[]")
             ClipRRect(
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(_DS.r20),
-                bottomRight: Radius.circular(_DS.r20),
+                bottomLeft: Radius.circular(DS.r20),
+                bottomRight: Radius.circular(DS.r20),
               ),
               child: Image.network(
                 photo,

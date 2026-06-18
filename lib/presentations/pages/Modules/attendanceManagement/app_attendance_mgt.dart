@@ -1461,38 +1461,12 @@ import 'package:flutter/material.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:intl/intl.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 // import 'package:new_design_demo/core/app_services/whatsappTwillioNotification.dart';
 import 'package:new_design_demo/presentations/common_widgets/alert_box.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_timePicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS
-// ─────────────────────────────────────────────────────────────
-class _DS {
-  static const Color brandStart = Color(0xFF14B8A6);
-  static const Color brandMid = Color(0xFF0D9488);
-  static const Color brandDeep = Color(0xFF0F766E);
-
-  // Accent green (for attendance / present)
-  static const Color green1 = Color(0xFF10B981);
-  // static const Color green2 = Color(0xFF059669);
-
-  static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color borderLight = Color(0xFFE2E8F0);
-
-  static const Color surfaceDark = Color(0xFF0F172A);
-  static const Color cardDark = Color(0xFF1E293B);
-  static const Color innerDark = Color(0xFF0F172A);
-  static const Color borderDark = Color(0xFF334155);
-  static const Color inputDark = Color(0xFF263244);
-
-  static const double r12 = 12;
-  static const double r16 = 16;
-  static const double r20 = 20;
-}
 
 // ─────────────────────────────────────────────────────────────
 //  SCREEN
@@ -1913,7 +1887,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
         return true;
       },
       child: Scaffold(
-        backgroundColor: isDark ? _DS.surfaceDark : _DS.surfaceLight,
+        backgroundColor: isDark ? DS.surfaceDark : DS.surfaceLight,
         body: Column(
           children: [
             _header(isDark),
@@ -1945,7 +1919,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [_DS.brandStart, _DS.brandMid, _DS.brandDeep],
+          colors: [DS.brandStart, DS.brandMid, DS.brandDeep],
           stops: [0.0, 0.5, 1.0],
         ),
       ),
@@ -2070,14 +2044,14 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                               children: const [
                                 Icon(
                                   Icons.verified_user_rounded,
-                                  color: _DS.brandDeep,
+                                  color: DS.brandDeep,
                                   size: 17,
                                 ),
                                 SizedBox(width: 6),
                                 Text(
                                   "Authorization",
                                   style: TextStyle(
-                                    color: _DS.brandDeep,
+                                    color: DS.brandDeep,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 13,
                                   ),
@@ -2111,9 +2085,9 @@ class _AttendanceScreenState extends State<AttendanceScreen>
         height: 48,
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: isDark ? _DS.cardDark : _DS.cardLight,
+          color: isDark ? DS.cardDark : DS.cardLight,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+          border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
           boxShadow: [
             BoxShadow(
               color: isDark
@@ -2155,7 +2129,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
           decoration: BoxDecoration(
             gradient: isSelected
                 ? const LinearGradient(
-                    colors: [_DS.brandStart, _DS.brandDeep],
+                    colors: [DS.brandStart, DS.brandDeep],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   )
@@ -2164,7 +2138,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: _DS.brandStart.withOpacity(0.35),
+                      color: DS.brandStart.withOpacity(0.35),
                       blurRadius: 8,
                     ),
                   ]
@@ -2192,9 +2166,9 @@ class _AttendanceScreenState extends State<AttendanceScreen>
       height: 48,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
+        color: isDark ? DS.cardDark : DS.cardLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -2220,7 +2194,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     final Color selColor = index == 0
         ? const Color(0xFFF59E0B)
         : index == 1
-        ? _DS.green1
+        ? DS.green1
         : const Color(0xFFEF4444);
 
     return Expanded(
@@ -2293,9 +2267,9 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r20),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r20),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -2374,10 +2348,10 @@ class _AttendanceScreenState extends State<AttendanceScreen>
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
               decoration: BoxDecoration(
-                color: isDark ? _DS.innerDark : const Color(0xFFF1F5F9),
-                borderRadius: BorderRadius.circular(_DS.r12),
+                color: isDark ? DS.innerDark : const Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.circular(DS.r12),
                 border: Border.all(
-                  color: isDark ? _DS.borderDark : _DS.borderLight,
+                  color: isDark ? DS.borderDark : DS.borderLight,
                 ),
               ),
               child: Row(
@@ -2386,7 +2360,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                     child: _timeColPremium(
                       "Check In",
                       checkIn,
-                      _DS.green1,
+                      DS.green1,
                       isDark,
                     ),
                   ),
@@ -2424,12 +2398,12 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [_DS.brandStart, _DS.brandDeep],
+                      colors: [DS.brandStart, DS.brandDeep],
                     ),
-                    borderRadius: BorderRadius.circular(_DS.r12),
+                    borderRadius: BorderRadius.circular(DS.r12),
                     boxShadow: [
                       BoxShadow(
-                        color: _DS.brandStart.withOpacity(0.30),
+                        color: DS.brandStart.withOpacity(0.30),
                         blurRadius: 8,
                       ),
                     ],
@@ -2514,9 +2488,9 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? _DS.innerDark : const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(_DS.r16),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.innerDark : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(DS.r16),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2527,7 +2501,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [_DS.brandStart, _DS.brandDeep],
+                    colors: [DS.brandStart, DS.brandDeep],
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -2590,7 +2564,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.white10 : Colors.black38,
-                      borderRadius: BorderRadius.circular(_DS.r12),
+                      borderRadius: BorderRadius.circular(DS.r12),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -2678,21 +2652,21 @@ class _AttendanceScreenState extends State<AttendanceScreen>
             )
           : null,
       filled: true,
-      fillColor: isDark ? _DS.inputDark : Colors.white,
+      fillColor: isDark ? DS.inputDark : Colors.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(_DS.r12),
+        borderRadius: BorderRadius.circular(DS.r12),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(_DS.r12),
+        borderRadius: BorderRadius.circular(DS.r12),
         borderSide: BorderSide(
-          color: isDark ? _DS.borderDark : _DS.borderLight,
+          color: isDark ? DS.borderDark : DS.borderLight,
         ),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(_DS.r12),
-        borderSide: const BorderSide(color: _DS.brandStart, width: 1.8),
+        borderRadius: BorderRadius.circular(DS.r12),
+        borderSide: const BorderSide(color: DS.brandStart, width: 1.8),
       ),
     );
   }
@@ -2701,10 +2675,10 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [_DS.brandStart, _DS.brandDeep]),
-        borderRadius: BorderRadius.circular(_DS.r12),
+        gradient: const LinearGradient(colors: [DS.brandStart, DS.brandDeep]),
+        borderRadius: BorderRadius.circular(DS.r12),
         boxShadow: [
-          BoxShadow(color: _DS.brandStart.withOpacity(0.35), blurRadius: 10),
+          BoxShadow(color: DS.brandStart.withOpacity(0.35), blurRadius: 10),
         ],
       ),
       child: Row(
@@ -2747,10 +2721,10 @@ class _AttendanceScreenState extends State<AttendanceScreen>
         return Container(
           margin: const EdgeInsets.only(bottom: 14),
           decoration: BoxDecoration(
-            color: isDark ? _DS.cardDark : _DS.cardLight,
-            borderRadius: BorderRadius.circular(_DS.r20),
+            color: isDark ? DS.cardDark : DS.cardLight,
+            borderRadius: BorderRadius.circular(DS.r20),
             border: Border.all(
-              color: isDark ? _DS.borderDark : _DS.borderLight,
+              color: isDark ? DS.borderDark : DS.borderLight,
             ),
             boxShadow: [
               BoxShadow(
@@ -2796,7 +2770,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
               ),
               Divider(
                 height: 1,
-                color: isDark ? _DS.borderDark : _DS.borderLight,
+                color: isDark ? DS.borderDark : DS.borderLight,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
@@ -2806,7 +2780,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                       child: _timeColPremium(
                         "Check In",
                         checkIn,
-                        _DS.green1,
+                        DS.green1,
                         isDark,
                       ),
                     ),
@@ -2841,7 +2815,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: const Color(0xFFEF4444).withOpacity(0.10),
-                        borderRadius: BorderRadius.circular(_DS.r12),
+                        borderRadius: BorderRadius.circular(DS.r12),
                         border: Border.all(
                           color: const Color(0xFFEF4444).withOpacity(0.30),
                         ),
@@ -2913,10 +2887,10 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                       return Container(
                         margin: const EdgeInsets.only(bottom: 14),
                         decoration: BoxDecoration(
-                          color: isDark ? _DS.cardDark : _DS.cardLight,
-                          borderRadius: BorderRadius.circular(_DS.r20),
+                          color: isDark ? DS.cardDark : DS.cardLight,
+                          borderRadius: BorderRadius.circular(DS.r20),
                           border: Border.all(
-                            color: isDark ? _DS.borderDark : _DS.borderLight,
+                            color: isDark ? DS.borderDark : DS.borderLight,
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -2957,7 +2931,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                             ),
                             Divider(
                               height: 1,
-                              color: isDark ? _DS.borderDark : _DS.borderLight,
+                              color: isDark ? DS.borderDark : DS.borderLight,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
@@ -2984,7 +2958,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                                         child: _timeColPremium(
                                           "In Time",
                                           item["InTime"] ?? "--",
-                                          _DS.green1,
+                                          DS.green1,
                                           isDark,
                                         ),
                                       ),
@@ -3042,7 +3016,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                                               0xFFEF4444,
                                             ).withOpacity(0.10),
                                             borderRadius: BorderRadius.circular(
-                                              _DS.r12,
+                                              DS.r12,
                                             ),
                                             border: Border.all(
                                               color: const Color(
@@ -3142,7 +3116,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(color: _DS.brandStart, strokeWidth: 2.5),
+          CircularProgressIndicator(color: DS.brandStart, strokeWidth: 2.5),
           SizedBox(height: 14),
           Text(
             "Loading…",
@@ -3161,10 +3135,10 @@ class _AttendanceScreenState extends State<AttendanceScreen>
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: _DS.brandStart.withOpacity(0.10),
+              color: DS.brandStart.withOpacity(0.10),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: _DS.brandStart, size: 32),
+            child: Icon(icon, color: DS.brandStart, size: 32),
           ),
           const SizedBox(height: 14),
           Text(
@@ -3184,7 +3158,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
   Widget companyDropdown({bool isDark = false}) {
     return DropdownButtonFormField<String>(
       value: selectedComp,
-      dropdownColor: isDark ? _DS.cardDark : null,
+      dropdownColor: isDark ? DS.cardDark : null,
       style: TextStyle(
         color: isDark ? Colors.white : const Color(0xFF0F172A),
         fontSize: 13,
@@ -3201,24 +3175,24 @@ class _AttendanceScreenState extends State<AttendanceScreen>
           size: 18,
         ),
         filled: true,
-        fillColor: isDark ? _DS.inputDark : Colors.white,
+        fillColor: isDark ? DS.inputDark : Colors.white,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 12,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r12),
+          borderRadius: BorderRadius.circular(DS.r12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r12),
+          borderRadius: BorderRadius.circular(DS.r12),
           borderSide: BorderSide(
-            color: isDark ? _DS.borderDark : _DS.borderLight,
+            color: isDark ? DS.borderDark : DS.borderLight,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r12),
-          borderSide: const BorderSide(color: _DS.brandStart, width: 1.8),
+          borderRadius: BorderRadius.circular(DS.r12),
+          borderSide: const BorderSide(color: DS.brandStart, width: 1.8),
         ),
       ),
       items: companyMap.keys
@@ -3263,24 +3237,24 @@ class _AttendanceScreenState extends State<AttendanceScreen>
           size: 20,
         ),
         filled: true,
-        fillColor: isDark ? _DS.inputDark : Colors.white,
+        fillColor: isDark ? DS.inputDark : Colors.white,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 12,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r12),
+          borderRadius: BorderRadius.circular(DS.r12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r12),
+          borderRadius: BorderRadius.circular(DS.r12),
           borderSide: BorderSide(
-            color: isDark ? _DS.borderDark : _DS.borderLight,
+            color: isDark ? DS.borderDark : DS.borderLight,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_DS.r12),
-          borderSide: const BorderSide(color: _DS.brandStart, width: 1.8),
+          borderRadius: BorderRadius.circular(DS.r12),
+          borderSide: const BorderSide(color: DS.brandStart, width: 1.8),
         ),
       ),
       onChanged: (value) {
@@ -3301,9 +3275,9 @@ class _AttendanceScreenState extends State<AttendanceScreen>
       height: 150,
       margin: const EdgeInsets.only(top: 4),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r12),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r12),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -3315,12 +3289,12 @@ class _AttendanceScreenState extends State<AttendanceScreen>
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(_DS.r12),
+        borderRadius: BorderRadius.circular(DS.r12),
         child: ListView.separated(
           itemCount: searchEmp.length,
           separatorBuilder: (_, __) => Divider(
             height: 1,
-            color: isDark ? _DS.borderDark : _DS.borderLight,
+            color: isDark ? DS.borderDark : DS.borderLight,
           ),
           itemBuilder: (context, index) {
             final emp = searchEmp[index];
@@ -3328,10 +3302,10 @@ class _AttendanceScreenState extends State<AttendanceScreen>
               dense: true,
               leading: CircleAvatar(
                 radius: 16,
-                backgroundColor: _DS.brandStart.withOpacity(0.15),
+                backgroundColor: DS.brandStart.withOpacity(0.15),
                 child: const Icon(
                   Icons.person_outline,
-                  color: _DS.brandStart,
+                  color: DS.brandStart,
                   size: 16,
                 ),
               ),
