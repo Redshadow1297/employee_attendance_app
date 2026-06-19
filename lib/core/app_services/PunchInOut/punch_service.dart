@@ -4,7 +4,6 @@ import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
 import 'package:new_design_demo/data/model/data_model_InOutPunch.dart';
 
-// ─────────────────────────────────────────────────────────────
 //  PUNCH SERVICE
 
 class PunchService {
@@ -41,7 +40,6 @@ class PunchService {
     return _extractStatusMessage(response.toString());
   }
 
-  // ─────────────────────────────────────────────────────────────
   //  OFFLINE PUNCH  –  for when the device has no internet
 
   /// Sends a **single** stored offline punch record to the server.
@@ -57,18 +55,6 @@ class PunchService {
     debugPrint(
       "PunchService ▶ syncing offline record id=$localId | InOrOUT=$inOrOut  | url=$url",
     );
-
-    // final response = await ApiClient.post(
-    //   ApiConstants.punchInOut,
-    //   data: req.toJson(overrideInOrOut: inOrOut),
-    // );
-    // debugPrint("PunchService ◀ offline sync status=${response.statusCode}");
-    // if (response.statusCode == 200) {
-    //   await onDeleteRecord(localId);
-    //   debugPrint("PunchService ✓ offline record $localId deleted after sync");
-    // } else {
-    //   debugPrint("PunchService ✗ server returned ${response.statusCode} for record $localId");
-    // }
 
     final response = await ApiClient.post(
       ApiConstants.punchInOut,

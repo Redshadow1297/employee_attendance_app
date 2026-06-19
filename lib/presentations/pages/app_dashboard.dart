@@ -1,5 +1,4 @@
 // // ignore_for_file: avoid_print, use_build_context_synchronously, deprecated_member_use, unused_local_variable
-
 // import 'dart:async';
 // import 'dart:convert';
 // import 'package:flutter/material.dart';
@@ -18,17 +17,13 @@
 // import 'package:new_design_demo/presentations/pages/app_profile.dart';
 // import 'package:intl/intl.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-
 // class AppDashboardScreen extends StatefulWidget {
 //   const AppDashboardScreen({super.key});
-
 //   @override
 //   State<AppDashboardScreen> createState() => _AppDashboardScreenState();
 // }
-
 // class _AppDashboardScreenState extends State<AppDashboardScreen> {
 //   String liveDayDate = DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now());
-
 //   // ── User
 //   String employeeCode = '';
 //   String employeename = '';
@@ -43,14 +38,11 @@
 //   bool hasNewWallPost = false;
 //   Timer? _wallPostTimer;
 //   late final imageProvider = _buildBase64Image(profilePhoto);
-
 //   // ── Module list
 //   List<dynamic> moduleList = [];
 //   bool isLoadingModules = false;
-
-//   // ── PUNCH CONTROLLER
+//  // ── PUNCH CONTROLLER
 //   late PunchController _punchController;
-
 //   @override
 //   void initState() {
 //     super.initState();
@@ -65,19 +57,15 @@
 //       deleteOfflineRecord: (int id) async {},
 //       saveOfflineRecord: (record) async {},
 //     );
-
 //     _initDashboard();
-
 //     _wallPostTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
 //       fetchWallPostData();
 //     });
 //   }
-
 //   //Initial dashboard loading with permission checks
 //   Future<void> _initDashboard() async {
 //     /// Check permissions first
 //     bool isValid = await AppServices.validatePunchRequirements();
-
 //     if (!isValid) {
 //       if (mounted) {
 //         CommonSnackBar.show(
@@ -92,7 +80,6 @@
 //     await _loadUserData();
 //     await _punchController.loadUserPrefs();
 //     // await TrackingService().initialize();
-
 //     if (emppk != null) {
 //       await _punchController.getTodaysAttendanceState(emppk: emppk!);
 //       await _fetchModules();
@@ -100,7 +87,6 @@
 //       await fetchWallPostData();
 //     }
 //   }
-
 //   ///Load user data
 //   Future<void> _loadUserData() async {
 //     final prefs = await SharedPreferences.getInstance();
@@ -113,7 +99,6 @@
 //     companypk = prefs.getInt('companypk');
 //     locationpk = prefs.getInt('locationpk');
 //   }
-
 //   //Module fetching
 //   Future<void> _fetchModules() async {
 //     try {
@@ -131,7 +116,6 @@
 //       debugPrint("Module error: $e");
 //     }
 //   }
-
 //   ////Last login Info
 //   Future<void> _fetchLastLoginDetails() async {
 //     try {
@@ -149,7 +133,6 @@
 //       debugPrint("LastLogin error: $ex");
 //     }
 //   }
-
 //   ///Fetch Wall post data for checking any new notice is arrived  or not
 //   Future<void> fetchWallPostData() async {
 //     try {
@@ -157,14 +140,11 @@
 //         ApiConstants.getWallPosts,
 //         query: {"Emp_PK": emppk},
 //       );
-
 //       if (response.data is List) {
 //         List<dynamic> wallPosts = response.data;
-
 //         int newPostsCount = wallPosts
 //             .where((post) => post['IsNew'] == true)
 //             .length;
-
 //         if (mounted) {
 //           setState(() {
 //             hasNewWallPost = newPostsCount > 0;
@@ -175,7 +155,6 @@
 //       debugPrint("Wall post error: $e");
 //     }
 //   }
-
 //   // ── MODULE MAPPING ─────────────────────────────────────────
 //   final Map<int, ModuleUIConfig> moduleUIMap = {
 //     1: ModuleUIConfig(
@@ -256,11 +235,9 @@
 //       route: "/vehicleRequisition",
 //     ),
 //   };
-
 //   @override
 //   Widget build(BuildContext context) {
 //     final isDark = Theme.of(context).brightness == Brightness.dark;
-
 //     return WillPopScope(
 //       onWillPop: () async => true,
 //       child: Scaffold(
@@ -330,14 +307,12 @@
 //                             setState(() {
 //                               hasNewWallPost = false;
 //                             });
-
 //                             Navigator.pushNamed(context, "/wallpost");
 //                           },
 //                           child: Stack(
 //                             clipBehavior: Clip.none,
 //                             children: [
 //                               _circleIcon(Icons.notifications_none),
-
 //                               if (hasNewWallPost)
 //                                 Positioned(
 //                                   right: 0,
@@ -434,7 +409,6 @@
 //                   ),
 //                 ),
 //               ),
-
 //               //     isDark pass kela
 //               _moduleGrid(isDark: isDark),
 //             ],
@@ -443,31 +417,23 @@
 //       ),
 //     );
 //   }
-
 //   //  PUNCH IN/OUT CARD
 //   Widget _timeInOutCard() {
 //     final isDark = Theme.of(context).brightness == Brightness.dark;
-
 //     final String inTimeDisplay = _punchController.inTimeVal.isNotEmpty
 //         ? _punchController.inTimeVal
 //         : "--:--";
-
 //     final String outTimeDisplay = _punchController.outTimeVal.isNotEmpty
 //         ? _punchController.outTimeVal
 //         : "--:--";
-
 //     final bool isCheckedIn =
 //         _punchController.inTimeVal.isNotEmpty &&
 //         _punchController.outTimeVal.isEmpty;
-
 //     final bool isLoading = _punchController.isPunchLoading;
 //     final bool isCheckedOut = _punchController.outTimeVal.isNotEmpty;
-
 //     final Color actionColor = isCheckedIn ? Colors.red : Colors.green;
-
 //     String statusText = "";
 //     Color statusColor = Colors.blue;
-
 //     //Showing time progress  like lunch break, tea break based on time and punch status
 //     // final now = DateTime.now();
 //     // final currentHour = now.hour;
@@ -489,7 +455,6 @@
 //     //   statusText = "Not Checked In";
 //     //   statusColor = Colors.grey;
 //     // }
-
 //     return Container(
 //       margin: const EdgeInsets.fromLTRB(3, 10, 3, 12),
 //       padding: const EdgeInsets.all(10),
@@ -545,9 +510,7 @@
 //                 ),
 //             ],
 //           ),
-
 //           const SizedBox(height: 24),
-
 //           GestureDetector(
 //             onTap: isLoading
 //                 ? null
@@ -555,13 +518,10 @@
 //                     await _punchController.onPunchTapped(
 //                       isPunchIn: !isCheckedIn,
 //                     );
-
 //                     await Future.delayed(const Duration(milliseconds: 1500));
-
 //                     await _punchController.getTodaysAttendanceState(
 //                       emppk: emppk!,
 //                     );
-
 //                     if (mounted) {
 //                       setState(() {});
 //                     }
@@ -585,9 +545,7 @@
 //               child: Icon(Icons.fingerprint, size: 52, color: actionColor),
 //             ),
 //           ),
-
 //           const SizedBox(height: 22),
-
 //           Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceAround,
 //             children: [
@@ -632,14 +590,12 @@
 //               ),
 //             ],
 //           ),
-
 //           const SizedBox(height: 18),
 //           // _attendanceStatusBar(isCheckedIn, isCheckedOut),
 //         ],
 //       ),
 //     );
 //   }
-
 //   //  ATTENDANCE STATUS BAR //// Progress Bar for check in, lunch, tea and check out status
 //   // Widget _attendanceStatusBar(bool isCheckedIn, bool isCheckedOut) {
 //   //   final now = DateTime.now();
@@ -681,7 +637,6 @@
 //   //     ],
 //   //   );
 //   // }
-
 //   // //  STATUS DOT
 //   // Widget _statusDot({
 //   //   required String title,
@@ -730,7 +685,6 @@
 //   //     ],
 //   //   );
 //   // }
-
 //   //  MODULE GRID
 //   Widget _moduleGrid({required bool isDark}) {
 //     if (isLoadingModules) {
@@ -754,7 +708,6 @@
 //         final module = moduleList[index];
 //         final int pk = module["Module_PK"];
 //         final config = moduleUIMap[pk];
-
 //         return GestureDetector(
 //           onTap: () {
 //             if (config != null) Navigator.pushNamed(context, config.route);
@@ -825,7 +778,6 @@
 //       },
 //     );
 //   }
-
 //   //  HELPERS
 //   ImageProvider<Object> _buildBase64Image(String base64String) {
 //     try {
@@ -835,16 +787,13 @@
 //       return const AssetImage('assets/placeholder.png');
 //     }
 //   }
-
 //   ///Leave Balance Card
 //   Widget _leaveBalanceCard() {
 //     final isDark = Theme.of(context).brightness == Brightness.dark;
-
 //     final double totalLeaves = 24;
 //     final double usedLeaves = 10;
 //     final double remainingLeaves = totalLeaves - usedLeaves;
 //     final double progress = usedLeaves / totalLeaves;
-
 //     return Container(
 //       margin: const EdgeInsets.fromLTRB(6, 0, 6, 16),
 //       padding: const EdgeInsets.all(8),
@@ -890,9 +839,7 @@
 //               ),
 //             ],
 //           ),
-
 //           const SizedBox(height: 18),
-
 //           ClipRRect(
 //             borderRadius: BorderRadius.circular(12),
 //             child: LinearProgressIndicator(
@@ -902,9 +849,7 @@
 //               valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
 //             ),
 //           ),
-
 //           const SizedBox(height: 14),
-
 //           Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             children: [
@@ -932,7 +877,6 @@
 //       ),
 //     );
 //   }
-
 //   //Helper for leave balance card
 //   Widget _leaveStat(String title, String value, Color color, bool isDark) {
 //     return Column(
@@ -956,7 +900,6 @@
 //       ],
 //     );
 //   }
-
 //   Widget _circleIcon(IconData icon) {
 //     return Container(
 //       padding: const EdgeInsets.all(8),
@@ -967,7 +910,6 @@
 //       child: Icon(icon, color: Colors.white, size: 20),
 //     );
 //   }
-
 //   //Quick Access  (Optional Development)
 //   Widget _quickAccessElement() {
 //     return Padding(
@@ -1048,7 +990,6 @@
 //       ),
 //     );
 //   }
-
 //   //Helper Quick Access Icons
 //   Widget _quickAccessIcon(
 //     IconData quickAccessIcon,
@@ -1077,7 +1018,6 @@
 //       ],
 //     );
 //   }
-
 //   //Dispose
 //   @override
 //   void dispose() {
@@ -1564,11 +1504,12 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                         ],
                       ),
                       const Spacer(),
+                      const SizedBox(height: 2),
                       const Text(
                         "Good day!  👋",
                         style: TextStyle(
                           color: Colors.white60,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -1719,12 +1660,11 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
         ? _punchController!.outTimeVal
         : "--:--";
 
-//ONLY ONE PUNCH IN OUT
+    //ONLY ONE PUNCH IN OUT
     // final bool isCheckedIn =
     //     (_punchController?.inTimeVal.isNotEmpty ?? false) &&
     //     (_punchController?.outTimeVal.isEmpty ?? true);
-    final bool isCheckedIn =
-    (_punchController?.inTimeVal.isNotEmpty ?? false);
+    final bool isCheckedIn = (_punchController?.inTimeVal.isNotEmpty ?? false);
 
     final bool isCheckedOut =
         (_punchController?.outTimeVal.isNotEmpty ?? false);
