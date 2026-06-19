@@ -1,5 +1,4 @@
 // // ignore_for_file: deprecated_member_use
-
 // import 'package:flutter/material.dart';
 // import 'package:flutter_html/flutter_html.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,65 +6,50 @@
 // import 'package:new_design_demo/core/api/api_constants.dart';
 // import 'package:new_design_demo/core/constants/app_text_styles.dart';
 // import 'package:new_design_demo/presentations/common_widgets/common_button.dart';
-
 // class WallPostScreen extends StatefulWidget {
 //   const WallPostScreen({super.key});
-
 //   @override
 //   State<WallPostScreen> createState() => _WallPostScreenState();
 // }
-
 // class _WallPostScreenState extends State<WallPostScreen> {
 //   List<Map<String, dynamic>> posts = [];
 //   bool isLoading = true;
 //   bool showCreatePost = false;
-
 //   final TextEditingController postController = TextEditingController();
-
 //   @override
 //   void initState() {
 //     super.initState();
 //     loadPosts();
 //   }
-
 //   @override
 //   void dispose() {
 //     postController.dispose();
 //     super.dispose();
 //   }
-
 //   Future<List<Map<String, dynamic>>> getWallPosts() async {
 //     try {
 //       final response = await ApiClient.get(ApiConstants.getWallPosts);
-
 //       final data = response.data;
-
 //       if (data is List) {
 //         return List<Map<String, dynamic>>.from(data);
 //       }
-
 //       return [];
 //     } catch (e) {
 //       debugPrint("Wall Posts Error: $e");
 //       return [];
 //     }
 //   }
-
 //   Future<void> loadPosts() async {
 //     setState(() => isLoading = true);
-
 //     final data = await getWallPosts();
-
 //     setState(() {
 //       posts = data;
 //       isLoading = false;
 //     });
 //   }
-
 //   @override
 //   Widget build(BuildContext context) {
 //     final theme = Theme.of(context);
-
 //     return Scaffold(
 //       backgroundColor: theme.scaffoldBackgroundColor,
 //       body: Stack(
@@ -117,10 +101,8 @@
 //       ),
 //     );
 //   }
-
 //   Widget _header(BuildContext context) {
 //     final theme = Theme.of(context);
-
 //     return Container(
 //       height: 220,
 //       padding: const EdgeInsets.fromLTRB(16, 50, 16, 20),
@@ -189,16 +171,13 @@
 //       ),
 //     );
 //   }
-
 //   Widget _wallPostCard(BuildContext context, Map<String, dynamic> post) {
 //     final theme = Theme.of(context);
-
 //     final name = post["Name"] ?? "";
 //     final title = post["Title"] ?? "";
 //     final postTime = post["ActualPostTime"] ?? "";
 //     final postText = post["PostText"] ?? "";
 //     final photo = post["photo"] ?? "";
-
 //     return Container(
 //       margin: const EdgeInsets.only(bottom: 16),
 //       padding: const EdgeInsets.all(16),
@@ -252,10 +231,8 @@
 //       ),
 //     );
 //   }
-
 //   Widget _createPostCard(BuildContext context) {
 //     final theme = Theme.of(context);
-
 //     return Container(
 //       padding: const EdgeInsets.all(16),
 //       decoration: BoxDecoration(
@@ -344,9 +321,9 @@ import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
 import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 
-// ─────────────────────────────────────────────────────────────
+ 
 //  SCREEN
-// ─────────────────────────────────────────────────────────────
+ 
 class WallPostScreen extends StatefulWidget {
   const WallPostScreen({super.key});
 
@@ -376,7 +353,7 @@ class _WallPostScreenState extends State<WallPostScreen>
     curve: Curves.easeOut,
   );
 
-  // ── LOGIC (unchanged) ────────────────────────────────────────
+
   @override
   void initState() {
     super.initState();
@@ -436,9 +413,9 @@ class _WallPostScreenState extends State<WallPostScreen>
         .toUpperCase();
   }
 
-  // ─────────────────────────────────────────────────────────
+ 
   //  BUILD
-  // ─────────────────────────────────────────────────────────
+ 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -450,7 +427,7 @@ class _WallPostScreenState extends State<WallPostScreen>
           Column(
             children: [
               _header(isDark),
-              // Create post panel (animated)
+              // Create post panel 
               if (showCreatePost)
                 FadeTransition(
                   opacity: _panelFade,

@@ -607,6 +607,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -615,33 +616,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ─────────────────────────────────────────────────────────────
-
-class _DS {
-  static const Color brandStart = Color(0xFF14B8A6);
-  static const Color brandMid = Color(0xFF0D9488);
-  static const Color brandDeep = Color(0xFF0F766E);
-
-  static const Color green = Color(0xFF10B981);
-  static const Color greenDeep = Color(0xFF059669);
-  static const Color red = Color(0xFFEF4444);
-  static const Color redDeep = Color(0xFFDC2626);
-  static const Color blue = Color(0xFF3B82F6);
-
-  static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color borderLight = Color(0xFFE2E8F0);
-
-  static const Color surfaceDark = Color(0xFF0F172A);
-  static const Color cardDark = Color(0xFF1E293B);
-  static const Color borderDark = Color(0xFF334155);
-  static const Color inputDark = Color(0xFF263244);
-
-  static const double r12 = 12;
-  // static const double r16 = 16;
-  static const double r20 = 20;
-  // static const double r24 = 24;
-}
 
 
 class ApprovalFormScreen extends StatefulWidget {
@@ -888,7 +862,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? _DS.surfaceDark : _DS.surfaceLight,
+      backgroundColor: isDark ? DS.surfaceDark : DS.surfaceLight,
       body: Column(
         children: [
           _header(isDark),
@@ -926,7 +900,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [_DS.brandStart, _DS.brandMid, _DS.brandDeep],
+          colors: [DS.brandStart, DS.brandMid, DS.brandDeep],
           stops: [0.0, 0.5, 1.0],
         ),
       ),
@@ -1019,7 +993,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Divider(
-            color: isDark ? _DS.borderDark : _DS.borderLight,
+            color: isDark ? DS.borderDark : DS.borderLight,
             height: 1,
           ),
         ),
@@ -1027,7 +1001,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
         _sectionHeader(
           "Advance Details",
           Icons.account_balance_wallet_rounded,
-          _DS.brandStart,
+          DS.brandStart,
           isDark,
         ),
         const SizedBox(height: 14),
@@ -1035,7 +1009,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
           "Amount",
           "₹${d["AdvanceAmount"] ?? "0"}",
           isDark,
-          valueColor: _DS.brandStart,
+          valueColor: DS.brandStart,
         ),
         _infoRow("Reason", d["Reason"], isDark),
         _infoRow("Date", d["ApplicationDate"], isDark),
@@ -1091,8 +1065,8 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
 
   Color _approvalColor(String status) {
     final lower = status.toLowerCase();
-    if (lower.contains('approved')) return _DS.green;
-    if (lower.contains('rejected')) return _DS.red;
+    if (lower.contains('approved')) return DS.green;
+    if (lower.contains('rejected')) return DS.red;
     return const Color(0xFFF59E0B);
   }
 
@@ -1119,7 +1093,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
               color: isDark
                   ? Colors.white.withOpacity(0.05)
                   : const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(_DS.r12),
+              borderRadius: BorderRadius.circular(DS.r12),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -1149,7 +1123,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
                 value: _downloadProgress,
                 minHeight: 6,
                 backgroundColor: isDark ? Colors.white10 : Colors.black38,
-                valueColor: const AlwaysStoppedAnimation(_DS.brandStart),
+                valueColor: const AlwaysStoppedAnimation(DS.brandStart),
               ),
             ),
             const SizedBox(height: 10),
@@ -1166,14 +1140,14 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
                     height: 44,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [_DS.blue, Color(0xFF2563EB)],
+                        colors: [DS.blue, Color(0xFF2563EB)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      borderRadius: BorderRadius.circular(_DS.r12),
+                      borderRadius: BorderRadius.circular(DS.r12),
                       boxShadow: [
                         BoxShadow(
-                          color: _DS.blue.withOpacity(0.35),
+                          color: DS.blue.withOpacity(0.35),
                           blurRadius: 10,
                         ),
                       ],
@@ -1209,14 +1183,14 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
                       height: 44,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [_DS.green, _DS.greenDeep],
+                          colors: [DS.green, DS.greenDeep],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(_DS.r12),
+                        borderRadius: BorderRadius.circular(DS.r12),
                         boxShadow: [
                           BoxShadow(
-                            color: _DS.green.withOpacity(0.35),
+                            color: DS.green.withOpacity(0.35),
                             blurRadius: 10,
                           ),
                         ],
@@ -1278,21 +1252,21 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
               fontSize: 12,
             ),
             filled: true,
-            fillColor: isDark ? _DS.inputDark : const Color(0xFFF1F5F9),
+            fillColor: isDark ? DS.inputDark : const Color(0xFFF1F5F9),
             contentPadding: const EdgeInsets.all(14),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(_DS.r12),
+              borderRadius: BorderRadius.circular(DS.r12),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(_DS.r12),
+              borderRadius: BorderRadius.circular(DS.r12),
               borderSide: BorderSide(
-                color: isDark ? _DS.borderDark : _DS.borderLight,
+                color: isDark ? DS.borderDark : DS.borderLight,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(_DS.r12),
-              borderSide: const BorderSide(color: _DS.brandStart, width: 1.8),
+              borderRadius: BorderRadius.circular(DS.r12),
+              borderSide: const BorderSide(color: DS.brandStart, width: 1.8),
             ),
           ),
         ),
@@ -1309,14 +1283,14 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
                   height: 48,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [_DS.green, _DS.greenDeep],
+                      colors: [DS.green, DS.greenDeep],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(_DS.r12),
+                    borderRadius: BorderRadius.circular(DS.r12),
                     boxShadow: [
                       BoxShadow(
-                        color: _DS.green.withOpacity(0.35),
+                        color: DS.green.withOpacity(0.35),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -1355,14 +1329,14 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
                   height: 48,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [_DS.red, _DS.redDeep],
+                      colors: [DS.red, DS.redDeep],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(_DS.r12),
+                    borderRadius: BorderRadius.circular(DS.r12),
                     boxShadow: [
                       BoxShadow(
-                        color: _DS.red.withOpacity(0.35),
+                        color: DS.red.withOpacity(0.35),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -1400,9 +1374,9 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
   Widget _sectionCard({required bool isDark, required List<Widget> children}) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r20),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r20),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -1451,7 +1425,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        CircularProgressIndicator(color: _DS.brandStart, strokeWidth: 2.5),
+        CircularProgressIndicator(color: DS.brandStart, strokeWidth: 2.5),
         SizedBox(height: 14),
         Text(
           "Loading details…",
@@ -1468,12 +1442,12 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: _DS.brandStart.withOpacity(0.10),
+            color: DS.brandStart.withOpacity(0.10),
             shape: BoxShape.circle,
           ),
           child: const Icon(
             Icons.info_outline_rounded,
-            color: _DS.brandStart,
+            color: DS.brandStart,
             size: 32,
           ),
         ),

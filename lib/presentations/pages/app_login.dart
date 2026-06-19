@@ -1,5 +1,4 @@
 // // ignore_for_file: use_build_context_synchronously, deprecated_member_use
-
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:new_design_demo/core/app_services/app_permission_services.dart';
@@ -7,60 +6,46 @@
 // import 'package:new_design_demo/core/constants/app_text_styles.dart';
 // import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 // import 'package:new_design_demo/presentations/pages/app_dashboard.dart';
-
 // class LoginScreen extends StatefulWidget {
 //   const LoginScreen({super.key});
-
 //   @override
 //   State<LoginScreen> createState() => _LoginScreenState();
 // }
-
 // class _LoginScreenState extends State<LoginScreen> {
 //   final _formKey = GlobalKey<FormState>();
 //   final TextEditingController usernameController = TextEditingController();
 //   final TextEditingController passwordController = TextEditingController();
-
 //   bool _obscurePassword = true;
 //   bool _isLoading = false;
-
 //   @override
 //   void initState() {
 //     super.initState();
 //     AppServices.checkInternet();
 //     AppServices.checkNotificationPermission();
 //   }
-
 //   @override
 //   void dispose() {
 //     usernameController.dispose();
 //     passwordController.dispose();
 //     super.dispose();
 //   }
-
 //   void _login() async {
 //     if (!_formKey.currentState!.validate()) return;
-
 //     setState(() => _isLoading = true);
-
 //     bool success = await AuthRepo.login(
 //       usernameController.text.trim(),
 //       passwordController.text.trim(),
 //     );
-
 //     if (!mounted) return;
-
 //     setState(() => _isLoading = false);
-
 //     if (success) {
 //       await AuthRepo.saveLoginStatus(true);
-
 //       CommonSnackBar.show(
 //         context: context,
 //         title: "Login",
 //         message: "Login Successful.",
 //         type: SnackBarType.success,
 //       );
-
 //       Navigator.pushReplacement(
 //         context,
 //         MaterialPageRoute(builder: (_) => const AppDashboardScreen()),
@@ -74,11 +59,9 @@
 //       );
 //     }
 //   }
-
 //   @override
 //   Widget build(BuildContext context) {
 //     final theme = Theme.of(context);
-
 //     return WillPopScope(
 //       onWillPop: () async => true,
 //       child: Scaffold(
@@ -103,10 +86,8 @@
 //       ),
 //     );
 //   }
-
 //   Widget _buildTopSection(BuildContext context) {
 //     Theme.of(context);
-
 //     return Container(
 //       width: double.infinity,
 //       padding: const EdgeInsets.only(top: 120, bottom: 70),
@@ -148,10 +129,8 @@
 //       ),
 //     );
 //   }
-
 //   Widget _buildLoginCard(BuildContext context) {
 //     final theme = Theme.of(context);
-
 //     return Padding(
 //       padding: const EdgeInsets.all(20),
 //       child: Container(
@@ -186,10 +165,8 @@
 //                 ),
 //               ),
 //               const SizedBox(height: 20),
-
 //               Text("Email Address", style: AppTextStyles.labelMedium),
 //               const SizedBox(height: 6),
-
 //               TextFormField(
 //                 controller: usernameController,
 //                 validator: (value) {
@@ -213,12 +190,9 @@
 //                   ),
 //                 ),
 //               ),
-
 //               const SizedBox(height: 16),
-
 //               Text("Password", style: AppTextStyles.labelMedium),
 //               const SizedBox(height: 6),
-
 //               TextFormField(
 //                 controller: passwordController,
 //                 obscureText: _obscurePassword,
@@ -255,9 +229,7 @@
 //                   ),
 //                 ),
 //               ),
-
 //               const SizedBox(height: 20),
-
 //               SizedBox(
 //                 width: double.infinity,
 //                 height: 50.h,
@@ -288,9 +260,7 @@
 // }
 
 ///NEW UI
-
 // ignore_for_file: dangling_library_doc_comments, use_build_context_synchronously, deprecated_member_use
-
 // ignore: unnecessary_import
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -303,9 +273,9 @@ import 'package:new_design_demo/routes/app_routes.dart';
 
 
 
-// ─────────────────────────────────────────────────────────────
+ 
 //  SCREEN
-// ─────────────────────────────────────────────────────────────
+ 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -336,7 +306,7 @@ class _LoginScreenState extends State<LoginScreen>
     end: Offset.zero,
   ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut));
 
-  // ── LOGIC (unchanged) ───────────────────────────────────────
+  // ── LOGIC   ───────────────────────────────────────
   @override
   void initState() {
     super.initState();
@@ -494,7 +464,7 @@ class _LoginScreenState extends State<LoginScreen>
         padding: const EdgeInsets.fromLTRB(24, 48, 24, 32),
         child: Column(
           children: [
-            // Logo avatar with glass ring
+            // Logo avatar 
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(

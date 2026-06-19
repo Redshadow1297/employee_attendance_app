@@ -1108,9 +1108,6 @@ import 'package:new_design_demo/presentations/pages/app_profile.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-  
-
-  
 //  SCREEN
 class AppDashboardScreen extends StatefulWidget {
   const AppDashboardScreen({super.key});
@@ -1143,7 +1140,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   Animation<Offset>? _headerSlide;
   Animation<double>? _pulseScale;
 
- 
   @override
   void initState() {
     super.initState();
@@ -1186,7 +1182,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     super.dispose();
   }
 
- 
   //  INITIALIZE
   Future<void> _initialize() async {
     await _loadUserData();
@@ -1225,7 +1220,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     }
   }
 
- 
   //  DATA FETCHERS
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -1289,9 +1283,8 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     }
   }
 
- 
   //  MODULE MAP
- 
+
   final Map<int, ModuleUIConfig> moduleUIMap = {
     1: ModuleUIConfig(
       icon: Icons.forum_outlined,
@@ -1372,7 +1365,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     ),
   };
 
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -1421,7 +1413,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
- 
   //  HEADER
   Widget _buildHeader(bool isDark) {
     return FadeTransition(
@@ -1690,7 +1681,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
- 
   //  SECTION LABEL
   Widget _sectionLabel(String title, bool isDark) {
     return Row(
@@ -1717,41 +1707,54 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
- 
   //  PUNCH IN/OUT CARD
   Widget _timeInOutCard(bool isDark) {
     final String inTimeDisplay =
         (_punchController?.inTimeVal.isNotEmpty ?? false)
         ? _punchController!.inTimeVal
         : "--:--";
+
     final String outTimeDisplay =
         (_punchController?.outTimeVal.isNotEmpty ?? false)
         ? _punchController!.outTimeVal
         : "--:--";
+
+//ONLY ONE PUNCH IN OUT
+    // final bool isCheckedIn =
+    //     (_punchController?.inTimeVal.isNotEmpty ?? false) &&
+    //     (_punchController?.outTimeVal.isEmpty ?? true);
     final bool isCheckedIn =
-        (_punchController?.inTimeVal.isNotEmpty ?? false) &&
-        (_punchController?.outTimeVal.isEmpty ?? true);
+    (_punchController?.inTimeVal.isNotEmpty ?? false);
+
     final bool isCheckedOut =
         (_punchController?.outTimeVal.isNotEmpty ?? false);
+
     final bool isLoading = _punchController?.isPunchLoading ?? false;
+
     final Color actionColor = isCheckedIn ? DS.accentRed : DS.accentGreen;
+
     final String actionLabel = isCheckedIn
         ? "Long press to Check Out"
         : "Long press to Check In";
 
     return _premiumCard(
       isDark: isDark,
+
       child: Column(
         children: [
-          // Status pill + loader
+          // STATUS + LOADER
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
             children: [
               _statusPill(isCheckedIn, isCheckedOut),
+
               if (isLoading)
                 const SizedBox(
                   width: 18,
+
                   height: 18,
+
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     color: DS.brandStart,
@@ -1762,9 +1765,10 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
 
           const SizedBox(height: 28),
 
-          // Fingerprint button
+          // FINGERPRINT BUTTON
           ScaleTransition(
             scale: _pulseScale ?? const AlwaysStoppedAnimation(1.0),
+
             child: GestureDetector(
               onLongPress: (isLoading || _punchController == null)
                   ? null
@@ -1772,35 +1776,46 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
                       await _punchController!.onPunchTapped(
                         isPunchIn: !isCheckedIn,
                       );
-                      await Future.delayed(const Duration(milliseconds: 1500));
-                      await _punchController!.getTodaysAttendanceState(
-                        emppk: emppk!,
-                      );
-                      if (mounted) setState(() {});
+
+                      if (mounted) {
+                        setState(() {});
+                      }
                     },
+
               child: Container(
                 width: 108,
+
                 height: 108,
+
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
+
                   gradient: RadialGradient(
                     colors: [
                       actionColor.withOpacity(0.25),
+
                       actionColor.withOpacity(0.05),
                     ],
                   ),
+
                   border: Border.all(color: actionColor, width: 2.5),
+
                   boxShadow: [
                     BoxShadow(
                       color: actionColor.withOpacity(0.4),
+
                       blurRadius: 24,
+
                       spreadRadius: 2,
                     ),
                   ],
                 ),
+
                 child: Icon(
                   Icons.fingerprint_rounded,
+
                   size: 56,
+
                   color: actionColor,
                 ),
               ),
@@ -1808,40 +1823,56 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           ),
 
           const SizedBox(height: 10),
+
           Text(
             actionLabel,
+
             style: TextStyle(
               color: isDark ? Colors.white38 : Colors.black38,
+
               fontSize: 11,
+
               fontWeight: FontWeight.w500,
             ),
           ),
 
           const SizedBox(height: 24),
+
           Divider(color: isDark ? Colors.white10 : Colors.black12, height: 1),
+
           const SizedBox(height: 20),
 
-          // Check In / Out times
+          // TIME DISPLAY
           Row(
             children: [
               Expanded(
                 child: _timeColumn(
                   "Check In",
+
                   inTimeDisplay,
+
                   DS.accentGreen,
+
                   isDark,
                 ),
               ),
+
               Container(
                 width: 1,
+
                 height: 44,
+
                 color: isDark ? Colors.white10 : Colors.black12,
               ),
+
               Expanded(
                 child: _timeColumn(
                   "Check Out",
+
                   outTimeDisplay,
+
                   DS.accentRed,
+
                   isDark,
                 ),
               ),
@@ -1927,7 +1958,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
- 
   //  LEAVE BALANCE CARD
   Widget _leaveBalanceCard(bool isDark) {
     const double totalLeaves = 29;
@@ -2123,7 +2153,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
- 
   //  QUICK ACCESS
   Widget _quickAccessSection(bool isDark) {
     return Column(
@@ -2224,7 +2253,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
- 
   //  MODULE GRID
   Widget _moduleGridSliver(bool isDark) {
     if (isLoadingModules) {
@@ -2366,7 +2394,6 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     );
   }
 
- 
   //  PREMIUM CARD WRAPPER
   Widget _premiumCard({required bool isDark, required Widget child}) {
     return Container(
@@ -2392,8 +2419,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   }
 }
 
-  
-//  SLIVER HEADER DELEGATE 
+//  SLIVER HEADER DELEGATE
 class _PremiumHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final double maxHeight;

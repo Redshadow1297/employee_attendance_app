@@ -1,47 +1,37 @@
 // // ignore_for_file: duplicate_ignore, deprecated_member_use
-
 // import 'dart:convert';
 // import 'dart:typed_data';
-
 // import 'package:flutter/material.dart';
 // import 'package:new_design_demo/core/api/api_client.dart';
 // import 'package:new_design_demo/core/api/api_constants.dart';
 // import 'package:new_design_demo/core/constants/app_text_styles.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-
 // class ProfileScreen extends StatefulWidget {
 //   const ProfileScreen({super.key});
-
 //   @override
 //   State<ProfileScreen> createState() => _ProfileScreenState();
 // }
-
 // class _ProfileScreenState extends State<ProfileScreen> {
 //   Map<String, dynamic>? userData;
 //   bool isLoading = true;
 //   int? emppk;
-
 //   @override
 //   void initState() {
 //     super.initState();
 //     _loadUserData();
 //   }
-
 //   Future<void> _loadUserData() async {
 //     final prefs = await SharedPreferences.getInstance();
 //     emppk = prefs.getInt('emppk');
 //     getUserDetails();
 //   }
-
 //   Future<void> getUserDetails() async {
 //     try {
 //       final response = await ApiClient.get(
 //         ApiConstants.getUserProfile,
 //         query: {"Emp_PK": emppk},
 //       );
-
 //       final data = response.data;
-
 //       if (data != null && data is List && data.isNotEmpty) {
 //         setState(() {
 //           userData = data[0];
@@ -55,11 +45,9 @@
 //       debugPrint("API Error: $e");
 //     }
 //   }
-
 //   @override
 //   Widget build(BuildContext context) {
 //     final theme = Theme.of(context);
-
 //     return Scaffold(
 //       backgroundColor: theme.scaffoldBackgroundColor,
 //       body: isLoading
@@ -108,7 +96,6 @@
 //                       ),
 //                     ],
 //                   ),
-
 //                   _buildSection(
 //                     context: context,
 //                     title: "Personal Details",
@@ -136,7 +123,6 @@
 //                       ),
 //                     ],
 //                   ),
-
 //                   _buildSection(
 //                     context: context,
 //                     title: "Contact Information",
@@ -155,9 +141,7 @@
 //                       profileRow(context, "Email", userData!['EmailID'] ?? ''),
 //                     ],
 //                   ),
-
 //                   const SizedBox(height: 30),
-
 //                   _buildSection(
 //                     context: context,
 //                     title: "Other Details",
@@ -165,7 +149,6 @@
 //                     children: userData!.entries.map((entry) {
 //                       final key = entry.key;
 //                       final value = entry.value?.toString() ?? '';
-
 //                       // Skip already shown fields + photo
 //                       final hiddenFields = [
 //                         'photo',
@@ -183,11 +166,9 @@
 //                         'Phone_Number',
 //                         'EmailID',
 //                       ];
-
 //                       if (hiddenFields.contains(key) || value.trim().isEmpty) {
 //                         return const SizedBox.shrink();
 //                       }
-
 //                       return profileRow(
 //                         context,
 //                         key.replaceAll('_', ' '),
@@ -195,14 +176,12 @@
 //                       );
 //                     }).toList(),
 //                   ),
-
 //                   const SizedBox(height: 30),
 //                 ],
 //               ),
 //             ),
 //     );
 //   }
-
 //   ImageProvider<Object> buildBase64Image(String base64String) {
 //     try {
 //       Uint8List bytes = base64Decode(base64String);
@@ -211,10 +190,8 @@
 //       return const AssetImage('lib/resources/icons/userpro.jpg');
 //     }
 //   }
-
 //   Widget _buildHeader(BuildContext context) {
 //     final theme = Theme.of(context);
-
 //     return Container(
 //       width: double.infinity,
 //       padding: const EdgeInsets.only(top: 60, bottom: 40),
@@ -269,7 +246,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _buildSection({
 //     required BuildContext context,
 //     required String title,
@@ -277,7 +253,6 @@
 //     required List<Widget> children,
 //   }) {
 //     final theme = Theme.of(context);
-
 //     return Container(
 //       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
 //       padding: const EdgeInsets.all(16),
@@ -313,12 +288,9 @@
 //       ),
 //     );
 //   }
-
 //   Widget profileRow(BuildContext context, String title, String value) {
 //     final theme = Theme.of(context);
-
 //     if (value.trim().isEmpty) return const SizedBox();
-
 //     return Padding(
 //       padding: const EdgeInsets.symmetric(vertical: 10),
 //       child: Column(
@@ -349,12 +321,7 @@
 //   }
 // }
 
-
-
-
-
 // New UI
-
 // ignore_for_file: duplicate_ignore, deprecated_member_use
 
 import 'dart:convert';
@@ -368,15 +335,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ─── SECTION CONFIG ──────────────────────────────────────────
 class _SectionConfig {
-  final String   title;
+  final String title;
   final IconData icon;
-  final Color    color;
+  final Color color;
   const _SectionConfig(this.title, this.icon, this.color);
 }
 
-// ─────────────────────────────────────────────────────────────
+//
 //  SCREEN
-// ─────────────────────────────────────────────────────────────
+//
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -391,12 +358,14 @@ class _ProfileScreenState extends State<ProfileScreen>
   int? emppk;
 
   late final AnimationController _animCtrl = AnimationController(
-    vsync: this, duration: const Duration(milliseconds: 600),
+    vsync: this,
+    duration: const Duration(milliseconds: 600),
   );
-  late final Animation<double> _fadeAnim =
-      CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
+  late final Animation<double> _fadeAnim = CurvedAnimation(
+    parent: _animCtrl,
+    curve: Curves.easeOut,
+  );
 
-  // ── LOGIC (unchanged) ────────────────────────────────────────
   @override
   void initState() {
     super.initState();
@@ -422,10 +391,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         query: {"Emp_PK": emppk},
       );
       // final data = response.data["GetUserProfileResult"]; ////For Demo To Client
-      final data = response.data;   //OTHER CLIENT
+      final data = response.data; //OTHER CLIENT
       if (data != null && data is List && data.isNotEmpty) {
         setState(() {
-          userData  = data[0];
+          userData = data[0];
           isLoading = false;
         });
         _animCtrl.forward();
@@ -447,9 +416,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
   }
 
-  // ─────────────────────────────────────────────────────────
   //  BUILD
-  // ─────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -459,74 +427,89 @@ class _ProfileScreenState extends State<ProfileScreen>
       body: isLoading
           ? _loadingState()
           : userData == null
-              ? _emptyState(isDark)
-              : FadeTransition(
-                  opacity: _fadeAnim,
-                  child: CustomScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    slivers: [
-                      _premiumSliverHeader(isDark),
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
-                          child: Column(
-                            children: [
-                              _infoStrip(isDark),
-                              const SizedBox(height: 20),
-                              _section(
-                                isDark: isDark,
-                                cfg: const _SectionConfig(
-                                  "Employment Details",
-                                  Icons.work_outline_rounded,
-                                  Color(0xFF3B82F6),
-                                ),
-                                rows: [
-                                  _Row("Employee Code",  userData!['Employee_Code']      ?? ''),
-                                  _Row("Department",     userData!['Dept_Name']           ?? ''),
-                                  _Row("Designation",    userData!['Designation_Title']   ?? ''),
-                                  _Row("Join Date",      userData!['Join_Date']           ?? ''),
-                                  _Row("Location",       userData!['Location_Name']       ?? ''),
-                                ],
+          ? _emptyState(isDark)
+          : FadeTransition(
+              opacity: _fadeAnim,
+              child: CustomScrollView(
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  _premiumSliverHeader(isDark),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                      child: Column(
+                        children: [
+                          _infoStrip(isDark),
+                          const SizedBox(height: 20),
+                          _section(
+                            isDark: isDark,
+                            cfg: const _SectionConfig(
+                              "Employment Details",
+                              Icons.work_outline_rounded,
+                              Color(0xFF3B82F6),
+                            ),
+                            rows: [
+                              _Row(
+                                "Employee Code",
+                                userData!['Employee_Code'] ?? '',
                               ),
-                              const SizedBox(height: 14),
-                              _section(
-                                isDark: isDark,
-                                cfg: const _SectionConfig(
-                                  "Personal Details",
-                                  Icons.person_outline_rounded,
-                                  Color(0xFF8B5CF6),
-                                ),
-                                rows: [
-                                  _Row("Date of Birth", userData!['Birth_Date']      ?? ''),
-                                  _Row("Blood Group",   userData!['BloodGroupCode']   ?? ''),
-                                  _Row("UID Number",    userData!['UID_NUMBER']       ?? ''),
-                                  _Row("PAN Number",    userData!['PAN_No']           ?? ''),
-                                ],
+                              _Row("Department", userData!['Dept_Name'] ?? ''),
+                              _Row(
+                                "Designation",
+                                userData!['Designation_Title'] ?? '',
                               ),
-                              const SizedBox(height: 14),
-                              _section(
-                                isDark: isDark,
-                                cfg: const _SectionConfig(
-                                  "Contact Information",
-                                  Icons.phone_outlined,
-                                  Color(0xFF10B981),
-                                ),
-                                rows: [
-                                  _Row("Mobile",  userData!['Mobile_Number'] ?? ''),
-                                  _Row("Phone",   userData!['Phone_Number']  ?? ''),
-                                  _Row("Email",   userData!['EmailID']       ?? ''),
-                                ],
+                              _Row("Join Date", userData!['Join_Date'] ?? ''),
+                              _Row(
+                                "Location",
+                                userData!['Location_Name'] ?? '',
                               ),
-                              const SizedBox(height: 14),
-                              _otherDetailsSection(isDark),
-                              const SizedBox(height: 32),
                             ],
                           ),
-                        ),
+                          const SizedBox(height: 14),
+                          _section(
+                            isDark: isDark,
+                            cfg: const _SectionConfig(
+                              "Personal Details",
+                              Icons.person_outline_rounded,
+                              Color(0xFF8B5CF6),
+                            ),
+                            rows: [
+                              _Row(
+                                "Date of Birth",
+                                userData!['Birth_Date'] ?? '',
+                              ),
+                              _Row(
+                                "Blood Group",
+                                userData!['BloodGroupCode'] ?? '',
+                              ),
+                              _Row("UID Number", userData!['UID_NUMBER'] ?? ''),
+                              _Row("PAN Number", userData!['PAN_No'] ?? ''),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          _section(
+                            isDark: isDark,
+                            cfg: const _SectionConfig(
+                              "Contact Information",
+                              Icons.phone_outlined,
+                              Color(0xFF10B981),
+                            ),
+                            rows: [
+                              _Row("Mobile", userData!['Mobile_Number'] ?? ''),
+                              _Row("Phone", userData!['Phone_Number'] ?? ''),
+                              _Row("Email", userData!['EmailID'] ?? ''),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          _otherDetailsSection(isDark),
+                          const SizedBox(height: 32),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
+              ),
+            ),
     );
   }
 
@@ -538,8 +521,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         children: [
           CircularProgressIndicator(color: DS.brandStart, strokeWidth: 2.5),
           SizedBox(height: 16),
-          Text("Loading profile…",
-              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+          Text(
+            "Loading profile…",
+            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+          ),
         ],
       ),
     );
@@ -556,15 +541,21 @@ class _ProfileScreenState extends State<ProfileScreen>
               color: DS.brandStart.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.person_off_outlined,
-                color: DS.brandStart, size: 40),
+            child: const Icon(
+              Icons.person_off_outlined,
+              color: DS.brandStart,
+              size: 40,
+            ),
           ),
           const SizedBox(height: 16),
-          Text("No Profile Data",
-              style: TextStyle(
-                color: isDark ? Colors.white54 : Colors.black38,
-                fontSize: 15, fontWeight: FontWeight.w600,
-              )),
+          Text(
+            "No Profile Data",
+            style: TextStyle(
+              color: isDark ? Colors.white54 : Colors.black38,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );
@@ -586,8 +577,11 @@ class _ProfileScreenState extends State<ProfileScreen>
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white24),
           ),
-          child: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Colors.white, size: 16),
+          child: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+            size: 16,
+          ),
         ),
       ),
       flexibleSpace: FlexibleSpaceBar(
@@ -606,12 +600,21 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
             ),
             // Decor circles
-            Positioned(right: -40, top: -40,
-              child: _decorCircle(180, Colors.white.withOpacity(0.06))),
-            Positioned(left: -20, bottom: 40,
-              child: _decorCircle(100, Colors.white.withOpacity(0.04))),
-            Positioned(right: 80, bottom: 20,
-              child: _decorCircle(60, Colors.white.withOpacity(0.05))),
+            Positioned(
+              right: -40,
+              top: -40,
+              child: _decorCircle(180, Colors.white.withOpacity(0.06)),
+            ),
+            Positioned(
+              left: -20,
+              bottom: 40,
+              child: _decorCircle(100, Colors.white.withOpacity(0.04)),
+            ),
+            Positioned(
+              right: 80,
+              bottom: 20,
+              child: _decorCircle(60, Colors.white.withOpacity(0.05)),
+            ),
 
             // Content
             Positioned.fill(
@@ -628,14 +631,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.25),
-                          blurRadius: 20, offset: const Offset(0, 8),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
                         ),
                       ],
                     ),
                     child: CircleAvatar(
                       radius: 52,
                       backgroundColor: Colors.white,
-                      backgroundImage: buildBase64Image(userData!['photo'] ?? ""),
+                      backgroundImage: buildBase64Image(
+                        userData!['photo'] ?? "",
+                      ),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -652,7 +658,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                   const SizedBox(height: 6),
                   // Designation chip
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(20),
@@ -677,15 +686,16 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget _decorCircle(double size, Color color) => Container(
-    width: size, height: size,
+    width: size,
+    height: size,
     decoration: BoxDecoration(shape: BoxShape.circle, color: color),
   );
 
   // ─── INFO STRIP (quick stats below header) ───────────────
   Widget _infoStrip(bool isDark) {
-    final dept   = userData!['Dept_Name']       ?? '—';
-    final code   = userData!['Employee_Code']   ?? '—';
-    final loc    = userData!['Location_Name']   ?? '—';
+    final dept = userData!['Dept_Name'] ?? '—';
+    final code = userData!['Employee_Code'] ?? '—';
+    final loc = userData!['Location_Name'] ?? '—';
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -698,23 +708,54 @@ class _ProfileScreenState extends State<ProfileScreen>
             color: isDark
                 ? Colors.black.withOpacity(0.30)
                 : Colors.black.withOpacity(0.05),
-            blurRadius: 16, offset: const Offset(0, 6),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Row(
         children: [
-          Expanded(child: _stripTile(Icons.badge_outlined,         "Code",       code,   const Color(0xFF3B82F6), isDark)),
+          Expanded(
+            child: _stripTile(
+              Icons.badge_outlined,
+              "Code",
+              code,
+              const Color(0xFF3B82F6),
+              isDark,
+            ),
+          ),
           _stripDivider(isDark),
-          Expanded(child: _stripTile(Icons.corporate_fare_rounded, "Department", dept,   const Color(0xFF8B5CF6), isDark)),
+          Expanded(
+            child: _stripTile(
+              Icons.corporate_fare_rounded,
+              "Department",
+              dept,
+              const Color(0xFF8B5CF6),
+              isDark,
+            ),
+          ),
           _stripDivider(isDark),
-          Expanded(child: _stripTile(Icons.location_on_outlined,   "Location",   loc,    const Color(0xFF10B981), isDark)),
+          Expanded(
+            child: _stripTile(
+              Icons.location_on_outlined,
+              "Location",
+              loc,
+              const Color(0xFF10B981),
+              isDark,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _stripTile(IconData icon, String label, String value, Color color, bool isDark) {
+  Widget _stripTile(
+    IconData icon,
+    String label,
+    String value,
+    Color color,
+    bool isDark,
+  ) {
     return Column(
       children: [
         Container(
@@ -750,7 +791,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget _stripDivider(bool isDark) => Container(
-    width: 1, height: 44,
+    width: 1,
+    height: 44,
     color: isDark ? Colors.white10 : Colors.black38,
     margin: const EdgeInsets.symmetric(horizontal: 4),
   );
@@ -774,7 +816,8 @@ class _ProfileScreenState extends State<ProfileScreen>
             color: isDark
                 ? Colors.black.withOpacity(0.28)
                 : Colors.black.withOpacity(0.05),
-            blurRadius: 16, offset: const Offset(0, 6),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -806,8 +849,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
                 const Spacer(),
                 Container(
-                  width: 4, height: 4,
-                  decoration: BoxDecoration(color: cfg.color, shape: BoxShape.circle),
+                  width: 4,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: cfg.color,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ],
             ),
@@ -863,7 +910,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         if (!isLast)
           Divider(
             height: 1,
-            indent: 16, endIndent: 16,
+            indent: 16,
+            endIndent: 16,
             color: isDark ? DS.borderDark : DS.borderLight,
           ),
       ],
@@ -873,14 +921,28 @@ class _ProfileScreenState extends State<ProfileScreen>
   // ─── OTHER DETAILS SECTION ───────────────────────────────
   Widget _otherDetailsSection(bool isDark) {
     const hiddenFields = [
-      'photo', 'Name', 'Employee_Code', 'Dept_Name', 'Designation_Title',
-      'Join_Date', 'Location_Name', 'Birth_Date', 'BloodGroupCode',
-      'UID_NUMBER', 'PAN_No', 'Mobile_Number', 'Phone_Number', 'EmailID',
+      'photo',
+      'Name',
+      'Employee_Code',
+      'Dept_Name',
+      'Designation_Title',
+      'Join_Date',
+      'Location_Name',
+      'Birth_Date',
+      'BloodGroupCode',
+      'UID_NUMBER',
+      'PAN_No',
+      'Mobile_Number',
+      'Phone_Number',
+      'EmailID',
     ];
 
     final others = userData!.entries
-        .where((e) => !hiddenFields.contains(e.key) &&
-            (e.value?.toString() ?? '').trim().isNotEmpty)
+        .where(
+          (e) =>
+              !hiddenFields.contains(e.key) &&
+              (e.value?.toString() ?? '').trim().isNotEmpty,
+        )
         .map((e) => _Row(e.key.replaceAll('_', ' '), e.value?.toString() ?? ''))
         .toList();
 

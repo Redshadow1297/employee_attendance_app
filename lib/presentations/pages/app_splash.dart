@@ -5,69 +5,52 @@
 // import 'package:new_design_demo/presentations/pages/app_dashboard.dart';
 // import 'package:new_design_demo/presentations/pages/app_login.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-
 // class SplashScreen extends StatefulWidget {
 //   const SplashScreen({super.key});
-
 //   @override
 //   State<SplashScreen> createState() => _SplashScreenState();
 // }
-
 // class _SplashScreenState extends State<SplashScreen>
 //     with TickerProviderStateMixin {
 //   late AnimationController _mainController;
 //   late AnimationController _floatingController;
 //   late AnimationController _dotController;
-
 //   late Animation<double> _fadeAnimation;
 //   late Animation<Offset> _slideAnimation;
 //   late Animation<double> _floatingAnimation;
-
 //   @override
 // void initState() {
 //   super.initState();
-
 //   _initAnimations();
 //   _navigate();
 // }
-
 // ///////////////Animation controlss
 // void _initAnimations() {
 //   _mainController =
 //       AnimationController(vsync: this, duration: const Duration(seconds: 2));
-
 //   _floatingController =
 //       AnimationController(vsync: this, duration: const Duration(seconds: 3))
 //         ..repeat(reverse: true);
-
 //   _dotController =
 //       AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
 //         ..repeat();
-
 //   _fadeAnimation =
 //       CurvedAnimation(parent: _mainController, curve: Curves.easeIn);
-
 //   _slideAnimation =
 //       Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
 //     CurvedAnimation(parent: _mainController, curve: Curves.easeOutCubic),
 //   );
-
 //   _floatingAnimation = Tween<double>(begin: -8, end: 8).animate(
 //     CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut),
 //   );
-
 //   _mainController.forward();
 // }
-
 // /////Navigation HAndles on LoggedInFlag
 // Future<void> _navigate() async {
 //   await Future.delayed(const Duration(seconds: 4));
-
 //   final prefs = await SharedPreferences.getInstance();
 //   final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
 //   if (!mounted) return;
-
 //   Navigator.pushReplacement(
 //     context,
 //     MaterialPageRoute(
@@ -76,7 +59,6 @@
 //     ),
 //   );
 // }
-
 //   @override
 //   void dispose() {
 //     _mainController.dispose();
@@ -84,7 +66,6 @@
 //     _dotController.dispose();
 //     super.dispose();
 //   }
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -103,7 +84,6 @@
 //               ),
 //             ),
 //           ),
-
 //           const Positioned(
 //             top: -80,
 //             left: -50,
@@ -114,7 +94,6 @@
 //             right: -40,
 //             child: GlowCircle(size: 180, opacity: 0.15),
 //           ),
-
 //           Center(
 //             child: FadeTransition(
 //               opacity: _fadeAnimation,
@@ -134,9 +113,7 @@
 //                       },
 //                       child: const AppIconWidget(),
 //                     ),
-
 //                     const SizedBox(height: 30),
-
 //                     Text(
 //                       "PeopleScope",
 //                       style: AppTextStyles.headingLarge.copyWith(
@@ -144,18 +121,14 @@
 //                         fontWeight: FontWeight.bold,
 //                       ),
 //                     ),
-
 //                     const SizedBox(height: 8),
-
 //                     Text(
 //                       "Enabling Work, Supporting Growth.",
 //                       style: AppTextStyles.headingSmall.copyWith(
 //                         color: Colors.white,
 //                       ),
 //                     ),
-
 //                     const SizedBox(height: 30),
-
 //                     // Loading Dots
 //                     BouncingDots(controller: _dotController),
 //                   ],
@@ -163,7 +136,6 @@
 //               ),
 //             ),
 //           ),
-
 //           // Bottom Section
 //           Positioned(
 //             bottom: 30,
@@ -183,21 +155,16 @@
 //     );
 //   }
 // }
-
 // class GlowCircle extends StatefulWidget {
 //   final double size;
 //   final double opacity;
-
 //   const GlowCircle({super.key, required this.size, required this.opacity});
-
 //   @override
 //   State<GlowCircle> createState() => _GlowCircleState();
 // }
-
 // class _GlowCircleState extends State<GlowCircle>
 //     with SingleTickerProviderStateMixin {
 //   late AnimationController _controller;
-
 //   @override
 //   void initState() {
 //     super.initState();
@@ -206,13 +173,11 @@
 //       duration: const Duration(seconds: 4),
 //     )..repeat(reverse: true);
 //   }
-
 //   @override
 //   void dispose() {
 //     _controller.dispose();
 //     super.dispose();
 //   }
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return AnimatedBuilder(
@@ -233,10 +198,8 @@
 //     );
 //   }
 // }
-
 // class AppIconWidget extends StatelessWidget {
 //   const AppIconWidget({super.key});
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return Container(
@@ -272,13 +235,10 @@
 //     );
 //   }
 // }
-
 // class IconTile extends StatelessWidget {
 //   final Color color;
 //   final IconData icon;
-
 //   const IconTile({super.key, required this.color, required this.icon});
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return Container(
@@ -290,12 +250,9 @@
 //     );
 //   }
 // }
-
 // class BouncingDots extends StatelessWidget {
 //   final AnimationController controller;
-
 //   const BouncingDots({super.key, required this.controller});
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return AnimatedBuilder(
@@ -306,7 +263,6 @@
 //           children: List.generate(3, (index) {
 //             double delay = index * 0.2;
 //             double value = sin((controller.value - delay) * 2 * pi).abs();
-
 //             return Container(
 //               margin: const EdgeInsets.symmetric(horizontal: 4),
 //               width: 8.w,
@@ -324,7 +280,6 @@
 // }
 
 //NEW UI
-
 // ignore_for_file: deprecated_member_use
 
 import 'dart:math';
@@ -334,16 +289,14 @@ import 'package:new_design_demo/presentations/pages/app_dashboard.dart';
 import 'package:new_design_demo/presentations/pages/app_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ─────────────────────────────────────────────────────────────
 //  DESIGN TOKENS
-// ─────────────────────────────────────────────────────────────
+
 const Color _brandStart = Color(0xFF14B8A6);
 const Color _brandMid = Color(0xFF0D9488);
 const Color _brandDeep = Color(0xFF0F766E);
 
-// ─────────────────────────────────────────────────────────────
 //  SPLASH SCREEN
-// ─────────────────────────────────────────────────────────────
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override
@@ -360,7 +313,6 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
 
-  // ── Logic (unchanged) ────────────────────────────────────
   @override
   void initState() {
     super.initState();
@@ -394,7 +346,6 @@ class _SplashScreenState extends State<SplashScreen>
       begin: const Offset(0, 0.12),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _mainCtrl, curve: Curves.easeOutCubic));
-
   }
 
   Future<void> _navigate() async {
@@ -420,9 +371,8 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  // ─────────────────────────────────────────────────────────
   //  BUILD
-  // ─────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -497,7 +447,7 @@ class _SplashScreenState extends State<SplashScreen>
                         "lib/resources/icons/peoplescopeicon.png",
                       ),
                       alignment: AlignmentGeometry.center,
-                      fit:BoxFit.fill,
+                      fit: BoxFit.fill,
                       gaplessPlayback: true,
                     ),
 
@@ -512,7 +462,6 @@ class _SplashScreenState extends State<SplashScreen>
                     //     letterSpacing: -0.5,
                     //   ),
                     // ),
-
                     const SizedBox(height: 100),
 
                     // Tagline chips
@@ -586,9 +535,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  GLOW CIRCLE (unchanged logic, cleaner)
-// ─────────────────────────────────────────────────────────────
+
 class _GlowCircle extends StatefulWidget {
   final double size;
   final double opacity;
@@ -630,8 +578,7 @@ class _GlowCircleState extends State<_GlowCircle>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  BOUNCING DOTS 
+//  BOUNCING DOTS
 
 class _BouncingDots extends StatelessWidget {
   final AnimationController controller;
@@ -670,8 +617,7 @@ class _BouncingDots extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-//  DOT GRID PAINTER 
+//  DOT GRID PAINTER
 
 class _DotGridPainter extends CustomPainter {
   @override

@@ -1269,34 +1269,11 @@ import 'package:intl/intl.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
 import 'package:new_design_demo/core/app_services/whtsapp_launcher.dart';
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'package:new_design_demo/presentations/pages/Modules/advanceManagement/app_advance_approval_form1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
-
-// ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS
-// ─────────────────────────────────────────────────────────────
-class _DS {
-  static const Color brandStart = Color(0xFF14B8A6);
-  static const Color brandMid = Color(0xFF0D9488);
-  static const Color brandDeep = Color(0xFF0F766E);
-
-  static const Color surfaceLight = Color(0xFFF8FAFC);
-  static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color borderLight = Color(0xFFE2E8F0);
-
-  static const Color surfaceDark = Color(0xFF0F172A);
-  static const Color cardDark = Color(0xFF1E293B);
-  // static const Color innerDark    = Color(0xFF0F172A);
-  static const Color borderDark = Color(0xFF334155);
-  static const Color inputDark = Color(0xFF263244);
-
-  static const double r12 = 12;
-  // static const double r16 = 16;
-  static const double r20 = 20;
-  static const double r24 = 24;
-}
 
 // ─────────────────────────────────────────────────────────────
 //  SCREEN
@@ -1725,7 +1702,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
         return true;
       },
       child: Scaffold(
-        backgroundColor: isDark ? _DS.surfaceDark : _DS.surfaceLight,
+        backgroundColor: isDark ? DS.surfaceDark : DS.surfaceLight,
         body: Stack(
           children: [
             Column(
@@ -1741,7 +1718,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                           width: 4,
                           height: 18,
                           decoration: BoxDecoration(
-                            color: _DS.brandStart,
+                            color: DS.brandStart,
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -1804,7 +1781,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [_DS.brandStart, _DS.brandMid, _DS.brandDeep],
+          colors: [DS.brandStart, DS.brandMid, DS.brandDeep],
           stops: [0.0, 0.5, 1.0],
         ),
       ),
@@ -1955,12 +1932,12 @@ class AdvanceScreenState extends State<AdvanceScreen>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: _DS.brandDeep, size: 17),
+            Icon(icon, color: DS.brandDeep, size: 17),
             const SizedBox(width: 6),
             Text(
               label,
               style: const TextStyle(
-                color: _DS.brandDeep,
+                color: DS.brandDeep,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
@@ -1989,9 +1966,9 @@ class AdvanceScreenState extends State<AdvanceScreen>
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r20),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r20),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -2061,7 +2038,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
               ],
             ),
           ),
-          Divider(height: 1, color: isDark ? _DS.borderDark : _DS.borderLight),
+          Divider(height: 1, color: isDark ? DS.borderDark : DS.borderLight),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
             child: Row(
@@ -2069,7 +2046,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                 Icon(
                   Icons.currency_rupee_rounded,
                   size: 14,
-                  color: _DS.brandStart,
+                  color: DS.brandStart,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -2082,7 +2059,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                 Text(
                   "₹$amount",
                   style: const TextStyle(
-                    color: _DS.brandStart,
+                    color: DS.brandStart,
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                   ),
@@ -2099,11 +2076,11 @@ class AdvanceScreenState extends State<AdvanceScreen>
   Widget _applyAdvanceForm(bool isDark) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
+        color: isDark ? DS.cardDark : DS.cardLight,
         borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(_DS.r24),
+          top: Radius.circular(DS.r24),
         ),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -2140,12 +2117,12 @@ class AdvanceScreenState extends State<AdvanceScreen>
                         padding: const EdgeInsets.all(9),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [_DS.brandStart, _DS.brandDeep],
+                            colors: [DS.brandStart, DS.brandDeep],
                           ),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: _DS.brandStart.withOpacity(0.35),
+                              color: DS.brandStart.withOpacity(0.35),
                               blurRadius: 8,
                             ),
                           ],
@@ -2209,7 +2186,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                   const SizedBox(height: 8),
                   DropdownButtonFormField<Map<String, dynamic>>(
                     value: selectedReason,
-                    dropdownColor: isDark ? _DS.cardDark : null,
+                    dropdownColor: isDark ? DS.cardDark : null,
                     style: TextStyle(
                       color: isDark ? Colors.white : const Color(0xFF0F172A),
                       fontSize: 13,
@@ -2264,12 +2241,12 @@ class AdvanceScreenState extends State<AdvanceScreen>
                         vertical: 14,
                       ),
                       decoration: BoxDecoration(
-                        color: isDark ? _DS.inputDark : const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(_DS.r12),
+                        color: isDark ? DS.inputDark : const Color(0xFFF1F5F9),
+                        borderRadius: BorderRadius.circular(DS.r12),
                         border: Border.all(
                           color: selectedDocument != null
-                              ? _DS.brandStart
-                              : (isDark ? _DS.borderDark : _DS.borderLight),
+                              ? DS.brandStart
+                              : (isDark ? DS.borderDark : DS.borderLight),
                           width: selectedDocument != null ? 1.8 : 1,
                         ),
                       ),
@@ -2278,7 +2255,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: _DS.brandStart.withOpacity(0.12),
+                              color: DS.brandStart.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Icon(
@@ -2286,7 +2263,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                                   ? Icons.check_circle_rounded
                                   : Icons.attach_file_rounded,
                               color: selectedDocument != null
-                                  ? _DS.brandStart
+                                  ? DS.brandStart
                                   : (isDark ? Colors.white38 : Colors.black38),
                               size: 18,
                             ),
@@ -2297,7 +2274,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                               documentName ?? "Choose PDF / Image (max 4MB)",
                               style: TextStyle(
                                 color: selectedDocument != null
-                                    ? _DS.brandStart
+                                    ? DS.brandStart
                                     : (isDark
                                           ? Colors.white38
                                           : Colors.black38),
@@ -2331,7 +2308,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                             padding: const EdgeInsets.symmetric(vertical: 13),
                             decoration: BoxDecoration(
                               color: isDark ? Colors.white10 : Colors.black38,
-                              borderRadius: BorderRadius.circular(_DS.r12),
+                              borderRadius: BorderRadius.circular(DS.r12),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -2395,14 +2372,14 @@ class AdvanceScreenState extends State<AdvanceScreen>
                       final si = _advanceStatusInfo(item['Apps_Status'] ?? '');
                       return InkWell(
                         onTap: () => onTapApplication(item),
-                        borderRadius: BorderRadius.circular(_DS.r20),
+                        borderRadius: BorderRadius.circular(DS.r20),
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 14),
                           decoration: BoxDecoration(
-                            color: isDark ? _DS.cardDark : _DS.cardLight,
-                            borderRadius: BorderRadius.circular(_DS.r20),
+                            color: isDark ? DS.cardDark : DS.cardLight,
+                            borderRadius: BorderRadius.circular(DS.r20),
                             border: Border.all(
-                              color: isDark ? _DS.borderDark : _DS.borderLight,
+                              color: isDark ? DS.borderDark : DS.borderLight,
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -2447,8 +2424,8 @@ class AdvanceScreenState extends State<AdvanceScreen>
                               Divider(
                                 height: 1,
                                 color: isDark
-                                    ? _DS.borderDark
-                                    : _DS.borderLight,
+                                    ? DS.borderDark
+                                    : DS.borderLight,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
@@ -2494,9 +2471,9 @@ class AdvanceScreenState extends State<AdvanceScreen>
       height: 48,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
+        color: isDark ? DS.cardDark : DS.cardLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark ? Colors.black26 : Colors.black38,
@@ -2578,10 +2555,10 @@ class AdvanceScreenState extends State<AdvanceScreen>
   Widget _gradientBtn(String label, IconData icon) => Container(
     padding: const EdgeInsets.symmetric(vertical: 13),
     decoration: BoxDecoration(
-      gradient: const LinearGradient(colors: [_DS.brandStart, _DS.brandDeep]),
-      borderRadius: BorderRadius.circular(_DS.r12),
+      gradient: const LinearGradient(colors: [DS.brandStart, DS.brandDeep]),
+      borderRadius: BorderRadius.circular(DS.r12),
       boxShadow: [
-        BoxShadow(color: _DS.brandStart.withOpacity(0.35), blurRadius: 10),
+        BoxShadow(color: DS.brandStart.withOpacity(0.35), blurRadius: 10),
       ],
     ),
     child: Row(
@@ -2632,7 +2609,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        CircularProgressIndicator(color: _DS.brandStart, strokeWidth: 2.5),
+        CircularProgressIndicator(color: DS.brandStart, strokeWidth: 2.5),
         SizedBox(height: 14),
         Text(
           "Loading…",
@@ -2649,10 +2626,10 @@ class AdvanceScreenState extends State<AdvanceScreen>
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: _DS.brandStart.withOpacity(0.10),
+            color: DS.brandStart.withOpacity(0.10),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: _DS.brandStart, size: 32),
+          child: Icon(icon, color: DS.brandStart, size: 32),
         ),
         const SizedBox(height: 14),
         Text(
@@ -2685,25 +2662,25 @@ class AdvanceScreenState extends State<AdvanceScreen>
           )
         : null,
     filled: true,
-    fillColor: isDark ? _DS.inputDark : Colors.white,
+    fillColor: isDark ? DS.inputDark : Colors.white,
     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(_DS.r12),
+      borderRadius: BorderRadius.circular(DS.r12),
       borderSide: BorderSide.none,
     ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(_DS.r12),
-      borderSide: BorderSide(color: isDark ? _DS.borderDark : _DS.borderLight),
+      borderRadius: BorderRadius.circular(DS.r12),
+      borderSide: BorderSide(color: isDark ? DS.borderDark : DS.borderLight),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(_DS.r12),
-      borderSide: const BorderSide(color: _DS.brandStart, width: 1.8),
+      borderRadius: BorderRadius.circular(DS.r12),
+      borderSide: const BorderSide(color: DS.brandStart, width: 1.8),
     ),
   );
 
   Widget _companyDropdown(bool isDark) => DropdownButtonFormField<String>(
     value: selectedComp,
-    dropdownColor: isDark ? _DS.cardDark : null,
+    dropdownColor: isDark ? DS.cardDark : null,
     style: TextStyle(
       color: isDark ? Colors.white : const Color(0xFF0F172A),
       fontSize: 13,
@@ -2762,9 +2739,9 @@ class AdvanceScreenState extends State<AdvanceScreen>
       height: 150,
       margin: const EdgeInsets.only(top: 4),
       decoration: BoxDecoration(
-        color: isDark ? _DS.cardDark : _DS.cardLight,
-        borderRadius: BorderRadius.circular(_DS.r12),
-        border: Border.all(color: isDark ? _DS.borderDark : _DS.borderLight),
+        color: isDark ? DS.cardDark : DS.cardLight,
+        borderRadius: BorderRadius.circular(DS.r12),
+        border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
             color: isDark ? Colors.black26 : Colors.black38,
@@ -2773,12 +2750,12 @@ class AdvanceScreenState extends State<AdvanceScreen>
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(_DS.r12),
+        borderRadius: BorderRadius.circular(DS.r12),
         child: ListView.separated(
           itemCount: searchEmp.length,
           separatorBuilder: (_, __) => Divider(
             height: 1,
-            color: isDark ? _DS.borderDark : _DS.borderLight,
+            color: isDark ? DS.borderDark : DS.borderLight,
           ),
           itemBuilder: (_, i) {
             final emp = searchEmp[i];
@@ -2786,10 +2763,10 @@ class AdvanceScreenState extends State<AdvanceScreen>
               dense: true,
               leading: CircleAvatar(
                 radius: 16,
-                backgroundColor: _DS.brandStart.withOpacity(0.15),
+                backgroundColor: DS.brandStart.withOpacity(0.15),
                 child: const Icon(
                   Icons.person_outline,
-                  color: _DS.brandStart,
+                  color: DS.brandStart,
                   size: 16,
                 ),
               ),
