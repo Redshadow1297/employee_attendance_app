@@ -1,16 +1,31 @@
-# new_design_demo
+# Hi, I'm Amol 👋
 
-A new Flutter project.
+## Flutter Developer
 
-## Getting Started
+I am a Flutter Developer with 1+ years of experience building production-level mobile applications.
 
-This project is a starting point for a Flutter application.
+### Skills
+- Flutter & Dart
+- BLoC State Management
+- REST API Integration
+- Firebase
+- Git
+- Android & iOS Deployment
 
-A few resources to get you started if this is your first Flutter project:
+### Featured Project
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Employee Attendance Management App
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A production-ready attendance management application built using Flutter.
+
+Features:
+- Employee authentication
+- Punch In / Punch Out
+- Offline attendance support
+- API integration
+- Data synchronization
+- Firebase integration
+- Android & iOS deployment
+
+Tech Stack:
+Flutter | Dart | BLoC | REST API | Firebase
