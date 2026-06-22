@@ -12,14 +12,11 @@
 // import 'package:new_design_demo/presentations/pages/Modules/advanceManagement/app_advance_approval_form1.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:file_picker/file_picker.dart';
-
 // class AdvanceScreen extends StatefulWidget {
 //   const AdvanceScreen({super.key});
-
 //   @override
 //   State<AdvanceScreen> createState() => AdvanceScreenState();
 // }
-
 // class AdvanceScreenState extends State<AdvanceScreen> {
 //   int? emppk;
 //   String? empcode;
@@ -27,22 +24,18 @@
 //   int? locationpk;
 //   String? empname;
 //   int? isSuperAdmin;
-
 //   bool showApplyAdvanceForm = false;
 //   bool isLoading = false;
 //   List<Map<String, dynamic>> advanceStatusList = [];
-
 //   // Form controllers
 //   final TextEditingController advamountController = TextEditingController();
 //   final TextEditingController reasonController = TextEditingController();
 //   final TextEditingController descriptionController = TextEditingController();
 //   File? selectedDocument;
 //   String? documentName;
-
 //   /////Reason fetching for dropdown
 //   List<Map<String, dynamic>> reasonList = [];
 //   Map<String, dynamic>? selectedReason;
-
 //   // Authorization
 //   bool isAuthorizationScreen = false;
 //   bool isAuthLoading = false;
@@ -55,7 +48,6 @@
 //   List<dynamic> searchEmp = [];
 //   TextEditingController empNameController = TextEditingController();
 //   String selEmpCode = '';
-
 //   @override
 //   void initState() {
 //     super.initState();
@@ -63,7 +55,6 @@
 //     initializeData();
 //     getCompanyList();
 //   }
-
 //   Future<void> initializeData() async {
 //     await getPrefsData();
 //     if (emppk == null) {
@@ -72,7 +63,6 @@
 //     }
 //     await loadAdvanceStatus();
 //   }
-
 //   // Load SharedPrefs Data
 //   Future<void> getPrefsData() async {
 //     final prefs = await SharedPreferences.getInstance();
@@ -84,7 +74,6 @@
 //     isSuperAdmin = int.tryParse(prefs.getString('issuperadmin') ?? '0') ?? 0;
 //     debugPrint('Loaded EmpPk - $emppk');
 //   }
-
 //   // LoaderForStatusList
 //   Future<void> loadAdvanceStatus() async {
 //     setState(() => isLoading = true);
@@ -94,15 +83,12 @@
 //       isLoading = false;
 //     });
 //   }
-
 //   /////-------------------------  Fetch Advance Reason List ----------------------------GET
 //   Future<void> loadReasons() async {
 //     try {
 //       final response = await ApiClient.get(ApiConstants.getAdvanceReason);
 //       final data = response.data;
-
 //       List<Map<String, dynamic>> tempList = [];
-
 //       if (data is List) {
 //         tempList = List<Map<String, dynamic>>.from(data);
 //       } else if (data is Map && data['GetAdvanceReasonsList'] != null) {
@@ -110,17 +96,14 @@
 //           data['GetAdvanceReasonsList'],
 //         );
 //       }
-
 //       setState(() {
 //         reasonList = tempList;
 //       });
-
 //       debugPrint("Reason List Loaded: $reasonList");
 //     } catch (e) {
 //       debugPrint("Load Reason Error: $e");
 //     }
 //   }
-
 //   ////ConvertImageToBase64
 //   Future<String> convertFileToBase64(File file) async {
 //     try {
@@ -131,7 +114,6 @@
 //       return '';
 //     }
 //   }
-
 //   // Fetch Advance Status List
 //   Future<List<Map<String, dynamic>>> getAdvanceStatusList() async {
 //     try {
@@ -154,27 +136,21 @@
 //       return [];
 //     }
 //   }
-
 //   ////helper method to convert raw status to readable status
 //   String _getReadableStatus(String? rawStatus) {
 //     if (rawStatus == null || rawStatus.isEmpty) return 'Pending';
-
 //     String lower = rawStatus.toLowerCase();
-
 //     if (lower.contains('approved by')) {
 //       return 'Approved by ${rawStatus.split(' by ').last}';
 //     }
-
 //     if (lower.contains('approved')) {
 //       return 'Approved';
 //     }
-
 //     if (lower.contains('rejected')) {
 //       return 'Rejected';
 //     }
 //     return 'Pending';
 //   }
-
 //   // Submit Advance Application
 //   Future<void> submitAdvanceApplication() async {
 //     if (advamountController.text.trim().isEmpty ||
@@ -189,14 +165,10 @@
 //       );
 //       return;
 //     }
-
 //     try {
 //       setState(() => isLoading = true);
-
 //       String base64Image = await convertFileToBase64(selectedDocument!);
-
 //       String formattedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
-
 //       final response = await ApiClient.post(
 //         ApiConstants.submitAdvanceApplication,
 //         data: {
@@ -209,21 +181,17 @@
 //           "Image": base64Image,
 //         },
 //       );
-
 //       final message = response.data.toString();
-
 //       if (message.toLowerCase().contains('success')) {
 //         final String msg =
 //             " Hello, The advance application for amount ${advamountController.text.trim()} with reason '${selectedReason!['AdvanceReason_Description']}' has been approved by $empname. Please review the application at your earliest convenience. Thank you.";
 //         WhatsAppService.sendMessage(phoneNumber: "9730028611", message: msg);
-
 //         CommonSnackBar.show(
 //           context: context,
 //           title: 'Success',
 //           message: message,
 //           type: SnackBarType.success,
 //         );
-
 //         resetAdvanceForm();
 //         loadAdvanceStatus();
 //       } else {
@@ -236,7 +204,6 @@
 //       }
 //     } catch (e) {
 //       debugPrint("API ERROR: $e");
-
 //       CommonSnackBar.show(
 //         context: context,
 //         title: 'Error',
@@ -247,7 +214,6 @@
 //       setState(() => isLoading = false);
 //     }
 //   }
-
 //   /////Reset Advance Form
 //   void resetAdvanceForm() {
 //     advamountController.clear();
@@ -257,19 +223,15 @@
 //     documentName = null;
 //     setState(() => showApplyAdvanceForm = false);
 //   }
-
 //   // Pick Document
 //   Future<void> pickDocument() async {
 //     FilePickerResult? result = await FilePicker.platform.pickFiles(
 //       type: FileType.custom,
 //       allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
 //     );
-
 //     if (result != null) {
 //       File file = File(result.files.single.path!);
-
 //       int size = await file.length();
-
 //       if (size > 4 * 1024 * 1024) {
 //         CommonSnackBar.show(
 //           context: context,
@@ -279,25 +241,19 @@
 //         );
 //         return;
 //       }
-
 //       setState(() {
 //         selectedDocument = file;
 //         documentName = result.files.single.name;
 //       });
 //     }
 //   }
-
 //   // Authorization Application List
 //   Future<void> getAdvanceAuthorizationList(int index) async {
 //     selectedApprovalTab = index;
-
 //     const statuses = ['Pending', 'Approved', 'Rejected'];
 //     String status = statuses[index];
-
 //     setState(() => isAuthLoading = true);
-
 //     users.clear();
-
 //     try {
 //       final response = await ApiClient.get(
 //         ApiConstants.getAdvanceApprovalList,
@@ -308,9 +264,7 @@
 //           'CompanyGroupDBName': selectedComp,
 //         },
 //       );
-
 //       final data = response.data;
-
 //       if (data is List) {
 //         users = List<Map<String, dynamic>>.from(data).map((item) {
 //           String rawStatus = item['Apps_Status']?.toString() ?? '';
@@ -327,36 +281,28 @@
 //     } catch (e) {
 //       debugPrint('Authorization Error $e');
 //     }
-
 //     setState(() => isAuthLoading = false);
 //   }
-
 //   // Employee Name And Employee Code Search
 //   Future<void> getEmployeeNameSearch(int? emppk) async {
 //     setState(() {
 //       isLoading = true;
 //       searchEmp.clear();
 //     });
-
 //     try {
 //       String company = selectedComp ?? "";
-
 //       final response = await ApiClient.get(
 //         "${ApiConstants.searchEmployeeNameCode}"
 //         "?Emp_PK=${emppk ?? 0}"
 //         "&Searchtxt=${empNameController.text}"
 //         "&CompanyGroupDBName=$company",
 //       );
-
 //       dynamic data = response.data;
-
 //       if (data is String) {
 //         data = jsonDecode(data);
 //       }
-
 //       final List list =
 //           data["AutoCompleteData_AttendanceApplicationResult"] ?? [];
-
 //       searchEmp = list.map<Map<String, dynamic>>((item) {
 //         final parts = item.split(":");
 //         return {
@@ -364,17 +310,14 @@
 //           "EmpName": parts.length > 1 ? parts[1] : "",
 //         };
 //       }).toList();
-
 //       setState(() {});
 //     } catch (e) {
 //       debugPrint("Employee Search Error: $e");
 //     }
-
 //     setState(() {
 //       isLoading = false;
 //     });
 //   }
-
 //   Future<void> getCompanyList() async {
 //     try {
 //       final response = await ApiClient.get(ApiConstants.getCompanyGroupList);
@@ -392,11 +335,9 @@
 //       debugPrint('Company List Error $e');
 //     }
 //   }
-
 //   /////Approve or Reject Advance Application
 //   void onTapApplication(Map<String, dynamic> data) {
 //     String status = (data["Apps_Status"] ?? "").toString().toLowerCase();
-
 //     if (status.contains("approved by") || status.contains("pending")) {
 //       openApprovalForm(data);
 //     } else if (status.contains("approved")) {
@@ -417,7 +358,6 @@
 //       openApprovalForm(data);
 //     }
 //   }
-
 //   void openApprovalForm(Map<String, dynamic> data) {
 //     Navigator.push(
 //       context,
@@ -431,7 +371,6 @@
 //     );
 //     // debugPrint("FULL ITEM DATA: $data");
 //   }
-
 //   ////Reset Authorization Filter
 //   void resetAuthorizationFilters() {
 //     empNameController.clear();
@@ -440,12 +379,10 @@
 //     if (companyMap.isNotEmpty) selectedComp = companyMap.values.first;
 //     selectedApprovalTab = 0;
 //   }
-
 //   @override
 //   Widget build(BuildContext context) {
 //     //         — same as AppVisitorManagement
 //     final isDark = Theme.of(context).brightness == Brightness.dark;
-
 //     return WillPopScope(
 //       onWillPop: () async {
 //         if (showApplyAdvanceForm) {
@@ -531,7 +468,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _header({bool isDark = false}) {
 //     return Container(
 //       height: 270,
@@ -644,16 +580,13 @@
 //       ),
 //     );
 //   }
-
 //   Widget _advanceAuthorizationData({bool isDark = false}) {
 //     if (isAuthLoading) {
 //       return const Center(
 //         child: CircularProgressIndicator(color: Colors.blueGrey),
 //       );
 //     }
-
-//     List filteredList = users;
-
+//    List filteredList = users;
 //     return Padding(
 //       padding: const EdgeInsets.all(16),
 //       child: Column(
@@ -757,16 +690,13 @@
 //       ),
 //     );
 //   }
-
 //   ///app status badges — no theme needed (colored badges look same in both)
 //   Widget _statusBadge(String status) {
 //     if (status.isEmpty) {
 //       return const Text("No Status", style: TextStyle(color: Colors.red));
 //     }
-
 //     String lower = status.toLowerCase().trim();
 //     Color color;
-
 //     if (lower.contains('approved by')) {
 //       color = Colors.orange;
 //     } else if (lower.contains('approved')) {
@@ -796,7 +726,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _authorizationTabs({bool isDark = false}) {
 //     return Container(
 //       height: 50,
@@ -846,7 +775,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _authTabItem(String title, int index, {bool isDark = false}) {
 //     bool isSelected = selectedApprovalTab == index;
 //     return Expanded(
@@ -868,7 +796,6 @@
 //       ),
 //     );
 //   }
-
 //   ///Company dropdown
 //   Widget _companyDropdown({bool isDark = false}) {
 //     return DropdownButtonFormField<String>(
@@ -904,7 +831,6 @@
 //       },
 //     );
 //   }
-
 //   // Employee Name Search Field
 //   Widget employeeSearchField({bool isDark = false}) {
 //     return TextField(
@@ -931,13 +857,11 @@
 //       },
 //     );
 //   }
-
 //   // Employee Name Search List
 //   Widget employeeSearchList({bool isDark = false}) {
 //     if (searchEmp.isEmpty) {
 //       return const SizedBox();
 //     }
-
 //     return Container(
 //       height: 150,
 //       decoration: BoxDecoration(
@@ -973,7 +897,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _applyAdvanceForm({bool isDark = false}) {
 //     return Container(
 //       padding: const EdgeInsets.all(16),
@@ -1172,13 +1095,11 @@
 //       ),
 //     );
 //   }
-
 //   Widget _advanceCard(Map<String, dynamic> advance, {bool isDark = false}) {
 //     final String amount = advance['AdvanceAmount']?.toString() ?? '';
 //     final String reason = advance['Reason']?.toString() ?? '';
 //     final String status = advance['Status']?.toString() ?? '';
 //     final String date = advance['ApplicationDate']?.toString() ?? '';
-
 //     Color statusColor = Colors.orange;
 //     if (status.toLowerCase().contains("approved by")) {
 //       statusColor = Colors.orange;
@@ -1188,7 +1109,6 @@
 //     } else if (status.toLowerCase().contains('rejected')) {
 //       statusColor = Colors.red;
 //     }
-
 //     return Container(
 //       margin: const EdgeInsets.only(bottom: 12),
 //       padding: const EdgeInsets.all(14),
@@ -1245,7 +1165,6 @@
 //       ),
 //     );
 //   }
-
 //   ////Dispose controllers
 //   @override
 //   void dispose() {
@@ -1275,9 +1194,9 @@ import 'package:new_design_demo/presentations/pages/Modules/advanceManagement/ap
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
 
-// ─────────────────────────────────────────────────────────────
+
 //  SCREEN
-// ─────────────────────────────────────────────────────────────
+
 class AdvanceScreen extends StatefulWidget {
   const AdvanceScreen({super.key});
   @override
@@ -2791,9 +2710,9 @@ class AdvanceScreenState extends State<AdvanceScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
+
 //  STATUS HELPERS
-// ─────────────────────────────────────────────────────────────
+
 class _StatusInfo {
   final Color color;
   final IconData icon;

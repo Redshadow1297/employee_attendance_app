@@ -1,5 +1,4 @@
 // // ignore_for_file: use_build_context_synchronously, deprecated_member_use
-
 // import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
 // import 'package:new_design_demo/core/api/api_client.dart';
@@ -13,23 +12,19 @@
 // import 'package:path_provider/path_provider.dart';
 // import 'package:open_file/open_file.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-
 // class ApprovalFormScreen extends StatefulWidget {
 //   final int transId;
 //   final int empPk;
 //   final String companyGroup;
-
 //   const ApprovalFormScreen({
 //     super.key,
 //     required this.transId,
 //     required this.empPk,
 //     required this.companyGroup,
 //   });
-
 //   @override
 //   State<ApprovalFormScreen> createState() => _ApprovalFormScreenState();
 // }
-
 // class _ApprovalFormScreenState extends State<ApprovalFormScreen> {
 //   Map<String, dynamic>? data;
 //   String? _downloadedFilePath;
@@ -39,16 +34,13 @@
 //   int? emppk;
 //   int? isSuperAdmin;
 //   String? empcode;
-
 //   final TextEditingController approvalReasonController =
 //       TextEditingController();
-
 //   @override
 //   void initState() {
 //     super.initState();
 //     getPrefsData().then((_) => fetchAdvanceDetails());
 //   }
-
 //   /// ---------------- Safe Date Parser ----------------
 //   /// Handles multiple API date formats:
 //   /// "Apr 10, 2026"  → MMM d, yyyy
@@ -73,7 +65,6 @@
 //     debugPrint("Date parse failed for: $raw");
 //     return raw; // return as-is if all formats fail
 //   }
-
 //   ///////Prefs Data...
 //   Future<void> getPrefsData() async {
 //     final prefs = await SharedPreferences.getInstance();
@@ -82,7 +73,6 @@
 //     isSuperAdmin = int.tryParse(prefs.getString('issuperadmin') ?? '0') ?? 0;
 //     debugPrint('Loaded EmpPk - $emppk');
 //   }
-
 //   /// ---------------- Fetch Advance Details ----------------
 //   Future<void> fetchAdvanceDetails() async {
 //     try {
@@ -94,11 +84,9 @@
 //           "CompanyGroup": widget.companyGroup,
 //         },
 //       );
-
 //       final responseData = response.data is Map
 //           ? Map<String, dynamic>.from(response.data)
 //           : null;
-
 //       setState(() {
 //         data = responseData;
 //         isLoading = false;
@@ -108,7 +96,6 @@
 //       setState(() => isLoading = false);
 //     }
 //   }
-
 //   ////Approve / Reject Advance application
 //   Future<void> _approveAdvance() async {
 //     String reason = approvalReasonController.text.trim();
@@ -142,7 +129,6 @@
 //           "CompanyGroup": data?["CompanyGroup"],
 //         },
 //       );
-
 //       if (response.statusCode == 200) {
 //         CommonSnackBar.show(
 //           context: context,
@@ -169,7 +155,6 @@
 //       );
 //     }
 //   }
-
 //   Future<void> _rejectAdvance() async {
 //     String reason = approvalReasonController.text.trim();
 //     if (reason.isEmpty) {
@@ -202,7 +187,6 @@
 //           "CompanyGroup": data?["CompanyGroup"],
 //         },
 //       );
-
 //       if (response.statusCode == 200) {
 //         CommonSnackBar.show(
 //           context: context,
@@ -229,7 +213,6 @@
 //       );
 //     }
 //   }
-
 //   /// ---------------- DOWNLOAD FILE ----------------
 //   Future<void> _downloadAndOpenFileFromBase64(
 //     String base64FileString,
@@ -240,47 +223,37 @@
 //         _isDownloading = true;
 //         _downloadProgress = 0.3;
 //       });
-
 //       if (base64FileString.isEmpty) {
 //         throw Exception("Empty file");
 //       }
-
 //       String cleanedBase64 = base64FileString.contains(',')
 //           ? base64FileString.split(',').last
 //           : base64FileString;
-
 //       Uint8List bytes = base64Decode(cleanedBase64);
-
 //       final dir = await getApplicationDocumentsDirectory();
 //       String path = "${dir.path}/$fileName.pdf";
-
 //       File file = File(path);
 //       await file.writeAsBytes(bytes);
-
 //       setState(() {
 //         _downloadedFilePath = path;
 //         _isDownloading = false;
 //         _downloadProgress = 1.0;
 //       });
-
 //       await OpenFile.open(path);
 //     } catch (e) {
 //       setState(() => _isDownloading = false);
 //       debugPrint("Download Error: $e");
 //     }
 //   }
-
 //   /// ---------------- OPEN FILE ----------------
 //   Future<void> _openDownloadedFile() async {
 //     if (_downloadedFilePath == null) return;
 //     await OpenFile.open(_downloadedFilePath!);
 //   }
-
 //   /// ---------------- UI ----------------
 //   @override
 //   Widget build(BuildContext context) {
 //     final isDark = Theme.of(context).brightness == Brightness.dark;
-
 //     return Scaffold(
 //       backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.grey[100],
 //       body: SingleChildScrollView(
@@ -313,7 +286,6 @@
 //       ),
 //     );
 //   }
-
 //   ////------------Header----------------
 //   Widget _header() {
 //     return Container(
@@ -353,7 +325,6 @@
 //       ),
 //     );
 //   }
-
 //   /// ---------------- INFO CARD ----------------
 //   Widget _infoCard(Map<String, dynamic> data, {bool isDark = false}) {
 //     return _card(
@@ -393,7 +364,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _row(String title, dynamic value, {bool isDark = false}) {
 //     return Padding(
 //       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -424,11 +394,9 @@
 //       ),
 //     );
 //   }
-
 //   /// ---------------- DOCUMENT CARD ----------------
 //   Widget _documentCard(Map<String, dynamic> data, {bool isDark = false}) {
 //     final base64 = data["PathnameBase64"];
-
 //     return _card(
 //       isDark: isDark,
 //       child: Column(
@@ -488,7 +456,6 @@
 //       ),
 //     );
 //   }
-
 //   /// ---------------- ACTION CARD ----------------
 //   Widget _actionCard({bool isDark = false}) {
 //     return _card(
@@ -565,7 +532,6 @@
 //       ),
 //     );
 //   }
-
 //   /// ---------------- COMMON CARD ----------------
 //   Widget _card({required Widget child, bool isDark = false}) {
 //     return Container(
@@ -590,7 +556,6 @@
 //       child: child,
 //     );
 //   }
-
 //   @override
 //   void dispose() {
 //     approvalReasonController.dispose();
@@ -598,11 +563,8 @@
 //   }
 // }
 
-// ignore: dangling_library_doc_comments
-///NEW UI
 
-// ignore_for_file: use_build_context_synchronously, deprecated_member_use
-
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
@@ -658,7 +620,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     curve: Curves.easeOut,
   );
 
-  // ── LOGIC (all unchanged) ────────────────────────────────
+  //  LOGIC
   @override
   void initState() {
     super.initState();
@@ -893,7 +855,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  // ─── PREMIUM HEADER ──────────────────────────────────────
+  //  PREMIUM HEADER 
   Widget _header(bool isDark) {
     return Container(
       decoration: const BoxDecoration(
@@ -970,7 +932,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     decoration: BoxDecoration(shape: BoxShape.circle, color: color),
   );
 
-  // ─── INFO CARD ───────────────────────────────────────────
+  //  INFO CARD 
   Widget _infoCard(bool isDark) {
     final d = data!;
     return _sectionCard(
@@ -1070,7 +1032,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     return const Color(0xFFF59E0B);
   }
 
-  // ─── DOCUMENT CARD ───────────────────────────────────────
+  //  DOCUMENT CARD 
   Widget _documentCard(bool isDark) {
     final base64 = data?["PathnameBase64"];
     final hasDoc = base64 != null && base64.toString().isNotEmpty;
@@ -1225,7 +1187,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  // ─── ACTION CARD ─────────────────────────────────────────
+  //  ACTION CARD 
   Widget _actionCard(bool isDark) {
     return _sectionCard(
       isDark: isDark,
@@ -1370,7 +1332,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  // ─── SECTION CARD ────────────────────────────────────────
+  //  SECTION CARD 
   Widget _sectionCard({required bool isDark, required List<Widget> children}) {
     return Container(
       decoration: BoxDecoration(
@@ -1420,7 +1382,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  // ─── STATES ──────────────────────────────────────────────
+  //  STATES 
   Widget _loadingState() => const Center(
     child: Column(
       mainAxisSize: MainAxisSize.min,
