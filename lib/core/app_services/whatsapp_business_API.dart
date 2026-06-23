@@ -3,15 +3,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-Future<void> sendWhatsAppMessage() async {
-  String token =
-      "";
-  String phoneNumberId = "";
+///TEMP USING THE HARDCODED VALUES FOR THE AUTH_TOKEN AND PHONE_NUMBER_ID
+Future<void> sendWhatsAppMessage(
+  String phoneNumber,
+  String tmplateType,
+  Map dataToWhtsap,
+) async {
+  String token = "";     //AddTOKEN
+  String phoneNumberId = "";    //AddPHONENUMBERID
 
   final url = "https://graph.facebook.com/v19.0/$phoneNumberId/messages";
 
   debugPrint(
-    "WhatsApp msg URL = https://graph.facebook.com/v19.0/$phoneNumberId/messages",
+    "WHATSAPP MSG URL :::: $url",
   );
 
   try {
@@ -24,32 +28,22 @@ Future<void> sendWhatsAppMessage() async {
         },
       ),
       data: {
-        "messaging_product": "whatsapp",
-         "to": "917057799118", // country code must
-        // "to": "919730028611",
-        "type": "template",
-        "template": {
-          "name": "Hello_Siraj_Bhaiii",
-          "language": {"code": "en_US"},
-        },
+        "MESSEGIN_PRODUCT": "WHATSAPP",
+        "to": phoneNumber, //country code is must when sending the phone number
+        "type": tmplateType,
+        "template": dataToWhtsap,
       },
     );
-
-    debugPrint(
-      "whatsapp data to send: ${{
-        "messaging_product": "whatsapp",
-          "to": "917057799118", // country code must
-        // "to": "919730028611",
-        "type": "template",
-        "template": {
-          "name": "Hello_Siraj_Bhaiii",
-          "language": {"code": "en_US"},
-        },
-      }}",
-    );
+    final dataToSend = {
+      "MESSEGIN_PRODUCT": "WHATSAPP",
+      "to": phoneNumber, 
+      "type": tmplateType,
+      "template": dataToWhtsap,
+    };
+    debugPrint("Data To Send WahtsAppp ::::  $dataToSend");
     debugPrint("WhatsApp Status Code: ${response.statusCode}");
     debugPrint("WhatsApp Response: ${response.data}");
   } catch (e) {
-    debugPrint("WhatsApp Error: $e");
+    debugPrint("WhatsApp MSG Sending Error: $e");
   }
 }

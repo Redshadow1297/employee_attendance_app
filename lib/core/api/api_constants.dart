@@ -1,8 +1,8 @@
 class ApiConstants {
   static const String baseUrl =
-    //   "http://192.168.7.179/PM_Flutter/"; ////PSPravin_UATLINK
-      "http://103.19.136.117/Pravin_Flutter_12_Jan/";//PsPravin36
-      // "http://103.229.5.175/flutter_demo_to_client_sir/"; ////Flutter Demo to client sir
+      // "http://192.168.7.179/PM_Flutter/"; ////PSPravin_UATLINK
+      // "http://103.19.136.117/Pravin_Flutter_12_Jan/";//PsPravin36
+      "http://103.229.5.175/flutter_demo_to_client_sir/"; ////Flutter Demo to client sir
 
 
   // ------------------- Auth -------------------

@@ -1,5 +1,4 @@
 // // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, deprecated_member_use
-
 // import 'dart:convert';
 // import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
@@ -12,7 +11,6 @@
 // import 'package:new_design_demo/presentations/common_widgets/common_datePicker.dart';
 // import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-
 // // Leave type categories
 // const List<String> _kNormalLeaves = [
 //   'PL',
@@ -26,17 +24,13 @@
 //   'ESI',
 //   'AB',
 // ];
-
 // // OD sub-types
 // enum OdSubType { halfDay, oneMoreDay, shortOD }
-
 // class LeaveScreen extends StatefulWidget {
-//   const LeaveScreen({super.key});
-
+//   const LeaveScreen({super.key})
 //   @override
 //   State<LeaveScreen> createState() => _LeaveScreenState();
 // }
-
 // class _LeaveScreenState extends State<LeaveScreen> {
 //   int? emppk;
 //   String? empcode;
@@ -44,51 +38,39 @@
 //   int? locationpk;
 //   String? empname;
 //   int? isSuperAdmin;
-
 //   bool showApplyLeaveForm = false;
 //   bool isLoading = false;
-
-//   // ── Leave status list ────────────────────────────────────────────────────
+//   //  Leave status list 
 //   List<Map<String, dynamic>> leaveStatusList = [];
-
 //   final TextEditingController _leaveReasonController = TextEditingController();
 //   final TextEditingController strtDateController = TextEditingController();
 //   final TextEditingController endDateController = TextEditingController();
-
 //   List<Map<String, dynamic>> leaveTypeList = [];
 //   List<Map<String, dynamic>> leaveBalanceList = [];
 //   List<Map<String, dynamic>> coffBalanceList = [];
-
 //   int? selectedLeaveTypeId;
 //   String? selectedLeaveCode;
 //   String? selectedLeaveDesc;
 //   String? selectedLeavePK;
-
 //   DateTime? startDate;
 //   DateTime? endDate;
-
 //   /// Radio value (mirrors   `value`):
 //   ///   0 = Half Day / On-Date  |  1 = One or More Days  |  2 = Short OD
 //   int leaveDayRadio = 0;
-
 //   // Full-day / Half-day toggle (for normal leaves)
 //   String leaveDayStatus = "F"; // "F" or "H"
 //   String? halfDayType; // "H1" or "H2"
-
-//   // COFF
+   // COFF
 //   int? selectedCoffIndex;
 //   String? selectedCoffScheduleDate;
 //   String? selectedCoffType;
-
 //   // OD / SH times
 //   String? _selectedTimeFrom;
 //   String? _selectedTimeTo;
 //   int _pickerHour = 0;
 //   int _pickerMinute = 0;
-
 //   // Seaco flavour flag  (set appFlavor from your env / build config)
 //   bool get isSeaco => const String.fromEnvironment('APP_FLAVOR') == 'seaco';
-
 //   bool isAuthorizationScreen = false;
 //   bool isAuthLoading = false;
 //   List<Map<String, dynamic>> users = [];
@@ -98,7 +80,6 @@
 //   String selEmpCode = "";
 //   final TextEditingController empNameController = TextEditingController();
 //   int selectedApprovalTab = 0;
-
 //   final List<Color> cardColors = [
 //     Colors.orange,
 //     Colors.blue,
@@ -107,43 +88,35 @@
 //     Colors.purple,
 //     Colors.teal,
 //   ];
-
-//   // ── Date helpers ──
+//   //  Date helpers 
 //   String formatDate(DateTime d) => DateFormat('dd/MM/yyyy').format(d);
-
 //   String get _fromDateStr => startDate != null ? formatDate(startDate!) : '';
 //   String get _toDateStr => endDate != null ? formatDate(endDate!) : '';
-
 //   //   helper methods
 //   String getLeaveDayType(int v) => v == 0 ? "H" : "F";
-
 //   String getFromDayStatus(String v) {
 //     if (v == "Full Day") return "F";
 //     if (v == "First Half") return "H1";
 //     if (v == "Second Half") return "H2";
 //     return "F";
 //   }
-
 //   String getToDayStatus(String v) {
 //     if (v == "Full Day") return "F";
 //     if (v == "First Half") return "H1";
 //     if (v == "Second Half") return "H2";
 //     return "F";
 //   }
-
 //   String getToDayStatus_HalfDay(String? v) {
 //     if (v == "H1") return "H1";
 //     if (v == "H2") return "H2";
 //     return "H1";
 //   }
-
 //   @override
 //   void initState() {
 //     super.initState();
 //     _initializeData();
 //     getCompanyList();
 //   }
-
 //   Future<void> _initializeData() async {
 //     await _getPrefsData();
 //     if (emppk == null) return;
@@ -154,7 +127,6 @@
 //       fetchLeaveTypes(),
 //     ]);
 //   }
-
 //   Future<void> _getPrefsData() async {
 //     final prefs = await SharedPreferences.getInstance();
 //     emppk = prefs.getInt("emppk");
@@ -164,7 +136,6 @@
 //     empname = prefs.getString("employeename");
 //     isSuperAdmin = int.tryParse(prefs.getString("issuperadmin") ?? "0") ?? 0;
 //   }
-
 //   @override
 //   void dispose() {
 //     _leaveReasonController.dispose();
@@ -173,14 +144,12 @@
 //     empNameController.dispose();
 //     super.dispose();
 //   }
-
 //   // API calls
 //   Future<void> loadLeaveStatus() async {
 //     setState(() => isLoading = true);
 //     leaveStatusList = await _getLeaveStatusList();
 //     setState(() => isLoading = false);
 //   }
-
 //   ///Get Leave Application Status List
 //   Future<List<Map<String, dynamic>>> _getLeaveStatusList() async {
 //     try {
@@ -198,7 +167,6 @@
 //     }
 //     return [];
 //   }
-
 //   ////Fetch Leave Balance
 //   Future<void> fetchLeaveBalance() async {
 //     try {
@@ -224,7 +192,6 @@
 //       debugPrint("Leave Balance Error: $e");
 //     }
 //   }
-
 //   //Fetching COFF balance
 //   Future<void> fetchCoffBalance() async {
 //     try {
@@ -250,7 +217,6 @@
 //       debugPrint("COFF Balance Error: $e");
 //     }
 //   }
-
 //   //Fetching leave Types
 //   Future<void> fetchLeaveTypes() async {
 //     try {
@@ -271,8 +237,7 @@
 //       setState(() => isLoading = false);
 //     }
 //   }
-
-//   // ── Shift default times (OD) ───────
+//   //  Shift default times (OD) 
 //   Future<void> _fetchShiftTime(String horF, String forS) async {
 //     try {
 //       final response = await ApiClient.get(ApiConstants.getShiftTime);
@@ -288,7 +253,6 @@
 //       debugPrint("ShiftTime Error: $e");
 //     }
 //   }
-
 //   // Leave type selection
 //   void _onLeaveTypeSelected(Map<String, dynamic> leave) {
 //     setState(() {
@@ -296,7 +260,6 @@
 //       selectedLeaveCode = leave["Leave_Code"]?.toString();
 //       selectedLeaveDesc = leave["Leave_Description"]?.toString();
 //       selectedLeavePK = leave["Leave_PK"].toString();
-
 //       // Reset form
 //       leaveDayRadio = 0;
 //       leaveDayStatus = "F";
@@ -311,20 +274,17 @@
 //       selectedCoffType = null;
 //       _selectedTimeFrom = null;
 //       _selectedTimeTo = null;
-
 //       // OD: pre-load half-day shift times
 //       if (selectedLeaveCode == "OD") {
 //         _fetchShiftTime("H", "H1");
 //       }
 //     });
 //   }
-
 //   // Date pickers
 //   bool get _isSingleDay =>
 //       selectedLeaveCode == 'C-OFF' ||
 //       selectedLeaveCode == 'C-Off' ||
 //       leaveDayRadio == 0;
-
 //   Future<void> _pickStartDate() async {
 //     final picked = await CommonDatePicker.pickDate(context: context);
 //     if (picked == null) return;
@@ -340,7 +300,6 @@
 //       }
 //     });
 //   }
-
 //   ///Pick End Date
 //   Future<void> _pickEndDate() async {
 //     if (_isSingleDay) {
@@ -374,7 +333,6 @@
 //       endDateController.text = DateFormat('dd-MM-yyyy').format(picked);
 //     });
 //   }
-
 //   // Custom Time Picker
 //   Future<void> _showTimePicker(String label) async {
 //     int tempH = _pickerHour, tempM = _pickerMinute;
@@ -419,7 +377,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _numberScroll(
 //     int current,
 //     int min,
@@ -445,11 +402,9 @@
 //       ),
 //     );
 //   }
-
 //   // Validation
 //   bool _validate() {
 //     final code = selectedLeaveCode ?? "";
-
 //     if (selectedLeaveTypeId == null) {
 //       _warn("Please select leave type.");
 //       return false;
@@ -462,7 +417,6 @@
 //       _warn("Please enter reason.");
 //       return false;
 //     }
-
 //     // Normal half-day
 //     if (_kNormalLeaves.contains(code) && leaveDayRadio == 0) {
 //       if (halfDayType == null && !(isSeaco && code == "PL")) {
@@ -470,7 +424,6 @@
 //         return false;
 //       }
 //     }
-
 //     // COFF – user must pick a COFF record
 //     if (code == "C-OFF" || code == "C-Off") {
 //       if (selectedCoffScheduleDate == null) {
@@ -478,24 +431,20 @@
 //         return false;
 //       }
 //     }
-
 //     // OD / SH – times required
 //     if ((code == "OD" || code == "SH") &&
 //         (_selectedTimeFrom == null || _selectedTimeTo == null)) {
 //       _warn("Please select From Time and To Time.");
 //       return false;
 //     }
-
 //     return true;
 //   }
-
 //   void _warn(String msg) => CommonSnackBar.show(
 //     context: context,
 //     title: "Warning",
 //     message: msg,
 //     type: SnackBarType.warning,
 //   );
-
 //   // Format time helper (mirrors   formatTime)
 //   String _formatTimeTo24(String? t) {
 //     if (t == null) return "00:00";
@@ -507,7 +456,6 @@
 //       return "00:00";
 //     }
 //   }
-
 //   // Total days
 //   double _totalDays() {
 //     if (startDate == null || endDate == null) return 0;
@@ -517,11 +465,9 @@
 //     if (leaveDayRadio == 0 && _kNormalLeaves.contains(code)) return 0.5;
 //     return endDate!.difference(startDate!).inDays + 1;
 //   }
-
 //   // Submit Leave Application
 //   Future<void> _submitLeave() async {
 //     if (!_validate()) return;
-
 //     setState(() => isLoading = true);
 //     try {
 //       final now = DateTime.now();
@@ -529,11 +475,9 @@
 //       final from = _fromDateStr;
 //       final to = _toDateStr.isNotEmpty ? _toDateStr : from;
 //       final days = _totalDays();
-
 //       Map<String, dynamic> payload;
-
 //       if (code == "SH") {
-//         // ── Short leave ────────────────────────────────────────────────────
+//         //  Short leave 
 //         payload = {
 //           "SHDate": to,
 //           "ShReason": _leaveReasonController.text.trim(),
@@ -549,9 +493,8 @@
 //         _handleResponse(msg);
 //         return;
 //       }
-
 //       if (code == "C-OFF" || code == "C-Off") {
-//         // ── COFF ──────────────────────────────────────────────────────────
+//         //  COFF 
 //         payload = _buildPayload(
 //           now: now,
 //           from: to, // COFF uses toDate as fromDate
@@ -571,7 +514,7 @@
 //           extraFields: {"Cofftype": selectedCoffType},
 //         );
 //       } else if (code == "OD") {
-//         // ── OD ────────────────────────────────────────────────────────────
+//         //  OD 
 //         if (leaveDayRadio == 0) {
 //           // Half day OD
 //           payload = _buildPayload(
@@ -620,7 +563,7 @@
 //         }
 //       } else if (leaveDayRadio == 0 &&
 //           (_kNormalLeaves.contains(code) || code == "LWP" || code == "MRGL")) {
-//         // ── Half day (normal leaves, LWP, MRGL) ───────────────────────────
+//         //  Half day (normal leaves, LWP, MRGL) 
 //         payload = _buildPayload(
 //           now: now,
 //           from: to,
@@ -635,7 +578,7 @@
 //           leaveDaySt: getLeaveDayType(0),
 //         );
 //       } else {
-//         // ── One or more days (normal, LWP, ML, MRGL) ──────────────────────
+//         //  One or more days (normal, LWP, ML, MRGL) 
 //         payload = _buildPayload(
 //           now: now,
 //           from: from,
@@ -650,7 +593,6 @@
 //           leaveDaySt: getLeaveDayType(1),
 //         );
 //       }
-
 //       final resp = await ApiClient.post(
 //         ApiConstants.submitLeaveApplication,
 //         data: payload,
@@ -668,7 +610,6 @@
 //       setState(() => isLoading = false);
 //     }
 //   }
-
 //   Map<String, dynamic> _buildPayload({
 //     required DateTime now,
 //     required String from,
@@ -712,7 +653,6 @@
 //     if (extraFields != null) base.addAll(extraFields);
 //     return base;
 //   }
-
 //   void _handleResponse(String msg) {
 //     if (msg.toLowerCase().contains("success") || msg.isNotEmpty) {
 //       CommonSnackBar.show(
@@ -737,7 +677,6 @@
 //     fetchLeaveBalance();
 //     fetchCoffBalance();
 //   }
-
 //   void _resetForm() {
 //     setState(() {
 //       showApplyLeaveForm = false;
@@ -760,7 +699,6 @@
 //       _leaveReasonController.clear();
 //     });
 //   }
-
 //   // Self-reject
 //   Future<void> _selfRejectLeave(Map<String, dynamic> leave) async {
 //     try {
@@ -791,7 +729,6 @@
 //       );
 //     }
 //   }
-
 //   // Authorization helpers
 //   Future<void> getCompanyList() async {
 //     try {
@@ -813,7 +750,6 @@
 //       debugPrint("Company List Error: $e");
 //     }
 //   }
-
 //   ////Get Leave Applications List for Authorization
 //   Future<void> getLeaveAuthorizationList(int index) async {
 //     selectedApprovalTab = index;
@@ -849,7 +785,6 @@
 //     }
 //     setState(() => isAuthLoading = false);
 //   }
-
 //   /////Get Employee List for search Employeee
 //   Future<void> getEmployeeNameSearch(int? pk) async {
 //     setState(() {
@@ -881,7 +816,6 @@
 //     }
 //     if (mounted) setState(() => isLoading = false);
 //   }
-
 //   void _resetAuthorizationFilters() {
 //     empNameController.clear();
 //     selEmpCode = "";
@@ -889,11 +823,9 @@
 //     if (companyMap.isNotEmpty) selectedComp = companyMap.values.first;
 //     selectedApprovalTab = 0;
 //   }
-
 //   @override
 //   Widget build(BuildContext context) {
 //     final isDark = Theme.of(context).brightness == Brightness.dark;
-
 //     return WillPopScope(
 //       onWillPop: () async {
 //         if (showApplyLeaveForm) {
@@ -960,7 +892,6 @@
 //                 ),
 //               ],
 //             ),
-
 //             // Balance cards overlay
 //             Positioned(
 //               top: 210,
@@ -968,7 +899,6 @@
 //               right: 8,
 //               child: _balanceCards(isDark: isDark),
 //             ),
-
 //             // Apply leave form overlay
 //             if (showApplyLeaveForm)
 //               Positioned(
@@ -982,7 +912,6 @@
 //       ),
 //     );
 //   }
-
 //   // HEADER
 //   Widget _header(bool isDark) {
 //     return Container(
@@ -1087,7 +1016,6 @@
 //       ),
 //     );
 //   }
-
 //   // BALANCE CARDS
 //   Widget _balanceCards({bool isDark = false}) {
 //     return SizedBox(
@@ -1170,11 +1098,9 @@
 //             ),
 //     );
 //   }
-
 //   // APPLY LEAVE FORM
 //   Widget _applyLeaveForm({bool isDark = false}) {
 //     final code = selectedLeaveCode ?? "";
-
 //     return Container(
 //       padding: const EdgeInsets.all(16),
 //       decoration: BoxDecoration(
@@ -1192,7 +1118,7 @@
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
-//             // ── Title ────────────────────────────────────────────────────
+//             //  Title 
 //             Text(
 //               "Apply for Leave",
 //               style: AppTextStyles.headingSmall.copyWith(
@@ -1200,20 +1126,17 @@
 //               ),
 //             ),
 //             const SizedBox(height: 14),
-
-//             // ── Leave type grid (  style chips) ──────────────────────
+//             //  Leave type grid (  style chips) 
 //             _leaveTypeChips(isDark),
 //             const SizedBox(height: 8),
-
-//             // ── Show selected leave name ──────────────────────────────────
+//             //  Show selected leave name 
 //             if (selectedLeaveDesc != null)
 //               Text(
 //                 selectedLeaveDesc!,
 //                 style: const TextStyle(color: Colors.redAccent, fontSize: 15),
 //               ),
 //             const SizedBox(height: 10),
-
-//             // ── Leave balance inline ──────────────────────────────────────
+//             //  Leave balance inline 
 //             if (code.isEmpty ||
 //                 _kNormalLeaves.contains(code) ||
 //                 code == "LWP" ||
@@ -1221,11 +1144,9 @@
 //                 code == "SH" ||
 //                 code == "ML")
 //               _inlineLeaveBalance(isDark),
-
-//             // ── COFF pending records ──────────────────────────────────────
+//             //  COFF pending records 
 //             if (code == "C-OFF" || code == "C-Off")
 //               _coffBalanceSelector(isDark),
-
 //             if (code.isEmpty) ...[
 //               const SizedBox(height: 10),
 //               Center(
@@ -1237,27 +1158,19 @@
 //                 ),
 //               ),
 //             ],
-
-//             // ── Day radio buttons ─────────────────────────────────────────
+//             //  Day radio buttons 
 //             if (code.isNotEmpty && code != "SH" && code != "ML")
 //               _radioButtons(isDark, code),
-
 //             const SizedBox(height: 8),
-
-//             // ── Date section (varies by leave type) ──────────────────────
+//             //  Date section (varies by leave type) 
 //             if (code.isNotEmpty) _datePicker(isDark, code),
-
 //             const SizedBox(height: 8),
-
-//             // ── Half-day selector ─────────────────────────────────────────
+//             //  Half-day selector 
 //             if (_shouldShowHalfDayDropdown(code)) _halfDayDropdown(isDark),
-
-//             // ── OD / SH time picker ───────────────────────────────────────
+//             //  OD / SH time picker 
 //             if (code == "OD" || code == "SH") _timePickers(isDark),
-
 //             const SizedBox(height: 12),
-
-//             // ── Reason ────────────────────────────────────────────────────
+//             //  Reason 
 //             if (code.isNotEmpty) ...[
 //               Text(
 //                 "Reason",
@@ -1288,8 +1201,7 @@
 //               ),
 //               const SizedBox(height: 16),
 //             ],
-
-//             // ── Buttons ───────────────────────────────────────────────────
+//             //  Buttons 
 //             Row(
 //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //               children: [
@@ -1320,8 +1232,7 @@
 //       ),
 //     );
 //   }
-
-//   // ── Leave type chip grid (matches   grid layout) ─────────────────────
+//   //  Leave type chip grid (matches   grid layout) 
 //   Widget _leaveTypeChips(bool isDark) {
 //     return Wrap(
 //       spacing: 8,
@@ -1348,8 +1259,7 @@
 //       }).toList(),
 //     );
 //   }
-
-//   // ── Inline leave balance row ──────────────────────────────────────────────
+//   //  Inline leave balance row 
 //   Widget _inlineLeaveBalance(bool isDark) {
 //     if (leaveBalanceList.isEmpty) return const SizedBox();
 //     return SizedBox(
@@ -1388,8 +1298,7 @@
 //       ),
 //     );
 //   }
-
-//   // ── COFF pending records (radio selection –   pattern) ────────────────
+//   //  COFF pending records (radio selection –   pattern) 
 //   Widget _coffBalanceSelector(bool isDark) {
 //     if (coffBalanceList.isEmpty) {
 //       return Padding(
@@ -1460,13 +1369,11 @@
 //       ),
 //     );
 //   }
-
-//   // ── Radio buttons (Half Day / One or More Days / Short OD) ───────────────
+//   //  Radio buttons (Half Day / One or More Days / Short OD) 
 //   Widget _radioButtons(bool isDark, String code) {
 //     // OD has 3 options; others have 2 (with Seaco PL restriction)
 //     final bool isOD = code == "OD";
 //     final bool hidHalf = isSeaco && code == "PL";
-
 //     return Padding(
 //       padding: const EdgeInsets.symmetric(vertical: 6),
 //       child: Wrap(
@@ -1480,7 +1387,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _radioChip(String label, int v, bool isDark) {
 //     final selected = leaveDayRadio == v;
 //     return OutlinedButton(
@@ -1512,18 +1418,15 @@
 //       ),
 //     );
 //   }
-
-//   // ── Date row ─────────────────────────────────────────────────────────────
+//   //  Date row 
 //   Widget _datePicker(bool isDark, String code) {
 //     final bool singleDate =
 //         _isSingleDay ||
 //         code == "ML" || // ML = From Date only
 //         code == "SH"; // SH = On Date only
-
 //     if (singleDate) {
 //       return _dateField("On Date", strtDateController, _pickStartDate, isDark);
 //     }
-
 //     // "One or more days" – show From + To
 //     return Row(
 //       children: [
@@ -1542,7 +1445,6 @@
 //       ],
 //     );
 //   }
-
 //   Widget _dateField(
 //     String label,
 //     TextEditingController ctrl,
@@ -1588,15 +1490,13 @@
 //       ],
 //     );
 //   }
-
-//   // ── Half-day dropdown ─────────────────────────────────────────────────────
+//   //  Half-day dropdown 
 //   bool _shouldShowHalfDayDropdown(String code) {
 //     if (leaveDayRadio != 0) return false;
 //     if (code == "SH" || code == "ML" || code == "OD") return false;
 //     if (isSeaco && code == "PL") return false;
 //     return true;
-//   }
-
+//   
 //   Widget _halfDayDropdown(bool isDark) {
 //     return Padding(
 //       padding: const EdgeInsets.only(bottom: 8),
@@ -1642,8 +1542,7 @@
 //       ),
 //     );
 //   }
-
-//   // ── Time pickers row (OD / SH) ────────────────────────────────────────────
+//   //  Time pickers row (OD / SH) 
 //   Widget _timePickers(bool isDark) {
 //     return Padding(
 //       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -1670,7 +1569,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _timeField(
 //     String label,
 //     String? value,
@@ -1705,7 +1603,6 @@
 //       ),
 //     );
 //   }
-
 //   // =========================================================================
 //   // LEAVE CARD
 //   // =========================================================================
@@ -1719,7 +1616,6 @@
 //     final toDate = leave["todate"]?.toString() ?? "";
 //     final totalLeave =
 //         double.tryParse(leave["totalleave"]?.toString() ?? "0") ?? 0;
-
 //     Color statusColor;
 //     switch (status) {
 //       case "Approved":
@@ -1731,7 +1627,6 @@
 //       default:
 //         statusColor = Colors.orange;
 //     }
-
 //     return Container(
 //       margin: const EdgeInsets.only(bottom: 12),
 //       padding: const EdgeInsets.all(14),
@@ -1832,7 +1727,6 @@
 //             ),
 //           ),
 //           const SizedBox(height: 10),
-
 //           if (status.toLowerCase() == "pending")
 //             Align(
 //               alignment: Alignment.centerRight,
@@ -1861,20 +1755,16 @@
 //       ),
 //     );
 //   }
-
 //   // AUTHORIZATION
-
 //   Widget _leaveAuthorizationData({bool isDark = false}) {
 //     if (isAuthLoading)
 //       return const Center(
 //         child: CircularProgressIndicator(color: Colors.blueGrey),
 //       );
-
 //     final filtered = users.where((item) {
 //       final statuses = ["Pending", "Approved", "Rejected"];
 //       return item["Status"] == statuses[selectedApprovalTab];
 //     }).toList();
-
 //     return Padding(
 //       padding: const EdgeInsets.all(16),
 //       child: Column(
@@ -2017,7 +1907,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _statusBadge(String status) {
 //     Color color;
 //     switch (status.toLowerCase()) {
@@ -2048,7 +1937,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _authorizationTabs({bool isDark = false}) {
 //     return Container(
 //       height: 50,
@@ -2092,7 +1980,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _authTabItem(String title, int index) {
 //     return Expanded(
 //       child: GestureDetector(
@@ -2110,7 +1997,6 @@
 //       ),
 //     );
 //   }
-
 // //COMAPNY DROPDOWN + EMPLOYEE SEARCH
 //   Widget companyDropdown({bool isDark = false}) {
 //     return DropdownButtonFormField<String>(
@@ -2150,7 +2036,6 @@
 //       },
 //     );
 //   }
-
 // ///EMPLOYEE SEARCH FIELD
 //   Widget employeeSearchField({bool isDark = false}) {
 //     return TextField(
@@ -2176,11 +2061,9 @@
 //       },
 //     );
 //   }
-
 //   //  EMPLOYEE SEARCH LIST
 //   Widget employeeSearchList({bool isDark = false}) {
 //     if (searchEmp.isEmpty) return const SizedBox();
-
 //     return Container(
 //       height: 150,
 //       decoration: BoxDecoration(
@@ -2218,10 +2101,8 @@
 //   }
 // }
 
-//NEW UI
 
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, deprecated_member_use
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -2233,7 +2114,6 @@ import 'package:new_design_demo/presentations/common_widgets/alert_box.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_datePicker.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 // Leave type categories (unchanged)
 const List<String> _kNormalLeaves = [
@@ -2249,9 +2129,9 @@ const List<String> _kNormalLeaves = [
   'AB',
 ];
 
-// ─────────────────────────────────────────────────────────────
+
 //  SCREEN
-// ─────────────────────────────────────────────────────────────
+
 class LeaveScreen extends StatefulWidget {
   const LeaveScreen({super.key});
   @override
@@ -2260,7 +2140,7 @@ class LeaveScreen extends StatefulWidget {
 
 class _LeaveScreenState extends State<LeaveScreen>
     with SingleTickerProviderStateMixin {
-  // ── State (all unchanged) ────────────────────────────────
+  //  State (all unchanged) 
   int? emppk;
   String? empcode;
   int? companypk;
@@ -2323,7 +2203,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     const Color(0xFF06B6D4),
   ];
 
-  // ── Fade animation ───────────────────────────────────────
+  //  Fade animation 
   late final AnimationController _fadeCtrl = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
@@ -2333,7 +2213,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     curve: Curves.easeOut,
   );
 
-  // ── Date / time helpers (unchanged) ─────────────────────
+  //  Date / time helpers (unchanged) 
   String formatDate(DateTime d) => DateFormat('dd/MM/yyyy').format(d);
   String get _fromDateStr => startDate != null ? formatDate(startDate!) : '';
   String get _toDateStr => endDate != null ? formatDate(endDate!) : '';
@@ -2359,7 +2239,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     return "H1";
   }
 
-  // ── LOGIC (all unchanged) ────────────────────────────────
+  //  LOGIC (all unchanged) 
   @override
   void initState() {
     super.initState();
@@ -2900,7 +2780,14 @@ class _LeaveScreenState extends State<LeaveScreen>
             ? SnackBarType.success
             : SnackBarType.warning,
       );
-      if (msg.toLowerCase().contains("success")) sendWhatsAppMessage();
+      if (msg.toLowerCase().contains("success")) {
+        sendWhatsAppMessage(
+          empcode ?? "",
+          "template",
+          {"message": msg},
+          ///SEDING RESPONSE AS MSG TO WHTSAPP TEMP ...
+        );
+      }
     } else {
       CommonSnackBar.show(
         context: context,
@@ -3062,9 +2949,9 @@ class _LeaveScreenState extends State<LeaveScreen>
     selectedApprovalTab = 0;
   }
 
-  // ─────────────────────────────────────────────────────────
+  // 
   //  BUILD
-  // ─────────────────────────────────────────────────────────
+  // 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -3145,7 +3032,7 @@ class _LeaveScreenState extends State<LeaveScreen>
               ],
             ),
 
-            // ── Balance cards floating below header
+            //  Balance cards floating below header
             Positioned(
               top: 215,
               left: 12,
@@ -3153,7 +3040,7 @@ class _LeaveScreenState extends State<LeaveScreen>
               child: _balanceCards(isDark: isDark),
             ),
 
-            // ── Apply leave form overlay
+            //  Apply leave form overlay
             if (showApplyLeaveForm)
               Positioned(
                 top: 200,
@@ -3168,7 +3055,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── PREMIUM HEADER ──────────────────────────────────────
+  //  PREMIUM HEADER 
   Widget _header(bool isDark) {
     return Container(
       decoration: const BoxDecoration(
@@ -3349,7 +3236,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     decoration: BoxDecoration(shape: BoxShape.circle, color: color),
   );
 
-  // ─── BALANCE CARDS ───────────────────────────────────────
+  //  BALANCE CARDS 
   Widget _balanceCards({bool isDark = false}) {
     if (leaveBalanceList.isEmpty) return const SizedBox(height: 90);
     return SizedBox(
@@ -3420,15 +3307,13 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── APPLY LEAVE FORM ────────────────────────────────────
+  //  APPLY LEAVE FORM 
   Widget _applyLeaveForm({bool isDark = false}) {
     final code = selectedLeaveCode ?? "";
     return Container(
       decoration: BoxDecoration(
         color: isDark ? DS.cardDark : DS.cardLight,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(DS.r24),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(DS.r24)),
         border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
@@ -3654,7 +3539,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── LEAVE TYPE CHIPS ────────────────────────────────────
+  //  LEAVE TYPE CHIPS 
   Widget _leaveTypeChips(bool isDark) {
     return Wrap(
       spacing: 8,
@@ -3669,9 +3554,7 @@ class _LeaveScreenState extends State<LeaveScreen>
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
             decoration: BoxDecoration(
               gradient: isChosen
-                  ? const LinearGradient(
-                      colors: [DS.brandStart, DS.brandDeep],
-                    )
+                  ? const LinearGradient(colors: [DS.brandStart, DS.brandDeep])
                   : null,
               color: isChosen
                   ? null
@@ -3707,7 +3590,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── INLINE BALANCE ──────────────────────────────────────
+  //  INLINE BALANCE 
   Widget _inlineLeaveBalance(bool isDark) {
     if (leaveBalanceList.isEmpty) return const SizedBox();
     return SizedBox(
@@ -3756,7 +3639,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── COFF SELECTOR ───────────────────────────────────────
+  //  COFF SELECTOR 
   Widget _coffBalanceSelector(bool isDark) {
     if (coffBalanceList.isEmpty) {
       return Padding(
@@ -3790,9 +3673,7 @@ class _LeaveScreenState extends State<LeaveScreen>
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: isDark
-                    ? (isChosen
-                          ? DS.brandDeep.withOpacity(0.15)
-                          : DS.inputDark)
+                    ? (isChosen ? DS.brandDeep.withOpacity(0.15) : DS.inputDark)
                     : (isChosen
                           ? DS.brandStart.withOpacity(0.08)
                           : Colors.white),
@@ -3873,7 +3754,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── RADIO BUTTONS ───────────────────────────────────────
+  //  RADIO BUTTONS 
   Widget _radioButtons(bool isDark, String code) {
     final bool isOD = code == "OD";
     final bool hidHalf = isSeaco && code == "PL";
@@ -3900,8 +3781,9 @@ class _LeaveScreenState extends State<LeaveScreen>
           endDate = startDate;
           endDateController.text = strtDateController.text;
         }
-        if (selectedLeaveCode == "OD")
+        if (selectedLeaveCode == "OD") {
           _fetchShiftTime(v == 0 ? "H" : "F", "H1");
+        }
       }),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -3941,11 +3823,12 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── DATE PICKER ─────────────────────────────────────────
+  //  DATE PICKER 
   Widget _datePicker(bool isDark, String code) {
     final bool singleDate = _isSingleDay || code == "ML" || code == "SH";
-    if (singleDate)
+    if (singleDate) {
       return _dateField("On Date", strtDateController, _pickStartDate, isDark);
+    }
     return Row(
       children: [
         Expanded(
@@ -3993,7 +3876,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── HALF-DAY DROPDOWN ───────────────────────────────────
+  //  HALF-DAY DROPDOWN 
   bool _shouldShowHalfDayDropdown(String code) {
     if (leaveDayRadio != 0) return false;
     if (code == "SH" || code == "ML" || code == "OD") return false;
@@ -4034,14 +3917,15 @@ class _LeaveScreenState extends State<LeaveScreen>
         ],
         onChanged: (v) => setState(() {
           halfDayType = v;
-          if (selectedLeaveCode == "OD")
+          if (selectedLeaveCode == "OD") {
             _fetchShiftTime("H", v == "H2" ? "H2" : "H1");
+          }
         }),
       ),
     );
   }
 
-  // ─── TIME PICKERS ────────────────────────────────────────
+  //  TIME PICKERS 
   Widget _timePickers(bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -4095,7 +3979,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── LEAVE CARD ──────────────────────────────────────────
+  //  LEAVE CARD 
   Widget _leaveCard(Map<String, dynamic> leave, {bool isDark = false}) {
     final leaveCode = leave["LeaveCode"]?.toString() ?? "";
     final appDate = leave["ApplicationDate"]?.toString() ?? "";
@@ -4299,7 +4183,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── AUTHORIZATION DATA ──────────────────────────────────
+  //  AUTHORIZATION DATA 
   Widget _leaveAuthorizationData({bool isDark = false}) {
     if (isAuthLoading) return _loadingState();
     final statuses = ["Pending", "Approved", "Rejected"];
@@ -4511,7 +4395,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── AUTH TABS ───────────────────────────────────────────
+  //  AUTH TABS 
   Widget _authorizationTabs({bool isDark = false}) {
     return Container(
       height: 48,
@@ -4567,7 +4451,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── SHARED WIDGETS ──────────────────────────────────────
+  //  SHARED WIDGETS 
   Widget _statusBadge(String label, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -4754,9 +4638,7 @@ class _LeaveScreenState extends State<LeaveScreen>
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(DS.r12),
-        borderSide: BorderSide(
-          color: isDark ? DS.borderDark : DS.borderLight,
-        ),
+        borderSide: BorderSide(color: isDark ? DS.borderDark : DS.borderLight),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(DS.r12),
@@ -4765,7 +4647,7 @@ class _LeaveScreenState extends State<LeaveScreen>
     );
   }
 
-  // ─── COMPANY + EMPLOYEE SEARCH (consistent with attendance) ─
+  //  COMPANY + EMPLOYEE SEARCH (consistent with attendance) 
   Widget companyDropdown({bool isDark = false}) {
     return DropdownButtonFormField<String>(
       value: selectedComp,
@@ -4881,9 +4763,9 @@ class _LeaveScreenState extends State<LeaveScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
+
 //  STATUS HELPERS
-// ─────────────────────────────────────────────────────────────
+
 class _StatusInfo {
   final String label;
   final Color color;
@@ -4915,6 +4797,3 @@ _StatusInfo _approvalStatusInfo(String status) {
       return const _StatusInfo("—", Colors.grey, Icons.help_outline);
   }
 }
-
-// const DS_green1 = Color(0xFF10B981);
-// extension DSExt on DS { static const Color green1 = Color(0xFF10B981); }

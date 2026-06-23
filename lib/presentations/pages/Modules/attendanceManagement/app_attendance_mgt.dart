@@ -1,7 +1,5 @@
 // // ignore_for_file: use_build_context_synchronously, unused_local_variable, duplicate_ignore, deprecated_member_use
-
 // import 'dart:convert';
-
 // import 'package:flutter/material.dart';
 // import 'package:new_design_demo/core/api/api_client.dart';
 // import 'package:intl/intl.dart';
@@ -13,14 +11,11 @@
 // import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 // import 'package:new_design_demo/presentations/common_widgets/common_timePicker.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-
 // class AttendanceScreen extends StatefulWidget {
 //   const AttendanceScreen({super.key});
-
 //   @override
 //   State<AttendanceScreen> createState() => _AttendanceScreenState();
 // }
-
 // class _AttendanceScreenState extends State<AttendanceScreen> {
 //   int? emppk;
 //   String? empcode;
@@ -29,7 +24,6 @@
 //   String? empname;
 //   int? isSuperAdmin;
 //   String? currentDtTime;
-
 //   List<dynamic> timeCardList = [];
 //   bool isLoading = true;
 //   int selectedTab = 0;
@@ -41,7 +35,6 @@
 //   bool isAuthorizationScreen = false;
 //   String selectedApprovalStatus = "Pending";
 //   int selectedApprovalTab = 0;
-
 //   List<Map<String, dynamic>> users = [];
 //   Map<String, String> companyMap = {};
 //   String? selectedComp;
@@ -49,11 +42,9 @@
 //   dynamic searchEmpData;
 //   TextEditingController empNameController = TextEditingController();
 //   String selEmpCode = "";
-
 //   final TextEditingController _checkInController = TextEditingController();
 //   final TextEditingController _checkOutController = TextEditingController();
 //   final TextEditingController _reasonController = TextEditingController();
-
 //   @override
 //   void initState() {
 //     super.initState();
@@ -62,13 +53,11 @@
 //       _loadAttendanceStatusList();
 //     });
 //   }
-
 //   void _methodLoader() async {
 //     await getCompanyList();
 //     await fetchCurrentDate();
 //     await _loadAttendanceApprovalList();
 //   }
-
 //   Future<void> _getPrefsData() async {
 //     final prefs = await SharedPreferences.getInstance();
 //     emppk = prefs.getInt("emppk");
@@ -79,13 +68,10 @@
 //     isSuperAdmin = int.tryParse(prefs.getString("issuperadmin") ?? "0") ?? 0;
 //     await _loadTimeCard();
 //   }
-
 //   Future<void> _loadAttendanceApprovalList() async {
 //     setState(() => isAuthLoading = true);
-
 //     const statuses = ["Pending", "Approved", "Rejected"];
 //     String status = statuses[selectedApprovalTab];
-
 //     try {
 //       final response = await ApiClient.post(
 //         ApiConstants.getAttendanceApprovalList,
@@ -99,7 +85,6 @@
 //           "CompanyGroupDBName": selectedComp ?? companyMap[companyMap.keys.first],
 //         },
 //       );
-
 //       final result = response.data["GetAttendaceAppApprovalListResult"];
 //       setState(() {
 //         approvalList = result != null ? List.from(result) : [];
@@ -108,20 +93,15 @@
 //       debugPrint("Approval Error: $e");
 //       setState(() => approvalList = []);
 //     }
-
 //     setState(() => isAuthLoading = false);
 //   }
-
 //   Future<void> _loadTimeCard() async {
 //     setState(() => isLoading = true);
-
 //     DateTime fdate = DateTime.now().subtract(const Duration(days: 61));
 //     DateTime ldate = DateTime.now();
-
 //     try {
 //       String startDate = DateFormat('dd/MM/yyyy').format(fdate);
 //       String endDate = DateFormat('dd/MM/yyyy').format(ldate);
-
 //       final response = await ApiClient.get(
 //         ApiConstants.getTimeCardData,
 //         query: {
@@ -130,9 +110,7 @@
 //           "strendate": endDate,
 //         },
 //       );
-
 //       final result = response.data["GetTimeCardResult"];
-
 //       setState(() {
 //         timeCardList = result != null ? List.from(result) : [];
 //         timeCardList.sort((a, b) {
@@ -143,22 +121,17 @@
 //       });
 //     } catch (e) {
 //       debugPrint("TimeCard Error: $e");
-//     }
-
+//    }
 //     setState(() => isLoading = false);
-//   }
-
+//
 //   Future<void> _loadAttendanceStatusList() async {
 //     setState(() => isLoading = true);
-
 //     try {
 //       final response = await ApiClient.get(
 //         ApiConstants.getAttendanceStatus,
 //         query: {"Emp_pk": emppk},
 //       );
-
 //       final result = response.data["GetAttendanceStatusResult"];
-
 //       setState(() {
 //         attStatusList = result != null ? List.from(result) : [];
 //         attStatusList.sort((a, b) {
@@ -171,10 +144,8 @@
 //       debugPrint("History Error: $e");
 //       setState(() => attStatusList = []);
 //     }
-
 //     setState(() => isLoading = false);
 //   }
-
 //   Future<void> _submitAttApplicationTimecard(date) async {
 //     try {
 //       final response = await ApiClient.post(
@@ -188,9 +159,7 @@
 //           "Reason": _reasonController.text,
 //         },
 //       );
-
 //       final result = response.data["AttendaceApplicationResult"];
-
 //       if (result.toString().toLowerCase().contains("success")) {
 //         CommonSnackBar.show(
 //           context: context,
@@ -198,7 +167,6 @@
 //           message: result,
 //           type: SnackBarType.success,
 //         );
-
 //         String whatsappMessage = """
 //          Attendance Application :
 //         👤 Name: $empname
@@ -208,13 +176,11 @@
 //         📝 Reason: ${_reasonController.text}
 //         📊 Application Date : $currentDtTime
 //         """;
-
 //         try {
 //           await sendWhatsAppDirect(whatsappMessage);
 //         } catch (e) {
 //           debugPrint("WhatsApp send Notification Error :: $e");
-//         }
-
+//        }
 //         _checkInController.clear();
 //         _checkOutController.clear();
 //         _reasonController.clear();
@@ -227,7 +193,6 @@
 //           type: SnackBarType.warning,
 //         );
 //       }
-
 //       if (result.toString().toLowerCase().contains("fail")) {
 //         CommonSnackBar.show(
 //           context: context,
@@ -246,7 +211,6 @@
 //       );
 //     }
 //   }
-
 //   Future<void> _selfRejectAttendance(String transPk) async {
 //     try {
 //       final response = await ApiClient.post(
@@ -258,9 +222,7 @@
 //           "appliedby": "Android"
 //         },
 //       );
-
 //       final result = response.data["AttendanceSelfRejectResult"];
-
 //   ////Result is Application rejected On Success from API
 //       if (result.toString().toLowerCase() == "application rejected") {
 //         CommonSnackBar.show(
@@ -288,7 +250,6 @@
 //       );
 //     }
 //   }
-
 // //Fetch Current Date from API
 //   Future<void> fetchCurrentDate() async {
 //     try {
@@ -296,7 +257,6 @@
 //         ApiConstants.getCurrentDate,
 //         query: {"Emp_pk": emppk},
 //       );
-
 //       final data = response.data["getSchedulerData"];
 //       if (data != null && data.isNotEmpty) {
 //         currentDtTime = data[0]["current_date"];
@@ -305,7 +265,6 @@
 //       debugPrint("History Error: $e");
 //     }
 //   }
-
 // ///Approve or rejetct the attendance application by athorizer
 //   void _approveOrRejectAttApp(String upPk, String newStatus) async {
 //     setState(() {
@@ -316,29 +275,23 @@
 //       }
 //     });
 //   }
-
 // ///Get Employee Search List for Employee
 //   Future<void> getEmployeeNameSearch(int? emppk) async {
 //     setState(() {
 //       isLoading = true;
 //       searchEmp.clear();
 //     });
-
 //     try {
 //       String company = selectedComp ?? "";
-
 //       final response = await ApiClient.get(
 //         "${ApiConstants.searchEmployeeNameCode}"
 //         "?Emp_PK=${emppk ?? 0}"
 //         "&Searchtxt=${empNameController.text}"
 //         "&CompanyGroupDBName=$company",
 //       );
-
 //       dynamic data = response.data;
 //       if (data is String) data = jsonDecode(data);
-
 //       final List list = data["AutoCompleteData_LeaveReportingResult"];
-
 //       searchEmp = list.map<Map<String, dynamic>>((item) {
 //         final parts = item.split(":");
 //         return {
@@ -346,15 +299,12 @@
 //           "EmpName": parts.length > 1 ? parts[1] : "",
 //         };
 //       }).toList();
-
 //       setState(() {});
 //     } catch (e) {
 //       debugPrint("Employee Search Error: $e");
 //     }
-
 //     setState(() => isLoading = false);
 //   }
-
 // ///Get Company List for Dropdown in Authorization Screen
 //   Future<void> getCompanyList() async {
 //     try {
@@ -362,9 +312,7 @@
 //         ApiConstants.getCompanyGroupList,
 //         query: {},
 //       );
-
 //       final data = response.data;
-
 //       if (data is List) {
 //         companyMap.clear();
 //         for (var item in data) {
@@ -379,12 +327,10 @@
 //       debugPrint("Company List Error: $e");
 //     }
 //   }
-
 //   //  BUILD
 //   @override
 //   Widget build(BuildContext context) {
 //     final isDark = Theme.of(context).brightness == Brightness.dark;
-
 //     return WillPopScope(
 //       onWillPop: () async {
 //         if (isAuthorizationScreen) {
@@ -397,7 +343,6 @@
 //         return true;
 //       },
 //       child: Scaffold(
-
 //         backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.grey.shade100,
 //         body: Column(
 //           children: [
@@ -422,7 +367,6 @@
 //       ),
 //     );
 //   }
-
 //   //  HEADER
 //   Widget _header() {
 //     return Container(
@@ -513,7 +457,6 @@
 //       ),
 //     );
 //   }
-
 //   //  AUTHORIZATION TABS
 //   Widget _authorizationTabs({bool isDark = false}) {
 //     return Container(
@@ -556,7 +499,6 @@
 //       ),
 //     );
 //   }
-
 //   Widget _authTabItem(String title, int index) {
 //     bool isSelected = selectedApprovalTab == index;
 //     return Expanded(
@@ -578,7 +520,6 @@
 //       ),
 //     );
 //   }
-
 //   //  TAB BUTTON
 //   Widget _tabButton(String text, int index, {bool isDark = false}) {
 //     bool isSelected = selectedTab == index;
@@ -634,15 +575,13 @@
 //       ),
 //     );
 //   }
-
 //   //  TIME CARD LIST
 //   Widget _timeCardList({bool isDark = false}) {
 //     if (isLoading) {
 //       return const Center(
 //         child: CircularProgressIndicator(color: Colors.blueGrey),
 //       );
-//     }
-
+//    }
 //     if (timeCardList.isEmpty) {
 //       return Center(
 //         child: Column(
@@ -658,7 +597,6 @@
 //         ),
 //       );
 //     }
-
 //     return ListView.builder(
 //       padding: const EdgeInsets.symmetric(horizontal: 16),
 //       itemCount: timeCardList.length,
@@ -667,7 +605,6 @@
 //       },
 //     );
 //   }
-
 //   //  TIME CARD ITEM
 //   Widget _timeCard(dynamic item, int index, {bool isDark = false}) {
 //     String empStatus = item['empstatus'] ?? '';
@@ -675,13 +612,10 @@
 //     String checkIn = item['intiming'] == "-" ? "--:--" : item['intiming'];
 //     String checkOut = item['outtiming'] == "-" ? "--:--" : item['outtiming'];
 //     String totalHours = item['Totalwork'] == "0.0" ? "--" : item['Totalwork'];
-
 //     DateTime parsedDate = DateFormat("dd/MM/yyyy").parse(date);
 //     String weekday = DateFormat("EEEE").format(parsedDate);
-
 //     Color statusColor;
 //     String statusText;
-
 //     switch (empStatus) {
 //       case "P":
 //         statusColor = Colors.green;
@@ -703,14 +637,11 @@
 //         statusColor = Colors.grey;
 //         statusText = empStatus;
 //     }
-
 //     bool showRegularize =
 //         empStatus == "AB" ||
 //         (empStatus == "P" &&
 //             (item['intiming'] == "-" || item['outtiming'] == "-"));
-
 //     bool isExpanded = expandedIndex == index;
-
 //     return Container(
 //       margin: const EdgeInsets.only(bottom: 16),
 //       padding: const EdgeInsets.all(14),
@@ -763,9 +694,7 @@
 //               ),
 //             ],
 //           ),
-
 //           const SizedBox(height: 14),
-
 //           Container(
 //             padding: const EdgeInsets.all(10),
 //             decoration: BoxDecoration(
@@ -782,9 +711,7 @@
 //               ],
 //             ),
 //           ),
-
 //           const SizedBox(height: 12),
-
 //           if (showRegularize && !isExpanded)
 //             CommonButton(
 //               width: 130,
@@ -796,13 +723,11 @@
 //               },
 //               icon: null,
 //             ),
-
 //           if (isExpanded) _regularizeForm(index, date, isDark: isDark),
 //         ],
 //       ),
 //     );
 //   }
-
 //   Widget _timeColumn(String title, String value, {bool isDark = false}) {
 //     return Column(
 //       crossAxisAlignment: CrossAxisAlignment.start,
@@ -825,7 +750,6 @@
 //       ],
 //     );
 //   }
-
 //   //  REGULARIZE FORM
 //   Widget _regularizeForm(int index, String date, {bool isDark = false}) {
 //     return Container(
@@ -977,7 +901,6 @@
 //       ),
 //     );
 //   }
-
 //   //  ATTENDANCE HISTORY / STATUS
 //   Widget _attStatus({bool isDark = false}) {
 //     if (isLoading) {
@@ -985,7 +908,6 @@
 //         child: CircularProgressIndicator(color: Colors.blueGrey),
 //       );
 //     }
-
 //     if (attStatusList.isEmpty) {
 //       return Center(
 //         child: Text(
@@ -994,18 +916,15 @@
 //         ),
 //       );
 //     }
-
 //     return ListView.builder(
 //       padding: const EdgeInsets.symmetric(horizontal: 16),
 //       itemCount: attStatusList.length,
 //       itemBuilder: (context, index) {
 //         final item = attStatusList[index];
-
 //         String attDate = item['AttendanceDate'] ?? '';
 //         String checkIn = item['FromDate'] == "" ? "--:--" : item['FromDate'];
 //         String checkOut = item['ToDate'] == "" ? "--:--" : item['ToDate'];
 //         String status = item['Approval_Status'] ?? '';
-
 //         Color statusColor;
 //         switch (status.toLowerCase()) {
 //           case "approved":
@@ -1020,7 +939,6 @@
 //           default:
 //             statusColor = Colors.grey;
 //         }
-
 //         return Container(
 //           margin: const EdgeInsets.only(bottom: 16),
 //           padding: const EdgeInsets.all(14),
@@ -1073,9 +991,7 @@
 //                   ),
 //                 ],
 //               ),
-
 //               const SizedBox(height: 12),
-
 //               Container(
 //                 padding: const EdgeInsets.all(10),
 //                 decoration: BoxDecoration(
@@ -1091,9 +1007,7 @@
 //                   ],
 //                 ),
 //               ),
-
 //               const SizedBox(height: 12),
-
 //               if (status.toLowerCase() == "pending") ...[
 //                 Align(
 //                   alignment: Alignment.centerRight,
@@ -1125,7 +1039,6 @@
 //       },
 //     );
 //   }
-
 //   //  AUTHORIZATION DATA
 //   Widget _attAuthorizationData({bool isDark = false}) {
 //     if (isAuthLoading) {
@@ -1133,13 +1046,11 @@
 //         child: CircularProgressIndicator(color: Colors.blueGrey),
 //       );
 //     }
-
 //     List filteredList = approvalList.where((item) {
 //       if (selectedApprovalTab == 0) return item["Status"] == "Pending";
 //       if (selectedApprovalTab == 1) return item["Status"] == "Approved";
 //       return item["Status"] == "Rejected";
 //     }).toList();
-
 //     return Padding(
 //       padding: const EdgeInsets.all(14),
 //       child: Column(
@@ -1290,7 +1201,6 @@
 //       ),
 //     );
 //   }
-
 //   //  STATUS BADGE
 //   Widget _statusBadge(String status) {
 //     Color color;
@@ -1322,7 +1232,6 @@
 //       ),
 //     );
 //   }
-
 //   //  COMPANY DROPDOWN
 //   Widget companyDropdown({bool isDark = false}) {
 //     return DropdownButtonFormField<String>(
@@ -1359,7 +1268,6 @@
 //       },
 //     );
 //   }
-
 //   //  EMPLOYEE SEARCH FIELD
 //   Widget employeeSearchField({bool isDark = false}) {
 //     return TextField(
@@ -1389,11 +1297,9 @@
 //       },
 //     );
 //   }
-
 //   //  EMPLOYEE SEARCH LIST
 //   Widget employeeSearchList({bool isDark = false}) {
 //     if (searchEmp.isEmpty) return const SizedBox();
-
 //     return Container(
 //       height: 150,
 //       decoration: BoxDecoration(
@@ -1429,7 +1335,6 @@
 //       ),
 //     );
 //   }
-
 //   //  DISPOSE
 //   @override
 //   void dispose() {
@@ -1438,7 +1343,6 @@
 //     _reasonController.dispose();
 //     super.dispose();
 //   }
-
 // //Clearing Filters on Authorization Tab
 //   void _clearAuthorizationFilters() {
 //     empNameController.clear();
@@ -1452,25 +1356,20 @@
 // }
 
 //NEW UI
-
 // ignore_for_file: use_build_context_synchronously, unused_local_variable, duplicate_ignore, deprecated_member_use
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:intl/intl.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
 import 'package:new_design_demo/core/constants/ds_color_handler.dart';
-// import 'package:new_design_demo/core/app_services/whatsappTwillioNotification.dart';
 import 'package:new_design_demo/presentations/common_widgets/alert_box.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_timePicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ─────────────────────────────────────────────────────────────
 //  SCREEN
-// ─────────────────────────────────────────────────────────────
+
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
 
@@ -1480,7 +1379,7 @@ class AttendanceScreen extends StatefulWidget {
 
 class _AttendanceScreenState extends State<AttendanceScreen>
     with SingleTickerProviderStateMixin {
-  // ── State (all unchanged from original) ──────────────────
+  //  State
   int? emppk;
   String? empcode;
   int? companypk;
@@ -1513,7 +1412,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
   final TextEditingController _checkOutController = TextEditingController();
   final TextEditingController _reasonController = TextEditingController();
 
-  // ── Animation ────────────────────────────────────────────
+  //  Animation
   late final AnimationController _tabAnim = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 400),
@@ -1523,7 +1422,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     curve: Curves.easeOut,
   );
 
-  // ── LOGIC (all unchanged) ────────────────────────────────
+  //  LOGIC
   @override
   void initState() {
     super.initState();
@@ -1544,7 +1443,6 @@ class _AttendanceScreenState extends State<AttendanceScreen>
   void _methodLoader() async {
     await getCompanyList();
     await fetchCurrentDate();
-    await _loadAttendanceApprovalList();
   }
 
   Future<void> _getPrefsData() async {
@@ -1589,7 +1487,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
 
   Future<void> _loadTimeCard() async {
     setState(() => isLoading = true);
-    DateTime fdate = DateTime.now().subtract(const Duration(days: 61));
+    DateTime fdate = DateTime.now().subtract(const Duration(days: 32));
     DateTime ldate = DateTime.now();
     try {
       String startDate = DateFormat('dd/MM/yyyy').format(fdate);
@@ -1718,7 +1616,8 @@ class _AttendanceScreenState extends State<AttendanceScreen>
         },
       );
       final result = response.data["AttendanceSelfRejectResult"];
-      if (result.toString().toLowerCase() == "application rejected") {
+      if (result.toString().toLowerCase() == "application rejected" ||
+          response.statusCode == 200) {
         CommonSnackBar.show(
           context: context,
           title: "Success",
@@ -1772,13 +1671,13 @@ class _AttendanceScreenState extends State<AttendanceScreen>
         data: {
           "InTime": "",
           "ApplicationDate": "",
-          "Company_PK": "1", ////In old project sent 1
+          "Company_PK": "1", ////IN PS PRAVIN SENT 1
           "UP_PK": upPk,
           "Employee_Code": empcode,
           "OutTime": "",
           "Emp_PK": emppk.toString(),
           "Location_PK": locationpk,
-          "TimeCard": "1", ////In old project sent 1
+          "TimeCard": "1", ////IN PS PRAVIN SENT 1
           "ApprovedReject": newStatus,
           "Reason": _reasonController.text,
           "AttendanceDate": "",
@@ -1868,9 +1767,8 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     selectedApprovalTab = 0;
   }
 
-  // ─────────────────────────────────────────────────────────
   //  BUILD
-  // ─────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -1912,7 +1810,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── PREMIUM HEADER ──────────────────────────────────────
+  //  PREMIUM HEADER
   Widget _header(bool isDark) {
     return Container(
       decoration: const BoxDecoration(
@@ -2077,7 +1975,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     decoration: BoxDecoration(shape: BoxShape.circle, color: color),
   );
 
-  // ─── PREMIUM TAB ROW ─────────────────────────────────────
+  //  PREMIUM TAB ROW
   Widget _tabRow(bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -2160,7 +2058,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── AUTHORIZATION TABS ──────────────────────────────────
+  //  AUTHORIZATION TABS
   Widget _authorizationTabs({bool isDark = false}) {
     return Container(
       height: 48,
@@ -2228,7 +2126,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── TIME CARD LIST ──────────────────────────────────────
+  //  TIME CARD LIST
   Widget _timeCardList({bool isDark = false}) {
     if (isLoading) return _loadingState();
     if (timeCardList.isEmpty) {
@@ -2246,7 +2144,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── TIME CARD ITEM ──────────────────────────────────────
+  //  TIME CARD ITEM
   Widget _timeCard(dynamic item, int index, {bool isDark = false}) {
     String empStatus = item['empstatus'] ?? '';
     String date = item['scheduledateddmm'] ?? '';
@@ -2483,7 +2381,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── REGULARIZE FORM ─────────────────────────────────────
+  //  REGULARIZE FORM
   Widget _regularizeForm(int index, String date, {bool isDark = false}) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -2546,7 +2444,10 @@ class _AttendanceScreenState extends State<AttendanceScreen>
                       return;
                     }
                     _submitAttApplicationTimecard(date);
-                    setState(() => expandedIndex = index);
+                    setState(() {
+                      expandedIndex = index;
+                      _timeCardList(isDark: isDark);
+                    });
                   },
                   child: _gradientBtn("Submit", Icons.send_rounded),
                 ),
@@ -2660,9 +2561,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(DS.r12),
-        borderSide: BorderSide(
-          color: isDark ? DS.borderDark : DS.borderLight,
-        ),
+        borderSide: BorderSide(color: isDark ? DS.borderDark : DS.borderLight),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(DS.r12),
@@ -2699,7 +2598,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── ATTENDANCE HISTORY ──────────────────────────────────
+  //  ATTENDANCE HISTORY
   Widget _attStatus({bool isDark = false}) {
     if (isLoading) return _loadingState();
     if (attStatusList.isEmpty) {
@@ -2723,9 +2622,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
           decoration: BoxDecoration(
             color: isDark ? DS.cardDark : DS.cardLight,
             borderRadius: BorderRadius.circular(DS.r20),
-            border: Border.all(
-              color: isDark ? DS.borderDark : DS.borderLight,
-            ),
+            border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
             boxShadow: [
               BoxShadow(
                 color: isDark
@@ -2849,7 +2746,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── AUTHORIZATION DATA ──────────────────────────────────
+  //  AUTHORIZATION DATA
   Widget _attAuthorizationData({bool isDark = false}) {
     if (isAuthLoading) return _loadingState();
 
@@ -3091,7 +2988,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── SHARED WIDGETS ──────────────────────────────────────
+  //  SHARED WIDGETS
   Widget _statusBadge(String label, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -3154,7 +3051,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── COMPANY DROPDOWN ────────────────────────────────────
+  //  COMPANY DROPDOWN
   Widget companyDropdown({bool isDark = false}) {
     return DropdownButtonFormField<String>(
       value: selectedComp,
@@ -3217,7 +3114,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── EMPLOYEE SEARCH FIELD ───────────────────────────────
+  //  EMPLOYEE SEARCH FIELD
   Widget employeeSearchField({bool isDark = false}) {
     return TextField(
       controller: empNameController,
@@ -3268,7 +3165,7 @@ class _AttendanceScreenState extends State<AttendanceScreen>
     );
   }
 
-  // ─── EMPLOYEE SEARCH LIST ────────────────────────────────
+  //  EMPLOYEE SEARCH LIST
   Widget employeeSearchList({bool isDark = false}) {
     if (searchEmp.isEmpty) return const SizedBox();
     return Container(
@@ -3330,9 +3227,8 @@ class _AttendanceScreenState extends State<AttendanceScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
 //  STATUS HELPERS
-// ─────────────────────────────────────────────────────────────
+
 class _StatusInfo {
   final String label;
   final Color color;
