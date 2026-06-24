@@ -17,7 +17,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.check_circle_outline_rounded,
         label: "Present",
       );
-
     case "AB":
       return StatusConfig(
         color: const Color(0xFFDC2626),
@@ -25,7 +24,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.cancel_outlined,
         label: "Absent",
       );
-
     case "CL":
       return StatusConfig(
         color: const Color(0xFFEA580C),
@@ -33,7 +31,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.event_busy_rounded,
         label: "Casual Leave",
       );
-
     case "OD":
       return StatusConfig(
         color: const Color(0xFFD97706),
@@ -41,7 +38,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.work_outline_rounded,
         label: "On Duty",
       );
-
     case "WO":
       return StatusConfig(
         color: const Color(0xFF475569),
@@ -49,7 +45,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.weekend_outlined,
         label: "Week Off",
       );
-
     case "PH":
       return StatusConfig(
         color: const Color(0xFF7C3AED),
@@ -57,7 +52,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.celebration_outlined,
         label: "Holiday",
       );
-
     case "LWP":
       return StatusConfig(
         color: const Color(0xFFB45309),
@@ -65,7 +59,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.money_off_rounded,
         label: "LWP",
       );
-
     case "ML":
       return StatusConfig(
         color: const Color(0xFFDB2777),
@@ -73,7 +66,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.child_care_rounded,
         label: "ML",
       );
-
     case "MRGL":
       return StatusConfig(
         color: const Color(0xFF2563EB),
@@ -81,7 +73,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.medical_services_outlined,
         label: "MRGL",
       );
-
     case "SH":
       return StatusConfig(
         color: const Color(0xFF0891B2),
@@ -89,7 +80,6 @@ StatusConfig statusConfig(String status, bool isDark) {
         icon: Icons.schedule_rounded,
         label: "SH",
       );
-
     default:
       return StatusConfig(
         color: const Color(0xFF94A3B8),
@@ -101,6 +91,7 @@ StatusConfig statusConfig(String status, bool isDark) {
 }
 
 //  SCREEN
+
 class MyCalendarScreen extends StatefulWidget {
   const MyCalendarScreen({super.key});
 
@@ -123,7 +114,6 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
   int get firstWeekday =>
       DateTime(selectedMonth.year, selectedMonth.month, 1).weekday % 7;
 
-  // Fade-in animation
   late final AnimationController _fadeCtrl = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
@@ -134,6 +124,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
   );
 
   //  LOGIC
+
   @override
   void initState() {
     super.initState();
@@ -191,9 +182,49 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     }
   }
 
-  ///Attendance Count Status And Leave
-  int getStatusCount(String status) =>
-      newCalendarData.where((e) => (e["empstatus"] ?? "") == status).length;
+  /// ✅ FIXED: Count only fakt aajparyantchya (today inclusive) dates
+  int getStatusCount(String status) {
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+
+    return newCalendarData.where((e) {
+      if ((e["empstatus"] ?? "") != status) return false;
+
+      final dateStr = e["scheduledateddmm"] ?? "";
+      if (dateStr.isEmpty) return false;
+
+      try {
+        final parts = dateStr.split('/');
+        if (parts.length < 2) return false;
+        final cardDate = DateTime(
+          selectedMonth.year,
+          int.parse(parts[1]),
+          int.parse(parts[0]),
+        );
+        // Future dates count madhye nahi
+        return !cardDate.isAfter(todayOnly);
+      } catch (_) {
+        return false;
+      }
+    }).length;
+  }
+
+  /// ✅ Helper: Date object from calendar item
+  DateTime? _parseDateFromItem(Map<String, dynamic> item) {
+    final dateStr = item["scheduledateddmm"] ?? "";
+    if (dateStr.isEmpty) return null;
+    try {
+      final parts = dateStr.split('/');
+      if (parts.length < 2) return null;
+      return DateTime(
+        selectedMonth.year,
+        int.parse(parts[1]),
+        int.parse(parts[0]),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 
   Future<void> _selectMonth() async {
     final DateTime? picked = await showDatePicker(
@@ -257,7 +288,6 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       ),
       child: Stack(
         children: [
-          // Decorative circles
           Positioned(
             right: -30,
             top: -30,
@@ -268,14 +298,12 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
             bottom: 0,
             child: _decorCircle(70, Colors.white.withOpacity(0.04)),
           ),
-
           SafeArea(
             bottom: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 16, 20),
               child: Row(
                 children: [
-                  // Back button
                   GestureDetector(
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
@@ -298,8 +326,6 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
                     ),
                   ),
                   const SizedBox(width: 14),
-
-                  // Title + subtitle
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -325,8 +351,6 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
                       ],
                     ),
                   ),
-
-                  // Month picker chip
                   GestureDetector(
                     onTap: _selectMonth,
                     child: Container(
@@ -473,22 +497,67 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
   //  ATTENDANCE CARD
   Widget _attendanceCard(Map<String, dynamic> item, bool isDark) {
     final status = item["empstatus"] ?? "";
-    final dateString = item["scheduledateddmm"] ?? "";
+    final dateStr = item["scheduledateddmm"] ?? "";
     final cfg = statusConfig(status, isDark);
+
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+
     bool isToday = false;
+    bool isFuture = false;
 
-    try {
-      final parts = dateString.split('/');
-      final cardDate = DateTime(
-        selectedMonth.year,
-        int.parse(parts[1]),
-        int.parse(parts[0]),
+    final cardDate = _parseDateFromItem(item);
+    if (cardDate != null) {
+      isToday = DateUtils.isSameDay(cardDate, todayOnly);
+      isFuture = cardDate.isAfter(todayOnly); // ✅ Future check
+    }
+
+    final dayNum = dateStr.isNotEmpty ? dateStr.split('/')[0] : "—";
+
+    // ✅ Future dates: greyed-out / disabled look
+    if (isFuture) {
+      return Container(
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withOpacity(0.04)
+              : const Color(0xFFF1F5F9),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withOpacity(0.08)
+                : const Color(0xFFE2E8F0),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              dayNum,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: isDark
+                    ? Colors.white.withOpacity(0.2)
+                    : const Color(0xFFCBD5E1),
+              ),
+            ),
+            const SizedBox(height: 5),
+            Container(
+              width: 18,
+              height: 4,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.white.withOpacity(0.08)
+                    : const Color(0xFFE2E8F0),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ],
+        ),
       );
-      isToday = DateUtils.isSameDay(cardDate, DateTime.now());
-    } catch (_) {}
+    }
 
-    final dayNum = dateString.isNotEmpty ? dateString.split('/')[0] : "—";
-
+    // ✅ Past / today cards – normal colored display
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
@@ -498,7 +567,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
           color: isToday
               ? const Color(0xFFF97316)
               : cfg.color.withOpacity(isDark ? 0.3 : 0.4),
-          width: isToday ? 2.0 : 1.0,
+          width: isToday ? 1.5 : 1.0,
         ),
         boxShadow: isToday
             ? [
@@ -512,7 +581,6 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Day number
           Text(
             dayNum,
             style: TextStyle(
@@ -524,7 +592,6 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
             ),
           ),
           const SizedBox(height: 5),
-          // Status badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
             decoration: BoxDecoration(
@@ -647,6 +714,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
 }
 
 //  HELPERS
+
 class _SummaryItem {
   final String label;
   final int count;

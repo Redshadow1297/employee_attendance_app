@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
+import 'package:new_design_demo/core/app_services/tracking_service.dart';
 import 'package:new_design_demo/data/model/data_model_InOutPunch.dart';
 
 //  PUNCH SERVICE
@@ -11,11 +12,13 @@ class PunchService {
 
   /// Sends an **In-Punch** request.
   static Future<String> punchIn(PunchRequestData req) async {
+    await TrackingService().startTracking();  //Start Tracking At Punch in Time
     return _sendPunch(req, inOrOut: "0");
   }
 
   /// Sends an **Out-Punch** request.
   static Future<String> punchOut(PunchRequestData req) async {
+    await TrackingService().stopTracking(); //Stop Tracking at PunchOut Time
     return _sendPunch(req, inOrOut: "1");
   }
 
@@ -27,7 +30,7 @@ class PunchService {
     final String url = ApiConstants.punchInOut;
 
     debugPrint("PunchService ▶ sending punch | InOrOUT=$inOrOut | url=$url");
-
+  
     final response = await ApiClient.post(
       ApiConstants.punchInOut,
       data: req.toJson(overrideInOrOut: inOrOut),

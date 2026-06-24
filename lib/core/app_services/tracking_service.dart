@@ -39,10 +39,16 @@ class TrackingService {
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         distanceFilter: 20,
 
-        stopOnTerminate: false,
+        stopOnTerminate: false, //Handling on termination of APP
         startOnBoot: true,
         enableHeadless: true,
         foregroundService: true,
+        showsBackgroundLocationIndicator: true,
+        backgroundPermissionRationale: bg.PermissionRationale(
+          title: "Allow Background Location.",
+          message:
+              "Please make sure that your device has granted the background location permission",
+        ),
 
         autoSync: true,
         batchSync: true,
