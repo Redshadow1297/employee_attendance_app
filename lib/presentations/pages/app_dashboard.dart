@@ -1900,7 +1900,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
 
   //  LEAVE BALANCE CARD
   Widget _leaveBalanceCard(bool isDark) {
-    const double totalLeaves = 29;
+    const double totalLeaves = 30;
     const double usedLeaves = 10;
     const double remainingLeaves = totalLeaves - usedLeaves;
     final double progress = usedLeaves / totalLeaves;
@@ -1913,7 +1913,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.green.shade400, Colors.green.shade600],
@@ -1957,7 +1957,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
               ),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
+                  horizontal: 10,
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
@@ -2060,7 +2060,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
     bool isDark,
   ) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
       decoration: BoxDecoration(
         color: isDark
             ? Colors.white.withOpacity(0.05)
@@ -2161,10 +2161,10 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(right: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
         decoration: BoxDecoration(
           color: color.withOpacity(0.10),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(color: color.withOpacity(0.25)),
         ),
         child: Column(

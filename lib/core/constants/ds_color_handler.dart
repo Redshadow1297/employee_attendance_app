@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-// ─────────────────────────────────────────────────────────────
-//  DESIGN TOKENS  
-// ─────────────────────────────────────────────────────────────
 class DS {
   static const Color brandStart = Color(0xFF14B8A6);
   static const Color brandMid = Color(0xFF0D9488);

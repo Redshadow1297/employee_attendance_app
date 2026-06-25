@@ -1,5 +1,3 @@
-// // ignore_for_file: avoid_print, use_build_context_synchronously, deprecated_member_use, non_constant_identifier_names, unused_local_variable
-
 // import 'dart:io';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -522,9 +520,6 @@
 // }
 
 // ignore_for_file: non_constant_identifier_names, deprecated_member_use, use_build_context_synchronously
-
-//ONLINE PUNCHES ONLY
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';

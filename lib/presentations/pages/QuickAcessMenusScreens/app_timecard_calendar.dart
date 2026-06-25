@@ -182,7 +182,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     }
   }
 
-  /// ✅ FIXED: Count only fakt aajparyantchya (today inclusive) dates
+  // count only from first day to currnt date
   int getStatusCount(String status) {
     final today = DateTime.now();
     final todayOnly = DateTime(today.year, today.month, today.day);
@@ -208,8 +208,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       }
     }).length;
   }
-
-  /// ✅ Helper: Date object from calendar item
+  
   DateTime? _parseDateFromItem(Map<String, dynamic> item) {
     final dateStr = item["scheduledateddmm"] ?? "";
     if (dateStr.isEmpty) return null;
@@ -509,12 +508,12 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     final cardDate = _parseDateFromItem(item);
     if (cardDate != null) {
       isToday = DateUtils.isSameDay(cardDate, todayOnly);
-      isFuture = cardDate.isAfter(todayOnly); // ✅ Future check
+      isFuture = cardDate.isAfter(todayOnly); 
     }
 
     final dayNum = dateStr.isNotEmpty ? dateStr.split('/')[0] : "—";
 
-    // ✅ Future dates: greyed-out / disabled look
+    // Future dates in grey  container
     if (isFuture) {
       return Container(
         decoration: BoxDecoration(
@@ -557,7 +556,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       );
     }
 
-    // ✅ Past / today cards – normal colored display
+    //Rglar dates
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(

@@ -1,51 +1,61 @@
-// ignore_for_file: file_names, deprecated_member_use, use_build_context_synchronously
+// ignore_for_file: prefer_typing_uninitialized_variables, file_names, deprecated_member_use, use_build_context_synchronously
+import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:new_design_demo/core/api/api_client.dart';
 import 'package:new_design_demo/core/api/api_constants.dart';
-import 'package:new_design_demo/core/constants/ds_color_handler.dart';
-import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
+import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 
-class ApprovalFormScreen extends StatefulWidget {
-  final int transId;
-  final int empPk;
-  final String companyGroup;
+class AdvanceEntryFormReporting2 extends StatefulWidget {
+  final Map<String, dynamic> responseData;
 
-  const ApprovalFormScreen({
-    super.key,
-    required this.transId,
-    required this.empPk,
-    required this.companyGroup,
-  });
+  const AdvanceEntryFormReporting2({super.key, required this.responseData});
 
   @override
-  State<ApprovalFormScreen> createState() => _ApprovalFormScreenState();
+  State<AdvanceEntryFormReporting2> createState() =>
+      _AdvanceEntryFormReporting2State();
 }
 
-class _ApprovalFormScreenState extends State<ApprovalFormScreen>
+class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     with SingleTickerProviderStateMixin {
-  Map<String, dynamic>? data;
-  String? _downloadedFilePath;
+  //  Controllers (same as File 1) 
+  final TextEditingController installmentsCtrl = TextEditingController();
+  final TextEditingController fromMonthCtrl = TextEditingController();
+  final TextEditingController toMonthCtrl = TextEditingController();
+  final TextEditingController advanceAmountCtrl = TextEditingController();
+  final TextEditingController noOfInstallmentsCtrl = TextEditingController();
+  final TextEditingController approvalReasonController =
+      TextEditingController();
+
+  //  State (same as File 1) 
+  bool isLoading = false;
+  List<Map<String, String>> emiList = [];
   bool _isDownloading = false;
-  double _downloadProgress = 0.0;
-  bool isLoading = true;
-  int? emppk;
-  int? isSuperAdmin;
-  String? empcode;
+  final double _downloadProgress = 0.0;
+  String? _downloadedFilePath;
+  Dio dio = Dio();
+  late final String advanceAmount;
+  int emppk = 123;
+  var abcd;
+  String? formattedStartMonth;
 
-  // EMI fields
-  final installmentController = TextEditingController();
-  final TextEditingController approvalReasonController = TextEditingController();
-  DateTime? startDate;
-  List<Map<String, dynamic>> emiList = [];
+  bool isFirstApprover = false;
+  bool isSecondApprover = false;
+  bool isFinalHRApprover = false;
 
-  // Fade animation
+  String? secondApproverInstallments;
+  String? secondApproverFromMonth;
+  String? secondApproverToMonth;
+  String? secondApproverAdvanceAmount;
+
+  //  Fade animation (same pattern as File 2) 
   late final AnimationController _fadeCtrl = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
@@ -55,124 +65,250 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     curve: Curves.easeOut,
   );
 
+  //  INIT 
   @override
   void initState() {
     super.initState();
-    getPrefsData().then((_) => fetchAdvanceDetails());
+
+    //  Exact logic from File 1 
+    isFirstApprover = widget.responseData["IsFirstApprover"] ?? false;
+    isSecondApprover = widget.responseData["IsSecondApprover"] ?? false;
+    isFinalHRApprover = widget.responseData["IsFinalHRApprover"] ?? false;
+
+    secondApproverInstallments = widget.responseData["NoOfInstallments"]
+        ?.toString();
+    secondApproverFromMonth = widget.responseData["EffectiveDate"]?.toString();
+    secondApproverToMonth = widget.responseData["EndDate"]?.toString();
+    secondApproverAdvanceAmount = widget.responseData["AdvanceAmount"]
+        ?.toString();
+
+    loadCounter().then((_) {
+      _prefillFormFields();
+      _fadeCtrl.forward();
+    });
   }
 
   @override
   void dispose() {
+    installmentsCtrl.dispose();
+    fromMonthCtrl.dispose();
+    toMonthCtrl.dispose();
+    advanceAmountCtrl.dispose();
+    noOfInstallmentsCtrl.dispose();
     approvalReasonController.dispose();
-    installmentController.dispose();
     _fadeCtrl.dispose();
     super.dispose();
   }
 
-  String _parseToApiDate(String? raw) {
-    if (raw == null || raw.isEmpty) return '';
-    final formats = [
-      DateFormat("MMM d, yyyy"),
-      DateFormat("MMM dd, yyyy"),
-      DateFormat("dd MMM, yyyy"),
-      DateFormat("dd/MM/yyyy"),
-      DateFormat("dd/MM/yy"),
-    ];
-    for (final fmt in formats) {
-      try {
-        return DateFormat("dd/MM/yyyy").format(fmt.parseStrict(raw.trim()));
-      } catch (_) {}
+  //  LOGIC (unchanged from File 1) 
+
+  void _prefillFormFields() {
+    if (isFinalHRApprover) {
+      if (secondApproverInstallments != null &&
+          secondApproverInstallments!.isNotEmpty) {
+        noOfInstallmentsCtrl.text = secondApproverInstallments!;
+      }
+      if (secondApproverFromMonth != null &&
+          secondApproverFromMonth!.isNotEmpty) {
+        fromMonthCtrl.text = secondApproverFromMonth!;
+      }
+      if (secondApproverToMonth != null && secondApproverToMonth!.isNotEmpty) {
+        toMonthCtrl.text = secondApproverToMonth!;
+      }
+      if (secondApproverAdvanceAmount != null &&
+          secondApproverAdvanceAmount!.isNotEmpty) {
+        advanceAmountCtrl.text = secondApproverAdvanceAmount!;
+      }
+      if (noOfInstallmentsCtrl.text.isNotEmpty &&
+          fromMonthCtrl.text.isNotEmpty) {
+        _generateEmiTable();
+      }
+    } else if (isSecondApprover) {
+      String? installments = widget.responseData["NoOfInstallments"]
+          ?.toString();
+      String? fromMonth =
+          widget.responseData["EffectiveMonthYear"]?.toString() ??
+          widget.responseData["EffectiveDate"]?.toString();
+      String? toMonth =
+          widget.responseData["EndMonthYear"]?.toString() ??
+          widget.responseData["EndDate"]?.toString();
+      String? advAmt = widget.responseData["AdvanceAmount"]?.toString();
+
+      if (installments != null && installments.isNotEmpty) {
+        noOfInstallmentsCtrl.text = installments;
+      }
+      if (fromMonth != null && fromMonth.isNotEmpty) {
+        fromMonthCtrl.text = fromMonth;
+      }
+      if (toMonth != null && toMonth.isNotEmpty) {
+        toMonthCtrl.text = toMonth;
+      }
+      if (advAmt != null && advAmt.isNotEmpty) {
+        advanceAmountCtrl.text = advAmt;
+      }
+      if (noOfInstallmentsCtrl.text.isNotEmpty &&
+          fromMonthCtrl.text.isNotEmpty) {
+        _generateEmiTable();
+      }
     }
-    return raw;
   }
 
-  Future<void> getPrefsData() async {
-    final prefs = await SharedPreferences.getInstance();
-    emppk = prefs.getInt('emppk');
-    empcode = prefs.getString('employeecode');
-    isSuperAdmin = int.tryParse(prefs.getString('issuperadmin') ?? '0') ?? 0;
+  Future<void> loadCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      emppk = (prefs.getInt('emppk') ?? '') as int;
+      abcd = emppk.toString();
+    });
   }
 
-  Future<void> fetchAdvanceDetails() async {
-    try {
-      final response = await ApiClient.post(
-        ApiConstants.getAdvanceDetails,
-        data: {
-          "TransID": widget.transId,
-          "EmpPK": widget.empPk,
-          "CompanyGroup": widget.companyGroup,
-        },
-      );
-      final responseData = response.data is Map
-          ? Map<String, dynamic>.from(response.data)
-          : null;
-      setState(() {
-        data = responseData;
-        isLoading = false;
-      });
-      _fadeCtrl.forward();
-    } catch (e) {
-      debugPrint("DETAIL API ERROR $e");
-      setState(() => isLoading = false);
+  String get documentName {
+    final String? pathname = widget.responseData["Pathname"];
+    if (pathname != null && pathname.isNotEmpty) {
+      return pathname.split(Platform.isWindows ? '\\' : '/').last;
     }
+    return "No document attached";
   }
 
-  Map<String, dynamic> _buildApprovalPayload(String status) => {
-        "EmpPK": data?["EmpPK"],
-        "CompanyPK": data?["Companypk"],
-        "Status": status,
-        "TransID": data?["TransID"],
-        "ApprovalReason": approvalReasonController.text,
-        "NoOfInstallments": installmentController.text.trim(),
-        "EffectiveMonthYear": startDate != null
-            ? DateFormat('dd/MM/yyyy').format(startDate!)
-            : null,
-        "EndMonthYear": null,
-        "ApplicationDate":
-            _parseToApiDate(data?["ApplicationDate"]?.toString()),
-        "AdvanceAmount": data?["AdvanceAmount"],
-        "IsFirstApprover": data?["IsFirstApprover"],
-        "IsSecondApprover": data?["IsSecondApprover"],
-        "IsFinalHRApprover": data?["IsFinalHRApprover"],
-        "ReportingPK": data?["Reportingpk"],
-        "Reason": data?["Reason"],
-        "CompanyGroup": data?["CompanyGroup"],
-      };
+  Future<void> _selectMonthYear(BuildContext context) async {
+    DateTime now = DateTime.now();
+    int selectedMonth = now.month;
+    int selectedYear = now.year;
 
-  bool _validateReason() {
-    if (approvalReasonController.text.trim().isEmpty) {
-      CommonSnackBar.show(
-        context: context,
-        title: "Warning",
-        message: "Please enter a reason for approval/rejection.",
-        type: SnackBarType.warning,
-      );
-      return false;
-    }
-    return true;
-  }
-
-  Future<void> _approveAdvance() async {
-    if (!_validateReason()) return;
-    try {
-      setState(() => isLoading = true);
-      final response = await ApiClient.post(
-        ApiConstants.approveAdvanceApplication,
-        data: _buildApprovalPayload("Approved"),
-      );
-      if (response.statusCode == 200) {
-        CommonSnackBar.show(
-          context: context,
-          title: "Success",
-          message: "Advance approved successfully.",
-          type: SnackBarType.success,
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: const Text("Select Month & Year"),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DropdownButton<int>(
+                    value: selectedMonth,
+                    items: List.generate(12, (i) => i + 1)
+                        .where(
+                          (month) =>
+                              selectedYear > now.year ||
+                              (selectedYear == now.year && month >= now.month),
+                        )
+                        .map(
+                          (month) => DropdownMenuItem(
+                            value: month,
+                            child: Text(
+                              DateFormat.MMMM().format(DateTime(0, month)),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setStateDialog(() => selectedMonth = value);
+                      }
+                    },
+                  ),
+                  DropdownButton<int>(
+                    value: selectedYear,
+                    items: List.generate(20, (i) => DateTime.now().year + i)
+                        .map(
+                          (year) => DropdownMenuItem(
+                            value: year,
+                            child: Text("$year"),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setStateDialog(() {
+                          selectedYear = value;
+                          if (selectedYear == now.year &&
+                              selectedMonth < now.month) {
+                            selectedMonth = now.month;
+                          }
+                        });
+                      }
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    formattedStartMonth =
+                        "${selectedMonth.toString().padLeft(2, '0')}/$selectedYear";
+                    fromMonthCtrl.text = formattedStartMonth!;
+                    Navigator.pop(context);
+                    Future.microtask(() => _generateEmiTable());
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          },
         );
-        Navigator.pop(context, true);
-      } else {
+      },
+    );
+  }
+
+  void _generateEmiTable() {
+    setState(() {
+      emiList.clear();
+      if (noOfInstallmentsCtrl.text.isEmpty || fromMonthCtrl.text.isEmpty) {
+        return;
+      }
+
+      int installments = int.tryParse(noOfInstallmentsCtrl.text) ?? 0;
+      DateFormat format = DateFormat("MM/yyyy");
+      DateTime fromDate = format.parse(fromMonthCtrl.text);
+
+      int amount =
+          int.tryParse(
+            advanceAmountCtrl.text.isNotEmpty
+                ? advanceAmountCtrl.text.split(".").first
+                : widget.responseData["AdvanceAmount"]
+                          ?.toString()
+                          .split(".")
+                          .first ??
+                      "0",
+          ) ??
+          0;
+
+      int amountPerInstallment = amount ~/ installments;
+
+      for (int i = 0; i < installments; i++) {
+        DateTime emiMonth = DateTime(fromDate.year, fromDate.month + i, 1);
+        emiList.add({
+          "month": DateFormat("MMM-yyyy").format(emiMonth),
+          "amount": "$amountPerInstallment",
+          "paid": "No",
+        });
+      }
+
+      DateTime lastMonth = DateTime(
+        fromDate.year,
+        fromDate.month + installments - 1,
+        1,
+      );
+      toMonthCtrl.text = DateFormat("MM/yyyy").format(lastMonth);
+    });
+  }
+
+  String _getFileName(String path) =>
+      path.split(Platform.isWindows ? '\\' : '/').last;
+
+  Future<void> _openDownloadedFile() async {
+    if (_downloadedFilePath == null) return;
+    try {
+      final result = await OpenFile.open(_downloadedFilePath!);
+      if (result.type != ResultType.done) {
         CommonSnackBar.show(
           context: context,
           title: "Error",
-          message: "Failed to approve advance.",
+          message: "Could not open file: ${result.message}",
           type: SnackBarType.error,
         );
       }
@@ -180,107 +316,221 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
       CommonSnackBar.show(
         context: context,
         title: "Error",
-        message: "An error occurred.",
+        message: "Error opening file: $e",
         type: SnackBarType.error,
       );
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
-  Future<void> _rejectAdvance() async {
-    if (!_validateReason()) return;
-    try {
-      setState(() => isLoading = true);
-      final response = await ApiClient.post(
-        ApiConstants.approveAdvanceApplication,
-        data: _buildApprovalPayload("Rejected"),
-      );
-      if (response.statusCode == 200) {
-        CommonSnackBar.show(
-          context: context,
-          title: "Success",
-          message: "Advance rejected successfully.",
-          type: SnackBarType.success,
-        );
-        Navigator.pop(context, true);
-      } else {
-        CommonSnackBar.show(
-          context: context,
-          title: "Error",
-          message: "Failed to reject advance.",
-          type: SnackBarType.error,
-        );
-      }
-    } catch (e) {
-      CommonSnackBar.show(
-        context: context,
-        title: "Error",
-        message: "An error occurred.",
-        type: SnackBarType.error,
-      );
-    } finally {
-      setState(() => isLoading = false);
     }
   }
 
   Future<void> _downloadAndOpenFileFromBase64(
-      String base64FileString, String fileName) async {
+    String base64FileString,
+    String fileName,
+  ) async {
     try {
+      setState(() => _isDownloading = true);
+
+      if (base64FileString.contains(',')) {
+        base64FileString = base64FileString.split(',').last;
+      }
+      Uint8List fileBytes = base64Decode(base64FileString);
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String savePath = '${appDocDir.path}/$fileName';
+      File file = File(savePath);
+      await file.writeAsBytes(fileBytes, flush: true);
+
       setState(() {
-        _isDownloading = true;
-        _downloadProgress = 0.3;
-      });
-      if (base64FileString.isEmpty) throw Exception("Empty file");
-      String cleanedBase64 = base64FileString.contains(',')
-          ? base64FileString.split(',').last
-          : base64FileString;
-      Uint8List bytes = base64Decode(cleanedBase64);
-      final dir = await getApplicationDocumentsDirectory();
-      String path = "${dir.path}/$fileName.pdf";
-      File file = File(path);
-      await file.writeAsBytes(bytes);
-      setState(() {
-        _downloadedFilePath = path;
         _isDownloading = false;
-        _downloadProgress = 1.0;
+        _downloadedFilePath = savePath;
       });
-      await OpenFile.open(path);
+      await OpenFile.open(savePath);
     } catch (e) {
       setState(() => _isDownloading = false);
-      debugPrint("Download Error: $e");
+      CommonSnackBar.show(
+        context: context,
+        title: "Error",
+        message: "Error: $e",
+        type: SnackBarType.error,
+      );
     }
   }
 
-  Future<void> _openDownloadedFile() async {
-    if (_downloadedFilePath == null) return;
-    await OpenFile.open(_downloadedFilePath!);
-  }
+  //  Approve / Reject 
 
-  void generateEmiChart() {
-    emiList.clear();
-    final amount =
-        double.tryParse(data?["AdvanceAmount"]?.toString() ?? "0") ?? 0;
-    final installments = int.tryParse(installmentController.text.trim()) ?? 0;
-    if (installments <= 0 || startDate == null) return;
-    final emi = amount / installments;
-    double balance = amount;
-    for (int i = 1; i <= installments; i++) {
-      balance -= emi;
-      emiList.add({
-        "no": i,
-        "date": DateFormat("dd-MM-yyyy").format(
-          DateTime(
-              startDate!.year, startDate!.month + (i - 1), startDate!.day),
-        ),
-        "emi": emi.toStringAsFixed(0),
-        "balance": balance <= 0 ? "0" : balance.toStringAsFixed(0),
-      });
+  void onApprovePressed() {
+    final advAmt = advanceAmountCtrl.text.trim();
+    final installments = noOfInstallmentsCtrl.text.trim();
+    final fromMonth = fromMonthCtrl.text.trim();
+    final toMonth = toMonthCtrl.text.trim();
+    final approvalReason = approvalReasonController.text.trim();
+
+    if (advAmt.isEmpty || advAmt == "0") {
+      _showError("Please enter a valid Advance Amount");
+      return;
     }
-    setState(() {});
+    int? inst = int.tryParse(installments);
+    if (inst == null) {
+      _showError("Please enter valid number of installments");
+      return;
+    }
+    if (inst <= 0) {
+      _showError("Installments must be greater than 0");
+      return;
+    }
+    if (fromMonth.isEmpty) {
+      _showError("Please select Deduction From Month");
+      return;
+    }
+    if (toMonth.isEmpty) {
+      _showError(
+        "Deduction To Month is missing. Please check installment calculation.",
+      );
+      return;
+    }
+    if (approvalReason.isEmpty) {
+      _showError("Please enter Approval/Reject Reason");
+      return;
+    }
+
+    dynamic advanceAmountValue;
+    if (advanceAmountCtrl.text.isNotEmpty) {
+      double? amount = double.tryParse(advanceAmountCtrl.text);
+      advanceAmountValue = amount?.toInt();
+    } else {
+      String amountStr =
+          widget.responseData["AdvanceAmount"]?.toString() ?? "0";
+      double? amount = double.tryParse(amountStr);
+      advanceAmountValue = amount?.toInt();
+    }
+
+    Map<String, dynamic> data = {
+      "EmpPK": widget.responseData['EmpPK'],
+      "CompanyPK": 1,
+      "Status": "Approved",
+      "TransID": widget.responseData["TransID"],
+      "ApprovalReason": approvalReasonController.text,
+      "NoOfInstallments": noOfInstallmentsCtrl.text.isNotEmpty
+          ? int.tryParse(noOfInstallmentsCtrl.text)
+          : widget.responseData["NoOfInstallments"],
+      "EffectiveMonthYear": fromMonthCtrl.text,
+      "EndMonthYear": toMonthCtrl.text,
+      "EffectiveDate": fromMonthCtrl.text,
+      "EndDate": toMonthCtrl.text,
+      "ApplicationDate": DateFormat("dd/MM/yyyy").format(
+        DateFormat(
+          "MMM dd, yyyy",
+        ).parse(widget.responseData["ApplicationDate"]),
+      ),
+      "AdvanceAmount": advanceAmountValue,
+      "IsFirstApprover": isFirstApprover,
+      "IsSecondApprover": isSecondApprover,
+      "IsFinalHRApprover": isFinalHRApprover,
+      "ReportingPK": widget.responseData["Reportingpk"],
+      "Reason": widget.responseData["Reason"],
+      "CompanyGroup": widget.responseData["CompanyGroup"],
+    };
+
+    approveAdvance(data);
   }
 
-  // ─────────────────────────────── BUILD ───────────────────────────────
+  void onRejectPressed() {
+    final approvalReason = approvalReasonController.text.trim();
+    if (approvalReason.isEmpty) {
+      _showError("Please enter Approval/Reject Reason");
+      return;
+    }
+
+    dynamic advanceAmountValue;
+    if (advanceAmountCtrl.text.isNotEmpty) {
+      double? amount = double.tryParse(advanceAmountCtrl.text);
+      advanceAmountValue = amount?.toInt();
+    } else {
+      String amountStr =
+          widget.responseData["AdvanceAmount"]?.toString() ?? "0";
+      double? amount = double.tryParse(amountStr);
+      advanceAmountValue = amount?.toInt();
+    }
+
+    Map<String, dynamic> data = {
+      "EmpPK": widget.responseData['EmpPK'],
+      "CompanyPK": 1,
+      "Status": "Rejected",
+      "TransID": widget.responseData["TransID"],
+      "ApprovalReason": approvalReasonController.text,
+      "NoOfInstallments": noOfInstallmentsCtrl.text.isNotEmpty
+          ? int.tryParse(noOfInstallmentsCtrl.text)
+          : widget.responseData["NoOfInstallments"],
+      "EffectiveMonthYear": fromMonthCtrl.text,
+      "EndMonthYear": toMonthCtrl.text,
+      "EffectiveDate": fromMonthCtrl.text,
+      "EndDate": toMonthCtrl.text,
+      "ApplicationDate": DateFormat("dd/MM/yyyy").format(
+        DateFormat(
+          "MMM dd, yyyy",
+        ).parse(widget.responseData["ApplicationDate"]),
+      ),
+      "AdvanceAmount": advanceAmountValue,
+      "IsFirstApprover": isFirstApprover,
+      "IsSecondApprover": isSecondApprover,
+      "IsFinalHRApprover": isFinalHRApprover,
+      "ReportingPK": widget.responseData["Reportingpk"],
+      "Reason": widget.responseData["Reason"],
+      "CompanyGroup": widget.responseData["CompanyGroup"],
+    };
+
+    approveAdvance(data);
+  }
+
+  Future<void> approveAdvance(Map<String, dynamic> advanceAppData) async {
+    if (isLoading) return;
+    setState(() => isLoading = true);
+    try {
+      final response = await ApiClient.post(
+        ApiConstants.approveAdvanceApplication,
+      );
+
+      if (response.statusCode == 200) {
+        if (!mounted) return;
+        CommonSnackBar.show(
+          context: context,
+          title: "Success",
+          message: response.data.toString(),
+          type: SnackBarType.success,
+        );
+        Navigator.pop(context, true);
+      } else {
+        if (!mounted) return;
+        CommonSnackBar.show(
+          context: context,
+          title: "Error",
+          message: "Error: ${response.statusMessage}",
+          type: SnackBarType.error,
+        );
+        Navigator.pop(context, false);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      CommonSnackBar.show(
+        context: context,
+        title: "Error",
+        message: "Error: $e",
+        type: SnackBarType.error,
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  void _showError(String message) {
+    CommonSnackBar.show(
+      context: context,
+      title: "Warning",
+      message: message,
+      type: SnackBarType.warning,
+    );
+  }
+
+  //  BUILD 
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -293,33 +543,36 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
           Expanded(
             child: isLoading
                 ? _loadingState()
-                : data == null
-                    ? _emptyState(isDark)
-                    : FadeTransition(
-                        opacity: _fadeAnim,
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-                          physics: const BouncingScrollPhysics(),
-                          child: Column(
-                            children: [
-                              _infoCard(isDark),
-                              const SizedBox(height: 14),
-                              _documentCard(isDark),
-                              const SizedBox(height: 14),
-                              _emiCard(isDark),
-                              const SizedBox(height: 14),
-                              _actionCard(isDark),
-                            ],
-                          ),
-                        ),
+                : FadeTransition(
+                    opacity: _fadeAnim,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          _approverBadge(isDark),
+                          const SizedBox(height: 14),
+                          _employeeInfoCard(isDark),
+                          const SizedBox(height: 14),
+                          _advanceDetailsCard(isDark),
+                          const SizedBox(height: 14),
+                          _documentCard(isDark),
+                          const SizedBox(height: 14),
+                          _emiCard(isDark),
+                          const SizedBox(height: 14),
+                          _actionCard(isDark),
+                        ],
                       ),
+                    ),
+                  ),
           ),
         ],
       ),
     );
   }
 
-  // ─────────────────────────────── HEADER ───────────────────────────────
+  //  HEADER 
+
   Widget _header(bool isDark) {
     return Container(
       decoration: const BoxDecoration(
@@ -331,7 +584,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
         ),
       ),
       child: Stack(
-        children: [ 
+        children: [
           Positioned(
             right: -30,
             top: -30,
@@ -364,7 +617,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Advance Approval",
+                        "Advance Approval Form",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -391,72 +644,51 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
   }
 
   Widget _decorCircle(double size, Color color) => Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-      );
+    width: size,
+    height: size,
+    decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+  );
 
-  // ─────────────────────────────── INFO CARD ───────────────────────────────
-  Widget _infoCard(bool isDark) {
-    final d = data!;
-    return _sectionCard(
-      isDark: isDark,
-      children: [
-        _sectionHeader(
-            "Employee Details", Icons.person_outline_rounded, const Color(0xFF3B82F6), isDark),
-        const SizedBox(height: 14),
-        _infoRow("Name", d["EmployeeName"], isDark),
-        _infoRow("Code", d["EmployeeCode"], isDark),
-        _infoRow("Company", d["CompanyName"], isDark),
-        _infoRow("Department", d["DepartmentName"], isDark),
-        _infoRow("Location", d["LocationName"], isDark),
-        _infoRow("Salary", d["GrossSalary"], isDark),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Divider(
-              color: isDark ? DS.borderDark : DS.borderLight, height: 1),
-        ),
-        _sectionHeader(
-            "Advance Details", Icons.account_balance_wallet_rounded, DS.brandStart, isDark),
-        const SizedBox(height: 14),
-        _infoRow("Amount", "₹${d["AdvanceAmount"] ?? "0"}", isDark,
-            valueColor: DS.brandStart),
-        _infoRow("Reason", d["Reason"], isDark),
-        _infoRow("Date", d["ApplicationDate"], isDark),
-        _infoRow("Status", d["ApprovalStatus"], isDark,
-            valueColor: _approvalColor(d["ApprovalStatus"]?.toString() ?? "")),
-      ],
-    );
-  }
+  //  Approver Badge 
 
-  Widget _infoRow(String label, dynamic value, bool isDark,
-      {Color? valueColor}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 7),
+  Widget _approverBadge(bool isDark) {
+    String approverType = isFirstApprover
+        ? "First Approver"
+        : isSecondApprover
+        ? "Second Approver"
+        : isFinalHRApprover
+        ? "Final HR Approver"
+        : "Approver";
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: DS.brandStart.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(DS.r12),
+        border: Border.all(color: DS.brandStart.withOpacity(0.25)),
+      ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 110,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: isDark ? Colors.white38 : const Color(0xFF64748B),
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: DS.brandStart.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(
+              Icons.verified_user_rounded,
+              color: DS.brandStart,
+              size: 16,
             ),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              value?.toString() ?? "—",
-              style: TextStyle(
-                color: valueColor ??
-                    (isDark ? Colors.white : const Color(0xFF0F172A)),
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
+          const SizedBox(width: 10),
+          Text(
+            "Viewing as: $approverType",
+            style: TextStyle(
+              color: isDark ? Colors.white : const Color(0xFF0F172A),
+              fontWeight: FontWeight.w700,
+              fontSize: 13,
             ),
           ),
         ],
@@ -464,49 +696,162 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  Color _approvalColor(String status) {
-    final lower = status.toLowerCase();
-    if (lower.contains('approved')) return DS.green;
-    if (lower.contains('rejected')) return DS.red;
-    return const Color(0xFFF59E0B);
+  //  Employee Info Card 
+
+  Widget _employeeInfoCard(bool isDark) {
+    final d = widget.responseData;
+    return _sectionCard(
+      isDark: isDark,
+      children: [
+        _sectionHeader(
+          "Employee Details",
+          Icons.person_outline_rounded,
+          const Color(0xFF3B82F6),
+          isDark,
+        ),
+        const SizedBox(height: 14),
+        _infoRow("Application Date", d["ApplicationDate"] ?? "-", isDark),
+        _infoRow("Employee Code", d["EmployeeCode"] ?? "-", isDark),
+        _infoRow("Name", d["EmployeeName"] ?? "-", isDark),
+        _infoRow("Company", d["CompanyName"] ?? "-", isDark),
+        _infoRow("Location", d["LocationName"] ?? "-", isDark),
+        _infoRow("Department", d["DepartmentName"] ?? "-", isDark),
+        _infoRow("Gross Salary", d["GrossSalary"]?.toString() ?? "-", isDark),
+      ],
+    );
   }
 
-  // ─────────────────────────────── DOCUMENT CARD ───────────────────────────────
-  Widget _documentCard(bool isDark) {
-    final base64 = data?["PathnameBase64"];
-    final hasDoc = base64 != null && base64.toString().isNotEmpty;
+  //  Advance Details Card (editable fields per approver role) 
+
+  Widget _advanceDetailsCard(bool isDark) {
+    final d = widget.responseData;
+    final advAmt = d["AdvanceAmount"]?.toString() ?? "0";
+
+    // Editable only for second approver or final HR approver
+    final bool canEdit = isSecondApprover || isFinalHRApprover;
 
     return _sectionCard(
       isDark: isDark,
       children: [
-        _sectionHeader("Document", Icons.attach_file_rounded,
-            const Color(0xFF8B5CF6), isDark),
+        _sectionHeader(
+          "Advance Details",
+          Icons.account_balance_wallet_rounded,
+          DS.brandStart,
+          isDark,
+        ),
         const SizedBox(height: 14),
-        if (!hasDoc)
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(DS.r12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.folder_off_outlined,
-                    color: isDark ? Colors.white38 : Colors.black26, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  "No document available",
-                  style: TextStyle(
-                      color: isDark ? Colors.white38 : Colors.black38,
-                      fontSize: 13),
-                ),
-              ],
+
+        // Advance Amount
+        _fieldRow(
+          label: "Advance Amount",
+          isDark: isDark,
+          child: _styledTextField(
+            controller: advanceAmountCtrl
+              ..text = advanceAmountCtrl.text.isEmpty
+                  ? advAmt
+                  : advanceAmountCtrl.text,
+            hint: advAmt,
+            isDark: isDark,
+            readOnly: !canEdit,
+            onChanged: (_) => _generateEmiTable(),
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        // No. of Installments
+        _fieldRow(
+          label: "No. of Installments",
+          isDark: isDark,
+          child: _styledTextField(
+            controller: noOfInstallmentsCtrl,
+            hint: "e.g. 6",
+            isDark: isDark,
+            readOnly: !canEdit,
+            keyboardType: TextInputType.number,
+            onChanged: (_) => _generateEmiTable(),
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        // Deduction From Month
+        _fieldRow(
+          label: "Deduction From",
+          isDark: isDark,
+          child: GestureDetector(
+            onTap: canEdit ? () => _selectMonthYear(context) : null,
+            child: AbsorbPointer(
+              absorbing: !canEdit,
+              child: _styledTextField(
+                controller: fromMonthCtrl,
+                hint: "MM/yyyy",
+                isDark: isDark,
+                readOnly: true,
+                suffixIcon: canEdit
+                    ? Icon(
+                        Icons.calendar_today_rounded,
+                        size: 16,
+                        color: isDark
+                            ? Colors.white38
+                            : const Color(0xFF64748B),
+                      )
+                    : null,
+              ),
             ),
           ),
-        if (hasDoc) ...[
+        ),
+        const SizedBox(height: 10),
+
+        // Deduction To Month (always read-only — calculated)
+        _fieldRow(
+          label: "Deduction To",
+          isDark: isDark,
+          child: _styledTextField(
+            controller: toMonthCtrl,
+            hint: "Auto calculated",
+            isDark: isDark,
+            readOnly: true,
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        _infoRow("Reason", d["Reason"] ?? "-", isDark),
+        _infoRow(
+          "Approval Status",
+          d["ApprovalStatus"] ?? "-",
+          isDark,
+          valueColor: _approvalColor(d["ApprovalStatus"]?.toString() ?? ""),
+        ),
+      ],
+    );
+  }
+
+  //  Document Card 
+
+  Widget _documentCard(bool isDark) {
+    final String? base64File = widget.responseData["PathnameBase64"];
+    final String? pathname = widget.responseData["Pathname"];
+    final bool hasDocument = base64File != null && base64File.isNotEmpty;
+    final String fileName = pathname != null && pathname.isNotEmpty
+        ? _getFileName(pathname)
+        : "AdvanceDocument.pdf";
+
+    return _sectionCard(
+      isDark: isDark,
+      children: [
+        _sectionHeader(
+          "Document",
+          Icons.attach_file_rounded,
+          const Color(0xFF8B5CF6),
+          isDark,
+        ),
+        const SizedBox(height: 14),
+        if (!hasDocument)
+          _emptyPlaceholder(
+            "No document attached",
+            Icons.folder_off_outlined,
+            isDark,
+          )
+        else ...[
           if (_isDownloading) ...[
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -523,8 +868,8 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => _downloadAndOpenFileFromBase64(
-                      base64.toString(), "Advance_${widget.transId}"),
+                  onTap: () =>
+                      _downloadAndOpenFileFromBase64(base64File, fileName),
                   child: _gradientButton(
                     label: "Download",
                     icon: Icons.download_rounded,
@@ -549,103 +894,43 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
               ],
             ],
           ),
+          const SizedBox(height: 8),
+          Text(
+            fileName,
+            style: TextStyle(
+              fontSize: 11,
+              color: isDark ? Colors.white38 : Colors.black38,
+            ),
+          ),
         ],
       ],
     );
   }
 
-  // ─────────────────────────────── EMI CARD ───────────────────────────────
+  //  EMI Card 
+
   Widget _emiCard(bool isDark) {
+    if (emiList.isEmpty) return const SizedBox.shrink();
     return _sectionCard(
       isDark: isDark,
       children: [
-        _sectionHeader("EMI Schedule", Icons.calendar_month_rounded,
-            const Color(0xFFF59E0B), isDark),
+        _sectionHeader(
+          "EMI Schedule",
+          Icons.calendar_month_rounded,
+          const Color(0xFFF59E0B),
+          isDark,
+        ),
         const SizedBox(height: 14),
-
-        // Installments input
-        TextField(
-          controller: installmentController,
-          keyboardType: TextInputType.number,
-          style: TextStyle(
-              color: isDark ? Colors.white : const Color(0xFF0F172A),
-              fontSize: 13),
-          decoration: _inputDecoration("No. of Installments", isDark),
+        // Header row
+        Row(
+          children: [
+            _emiHeaderCell("Month", isDark, flex: 3),
+            _emiHeaderCell("Amount (₹)", isDark, flex: 2),
+            _emiHeaderCell("Paid", isDark, flex: 1),
+          ],
         ),
-        const SizedBox(height: 12),
-
-        // Date picker
-        GestureDetector(
-          onTap: () async {
-            final picked = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: DateTime(2030),
-            );
-            if (picked != null) setState(() => startDate = picked);
-          },
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: isDark ? DS.inputDark : const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(DS.r12),
-              border: Border.all(
-                  color: isDark ? DS.borderDark : DS.borderLight),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.date_range_rounded,
-                    size: 17,
-                    color: isDark ? Colors.white38 : const Color(0xFF64748B)),
-                const SizedBox(width: 10),
-                Text(
-                  startDate == null
-                      ? "Select Start Date"
-                      : DateFormat("dd-MM-yyyy").format(startDate!),
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: startDate == null
-                        ? (isDark ? Colors.white30 : Colors.black38)
-                        : (isDark ? Colors.white : const Color(0xFF0F172A)),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        // Generate button
-        GestureDetector(
-          onTap: generateEmiChart,
-          child: _gradientButton(
-            label: "Generate EMI Chart",
-            icon: Icons.auto_graph_rounded,
-            colors: [DS.brandStart, DS.brandDeep],
-            shadowColor: DS.brandStart,
-          ),
-        ),
-
-        // EMI Table
-        if (emiList.isNotEmpty) ...[
-          const SizedBox(height: 16),
-          Divider(color: isDark ? DS.borderDark : DS.borderLight, height: 1),
-          const SizedBox(height: 12),
-          // Header row
-          Row(
-            children: [
-              _emiHeaderCell("#", isDark, flex: 1),
-              _emiHeaderCell("Date", isDark, flex: 3),
-              _emiHeaderCell("EMI (₹)", isDark, flex: 2),
-              _emiHeaderCell("Balance (₹)", isDark, flex: 2),
-            ],
-          ),
-          const SizedBox(height: 6),
-          ...emiList.map((e) => _emiRow(e, isDark)),
-        ],
+        const SizedBox(height: 6),
+        ...emiList.map((e) => _emiRow(e, isDark)),
       ],
     );
   }
@@ -664,7 +949,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  Widget _emiRow(Map<String, dynamic> e, bool isDark) {
+  Widget _emiRow(Map<String, String> e, bool isDark) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
@@ -677,29 +962,26 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
       child: Row(
         children: [
           Expanded(
-              flex: 1,
-              child: Text("${e["no"]}",
-                  style: _emiCellStyle(isDark))),
+            flex: 3,
+            child: Text(e["month"]!, style: _emiCellStyle(isDark)),
+          ),
           Expanded(
-              flex: 3,
-              child:
-                  Text(e["date"], style: _emiCellStyle(isDark))),
+            flex: 2,
+            child: Text(e["amount"]!, style: _emiCellStyle(isDark, bold: true)),
+          ),
           Expanded(
-              flex: 2,
-              child:
-                  Text(e["emi"], style: _emiCellStyle(isDark, bold: true))),
-          Expanded(
-              flex: 2,
-              child: Text(e["balance"],
-                  style: _emiCellStyle(isDark,
-                      color: DS.brandStart))),
+            flex: 1,
+            child: Text(
+              e["paid"]!,
+              style: _emiCellStyle(isDark, color: DS.brandStart),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  TextStyle _emiCellStyle(bool isDark,
-      {bool bold = false, Color? color}) {
+  TextStyle _emiCellStyle(bool isDark, {bool bold = false, Color? color}) {
     return TextStyle(
       color: color ?? (isDark ? Colors.white70 : const Color(0xFF0F172A)),
       fontSize: 12,
@@ -707,29 +989,37 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  // ─────────────────────────────── ACTION CARD ───────────────────────────────
+  //  Action Card 
+
   Widget _actionCard(bool isDark) {
     return _sectionCard(
       isDark: isDark,
       children: [
-        _sectionHeader("Take Action", Icons.gavel_rounded,
-            const Color(0xFFF59E0B), isDark),
+        _sectionHeader(
+          "Take Action",
+          Icons.gavel_rounded,
+          const Color(0xFFF59E0B),
+          isDark,
+        ),
         const SizedBox(height: 14),
         TextField(
           controller: approvalReasonController,
           maxLines: 3,
           style: TextStyle(
-              color: isDark ? Colors.white : const Color(0xFF0F172A),
-              fontSize: 13),
+            color: isDark ? Colors.white : const Color(0xFF0F172A),
+            fontSize: 13,
+          ),
           decoration: _inputDecoration(
-              "Enter reason for approval or rejection…", isDark),
+            "Enter reason for approval or rejection…",
+            isDark,
+          ),
         ),
         const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
               child: GestureDetector(
-                onTap: _approveAdvance,
+                onTap: onApprovePressed,
                 child: _gradientButton(
                   label: "Approve",
                   icon: Icons.check_circle_outline_rounded,
@@ -742,7 +1032,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
             const SizedBox(width: 12),
             Expanded(
               child: GestureDetector(
-                onTap: _rejectAdvance,
+                onTap: onRejectPressed,
                 child: _gradientButton(
                   label: "Reject",
                   icon: Icons.cancel_outlined,
@@ -758,7 +1048,8 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  // ─────────────────────────────── SHARED WIDGETS ───────────────────────────────
+  //  SHARED UI HELPERS 
+
   Widget _sectionCard({required bool isDark, required List<Widget> children}) {
     return Container(
       decoration: BoxDecoration(
@@ -777,12 +1068,13 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
       ),
       padding: const EdgeInsets.all(18),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, children: children),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
     );
   }
 
-  Widget _sectionHeader(
-      String title, IconData icon, Color color, bool isDark) {
+  Widget _sectionHeader(String title, IconData icon, Color color, bool isDark) {
     return Row(
       children: [
         Container(
@@ -807,6 +1099,125 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
+  Widget _infoRow(
+    String label,
+    dynamic value,
+    bool isDark, {
+    Color? valueColor,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isDark ? Colors.white38 : const Color(0xFF64748B),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value?.toString() ?? "—",
+              style: TextStyle(
+                color:
+                    valueColor ??
+                    (isDark ? Colors.white : const Color(0xFF0F172A)),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// A label + arbitrary child (used for text-field rows)
+  Widget _fieldRow({
+    required String label,
+    required Widget child,
+    required bool isDark,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 120,
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isDark ? Colors.white38 : const Color(0xFF64748B),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: child),
+      ],
+    );
+  }
+
+  Widget _styledTextField({
+    required TextEditingController controller,
+    required String hint,
+    required bool isDark,
+    required bool readOnly,
+    TextInputType keyboardType = TextInputType.text,
+    ValueChanged<String>? onChanged,
+    Widget? suffixIcon,
+  }) {
+    return TextField(
+      controller: controller,
+      readOnly: readOnly,
+      keyboardType: keyboardType,
+      onChanged: onChanged,
+      style: TextStyle(
+        color: isDark ? Colors.white : const Color(0xFF0F172A),
+        fontSize: 13,
+      ),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(
+          color: isDark ? Colors.white30 : Colors.black26,
+          fontSize: 12,
+        ),
+        filled: true,
+        fillColor: readOnly
+            ? (isDark
+                  ? Colors.white.withOpacity(0.03)
+                  : const Color(0xFFE8EDF2))
+            : (isDark ? DS.inputDark : const Color(0xFFF1F5F9)),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 10,
+        ),
+        suffixIcon: suffixIcon,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(DS.r12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(DS.r12),
+          borderSide: BorderSide(
+            color: isDark ? DS.borderDark : DS.borderLight,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(DS.r12),
+          borderSide: const BorderSide(color: DS.brandStart, width: 1.8),
+        ),
+      ),
+    );
+  }
+
   Widget _gradientButton({
     required String label,
     required IconData icon,
@@ -818,13 +1229,13 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
       height: height,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-            colors: colors,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight),
+          colors: colors,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(DS.r12),
         boxShadow: [
-          BoxShadow(
-              color: shadowColor.withOpacity(0.35), blurRadius: 10)
+          BoxShadow(color: shadowColor.withOpacity(0.35), blurRadius: 10),
         ],
       ),
       child: Row(
@@ -832,11 +1243,14 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
         children: [
           Icon(icon, color: Colors.white, size: 18),
           const SizedBox(width: 8),
-          Text(label,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13)),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 13,
+            ),
+          ),
         ],
       ),
     );
@@ -846,60 +1260,71 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     return InputDecoration(
       hintText: hint,
       hintStyle: TextStyle(
-          color: isDark ? Colors.white30 : Colors.black26, fontSize: 12),
+        color: isDark ? Colors.white30 : Colors.black26,
+        fontSize: 12,
+      ),
       filled: true,
       fillColor: isDark ? DS.inputDark : const Color(0xFFF1F5F9),
       contentPadding: const EdgeInsets.all(14),
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(DS.r12),
-          borderSide: BorderSide.none),
+        borderRadius: BorderRadius.circular(DS.r12),
+        borderSide: BorderSide.none,
+      ),
       enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(DS.r12),
-          borderSide:
-              BorderSide(color: isDark ? DS.borderDark : DS.borderLight)),
+        borderRadius: BorderRadius.circular(DS.r12),
+        borderSide: BorderSide(color: isDark ? DS.borderDark : DS.borderLight),
+      ),
       focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(DS.r12),
-          borderSide: const BorderSide(color: DS.brandStart, width: 1.8)),
+        borderRadius: BorderRadius.circular(DS.r12),
+        borderSide: const BorderSide(color: DS.brandStart, width: 1.8),
+      ),
     );
   }
 
-  // ─────────────────────────────── STATES ───────────────────────────────
-  Widget _loadingState() => const Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircularProgressIndicator(
-                color: DS.brandStart, strokeWidth: 2.5),
-            SizedBox(height: 14),
-            Text("Loading details…",
-                style:
-                    TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
-          ],
-        ),
-      );
+  Widget _emptyPlaceholder(String message, IconData icon, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: BoxDecoration(
+        color: isDark
+            ? Colors.white.withOpacity(0.05)
+            : const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(DS.r12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: isDark ? Colors.white38 : Colors.black26, size: 20),
+          const SizedBox(width: 8),
+          Text(
+            message,
+            style: TextStyle(
+              color: isDark ? Colors.white38 : Colors.black38,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _emptyState(bool isDark) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: DS.brandStart.withOpacity(0.10),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.info_outline_rounded,
-                  color: DS.brandStart, size: 32),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              "No Data Found",
-              style: TextStyle(
-                  color: isDark ? Colors.white54 : Colors.black38,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
+  Color _approvalColor(String status) {
+    final lower = status.toLowerCase();
+    if (lower.contains('approved')) return DS.green;
+    if (lower.contains('rejected')) return DS.red;
+    return const Color(0xFFF59E0B);
+  }
+
+  Widget _loadingState() => const Center(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CircularProgressIndicator(color: DS.brandStart, strokeWidth: 2.5),
+        SizedBox(height: 14),
+        Text(
+          "Loading…",
+          style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
         ),
-      );
+      ],
+    ),
+  );
 }

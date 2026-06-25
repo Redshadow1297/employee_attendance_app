@@ -89,4 +89,11 @@ class ApiConstants {
   static const String getVisitorPass = "Visitor_Services.svc/GetListVisitorPassData";
   static const String getVisitorDepartureData = "Visitor_Services.svc/GetDataVisitorDepa_List";
   static const String getVisitorRegisterData = "Visitor_Services.svc/Display_VisitorRegisterData";
+
+
+  ///----------------- Clearance Management --------------------
+  static const String getClearanceApprovalList = "Resignation_Clearance_Services.svc/GetClearanceApprovalList";
+  static const String getClearanceApprovalDetails = "Resignation_Clearance_Services.svc/GetClearanceApprovalDetails";
+  static const String saveClearanceApprovalDetails = "Resignation_Clearance_Services.svc/SaveClearanceApp";
+
 }
