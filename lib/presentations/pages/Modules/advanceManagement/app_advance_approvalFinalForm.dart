@@ -16,7 +16,13 @@ import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 class AdvanceEntryFormReporting2 extends StatefulWidget {
   final Map<String, dynamic> responseData;
 
-  const AdvanceEntryFormReporting2({super.key, required this.responseData});
+  const AdvanceEntryFormReporting2({
+    super.key,
+    required this.responseData,
+    required int transId,
+    required int empPk,
+    required String companyGroup,
+  });
 
   @override
   State<AdvanceEntryFormReporting2> createState() =>
@@ -25,7 +31,7 @@ class AdvanceEntryFormReporting2 extends StatefulWidget {
 
 class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     with SingleTickerProviderStateMixin {
-  //  Controllers (same as File 1) 
+  //  Controllers (same as File 1)
   final TextEditingController installmentsCtrl = TextEditingController();
   final TextEditingController fromMonthCtrl = TextEditingController();
   final TextEditingController toMonthCtrl = TextEditingController();
@@ -34,7 +40,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
   final TextEditingController approvalReasonController =
       TextEditingController();
 
-  //  State (same as File 1) 
+  //  State (same as File 1)
   bool isLoading = false;
   List<Map<String, String>> emiList = [];
   bool _isDownloading = false;
@@ -55,7 +61,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
   String? secondApproverToMonth;
   String? secondApproverAdvanceAmount;
 
-  //  Fade animation (same pattern as File 2) 
+  //  Fade animation (same pattern as File 2)
   late final AnimationController _fadeCtrl = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
@@ -65,12 +71,12 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     curve: Curves.easeOut,
   );
 
-  //  INIT 
+  //  INIT
   @override
   void initState() {
     super.initState();
 
-    //  Exact logic from File 1 
+    //  Exact logic from File 1
     isFirstApprover = widget.responseData["IsFirstApprover"] ?? false;
     isSecondApprover = widget.responseData["IsSecondApprover"] ?? false;
     isFinalHRApprover = widget.responseData["IsFinalHRApprover"] ?? false;
@@ -100,7 +106,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     super.dispose();
   }
 
-  //  LOGIC (unchanged from File 1) 
+  //  LOGIC (unchanged from File 1)
 
   void _prefillFormFields() {
     if (isFinalHRApprover) {
@@ -153,6 +159,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     }
   }
 
+//LOADER
   Future<void> loadCounter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -169,6 +176,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     return "No document attached";
   }
 
+//MONTH SELECTION FOR EMI TABLE.
   Future<void> _selectMonthYear(BuildContext context) async {
     DateTime now = DateTime.now();
     int selectedMonth = now.month;
@@ -254,6 +262,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
+//EMI TABLE GENERATION.
   void _generateEmiTable() {
     setState(() {
       emiList.clear();
@@ -354,7 +363,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     }
   }
 
-  //  Approve / Reject 
+  //  Approve / Reject
 
   void onApprovePressed() {
     final advAmt = advanceAmountCtrl.text.trim();
@@ -428,7 +437,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
       "Reason": widget.responseData["Reason"],
       "CompanyGroup": widget.responseData["CompanyGroup"],
     };
-
+    //SENDING DATA TO API / APPROVING ADVANCE APPLICATION
     approveAdvance(data);
   }
 
@@ -476,7 +485,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
       "Reason": widget.responseData["Reason"],
       "CompanyGroup": widget.responseData["CompanyGroup"],
     };
-
+    //SENDING DATA TO API / REJECTING ADVANCE APPLICATION
     approveAdvance(data);
   }
 
@@ -486,6 +495,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     try {
       final response = await ApiClient.post(
         ApiConstants.approveAdvanceApplication,
+        data: advanceAppData,
       );
 
       if (response.statusCode == 200) {
@@ -529,7 +539,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
-  //  BUILD 
+  //  BUILD
 
   @override
   Widget build(BuildContext context) {
@@ -571,7 +581,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
-  //  HEADER 
+  //  HEADER
 
   Widget _header(bool isDark) {
     return Container(
@@ -649,7 +659,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     decoration: BoxDecoration(shape: BoxShape.circle, color: color),
   );
 
-  //  Approver Badge 
+  //  Approver Badge
 
   Widget _approverBadge(bool isDark) {
     String approverType = isFirstApprover
@@ -696,7 +706,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
-  //  Employee Info Card 
+  //  Employee Info Card
 
   Widget _employeeInfoCard(bool isDark) {
     final d = widget.responseData;
@@ -721,7 +731,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
-  //  Advance Details Card (editable fields per approver role) 
+  //  Advance Details Card (editable fields per approver role)
 
   Widget _advanceDetailsCard(bool isDark) {
     final d = widget.responseData;
@@ -825,7 +835,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
-  //  Document Card 
+  //  Document Card
 
   Widget _documentCard(bool isDark) {
     final String? base64File = widget.responseData["PathnameBase64"];
@@ -907,7 +917,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
-  //  EMI Card 
+  //  EMI Card
 
   Widget _emiCard(bool isDark) {
     if (emiList.isEmpty) return const SizedBox.shrink();
@@ -989,7 +999,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
-  //  Action Card 
+  //  Action Card
 
   Widget _actionCard(bool isDark) {
     return _sectionCard(
@@ -1048,7 +1058,7 @@ class _AdvanceEntryFormReporting2State extends State<AdvanceEntryFormReporting2>
     );
   }
 
-  //  SHARED UI HELPERS 
+  //  SHARED UI HELPERS
 
   Widget _sectionCard({required bool isDark, required List<Widget> children}) {
     return Container(

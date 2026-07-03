@@ -1190,10 +1190,10 @@ import 'package:new_design_demo/core/api/api_constants.dart';
 import 'package:new_design_demo/core/app_services/whtsapp_launcher.dart';
 import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 import 'package:new_design_demo/presentations/common_widgets/common_snackbar.dart';
+import 'package:new_design_demo/presentations/pages/Modules/advanceManagement/app_advance_approvalFinalForm.dart';
 import 'package:new_design_demo/presentations/pages/Modules/advanceManagement/app_advance_approval_form1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
-
 
 //  SCREEN
 
@@ -1292,7 +1292,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     });
   }
 
-//FETCH REASON 
+  //FETCH REASON
   Future<void> loadReasons() async {
     try {
       final response = await ApiClient.get(ApiConstants.getAdvanceReason);
@@ -1313,8 +1313,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     }
   }
 
-
-////BASE 64
+  ////BASE 64
   Future<String> convertFileToBase64(File file) async {
     try {
       List<int> bytes = await file.readAsBytes();
@@ -1325,11 +1324,10 @@ class AdvanceScreenState extends State<AdvanceScreen>
     }
   }
 
-//FETCH ADVANCE STATUS LIST
+  //FETCH ADVANCE STATUS LIST
   Future<List<Map<String, dynamic>>> getAdvanceStatusList() async {
     try {
-      final response = 
-      await ApiClient.get(
+      final response = await ApiClient.get(
         ApiConstants.getAdvanceStatus,
         query: {'Emp_PK': emppk},
       );
@@ -1364,8 +1362,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     return 'Pending';
   }
 
-
-///SUBMIT ADVANCE APPLICATION
+  ///SUBMIT ADVANCE APPLICATION
   Future<void> submitAdvanceApplication() async {
     if (advamountController.text.trim().isEmpty ||
         selectedReason == null ||
@@ -1437,7 +1434,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     setState(() => showApplyAdvanceForm = false);
   }
 
-///PICKS FILES OR DOCS>
+  ///PICKS FILES OR DOCS>
   Future<void> pickDocument() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -1462,8 +1459,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     }
   }
 
-
-//FETCH ADVANCE AUTHORIZATION APPLICATIONS
+  //FETCH ADVANCE AUTHORIZATION APPLICATIONS
   Future<void> getAdvanceAuthorizationList(int index) async {
     selectedApprovalTab = index;
     const statuses = ['Pending', 'Approved', 'Rejected'];
@@ -1508,8 +1504,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     setState(() => isAuthLoading = false);
   }
 
-
-////FETCH EMPLOYEE NAME SEARCH LIST
+  ////FETCH EMPLOYEE NAME SEARCH LIST
   Future<void> getEmployeeNameSearch(int? emppk) async {
     setState(() {
       isLoading = true;
@@ -1538,8 +1533,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     setState(() => isLoading = false);
   }
 
-
-//FETCH COMPANY LIST
+  //FETCH COMPANY LIST
   Future<void> getCompanyList() async {
     try {
       final response = await ApiClient.get(ApiConstants.getCompanyGroupList);
@@ -1580,17 +1574,57 @@ class AdvanceScreenState extends State<AdvanceScreen>
     }
   }
 
+  // void openApprovalForm(Map<String, dynamic> data) {
+  //   // "IsFinalHRApprover": false,"IsFirstApprover": true,"IsSecondApprover": false,      ConditionalForms
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (_) => ApprovalFormScreen(
+  //         transId: int.tryParse(data["TransID"]?.toString() ?? "0") ?? 0,
+  //         empPk: int.tryParse(data["EmpPK"]?.toString() ?? "0") ?? 0,
+  //         companyGroup: selectedComp ?? "",
+  //       ),
+  //     ),
+  //   );
+  // }
   void openApprovalForm(Map<String, dynamic> data) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ApprovalFormScreen(
-          transId: int.tryParse(data["TransID"]?.toString() ?? "0") ?? 0,
-          empPk: int.tryParse(data["EmpPK"]?.toString() ?? "0") ?? 0,
-          companyGroup: selectedComp ?? "",
-        ),
-      ),
-    );
+    bool isFinalHRApprover = data["IsFinalHRApprover"] ?? false;
+    bool isFirstApprover = data["IsFirstApprover"] ?? false;
+    bool isSecondApprover = data["IsSecondApprover"] ?? false;
+
+    Widget screen;
+
+    if (isFinalHRApprover) {
+      // HR Final Approval Form
+      screen = AdvanceEntryFormReporting2(
+        transId: int.tryParse(data["TransID"]?.toString() ?? "0") ?? 0,
+
+        empPk: int.tryParse(data["EmpPK"]?.toString() ?? "0") ?? 0,
+
+        companyGroup: selectedComp ?? "",
+        responseData: {},
+      );
+    } else if (isFirstApprover || isSecondApprover) {
+      // Reporting Manager Approval Form
+      screen = ApprovalFormScreen(
+        transId: int.tryParse(data["TransID"]?.toString() ?? "0") ?? 0,
+
+        empPk: int.tryParse(data["EmpPK"]?.toString() ?? "0") ?? 0,
+
+        companyGroup: selectedComp ?? "",
+      );
+    } else {
+      // Default
+      screen = ApprovalFormScreen(
+        transId: int.tryParse(data["TransID"]?.toString() ?? "0") ?? 0,
+
+        empPk: int.tryParse(data["EmpPK"]?.toString() ?? "0") ?? 0,
+
+        companyGroup: selectedComp ?? "",
+      );
+    }
+
+    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
   }
 
   void resetAuthorizationFilters() {
@@ -1601,7 +1635,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     selectedApprovalTab = 0;
   }
 
-//BUILD
+  //BUILD
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -1997,9 +2031,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
     return Container(
       decoration: BoxDecoration(
         color: isDark ? DS.cardDark : DS.cardLight,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(DS.r24),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(DS.r24)),
         border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
         boxShadow: [
           BoxShadow(
@@ -2343,9 +2375,7 @@ class AdvanceScreenState extends State<AdvanceScreen>
                               ),
                               Divider(
                                 height: 1,
-                                color: isDark
-                                    ? DS.borderDark
-                                    : DS.borderLight,
+                                color: isDark ? DS.borderDark : DS.borderLight,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
@@ -2710,7 +2740,6 @@ class AdvanceScreenState extends State<AdvanceScreen>
     );
   }
 }
-
 
 //  STATUS HELPERS
 

@@ -5,19 +5,19 @@ class AppTextStyles {
   // ============================== Headings ====================================
 
   static const TextStyle headingLarge = TextStyle(
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: FontWeight.w700,
     letterSpacing: -0.3,
   );
 
   static const TextStyle headingMedium = TextStyle(
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: FontWeight.w600,
     letterSpacing: -0.2,
   );
 
   static const TextStyle headingSmall = TextStyle(
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: FontWeight.w600,
   );
 
@@ -25,19 +25,19 @@ class AppTextStyles {
   // ======================================= Labels =====================================================
 
   static const TextStyle labelSmall = TextStyle(
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.2,
   );
 
   static const TextStyle labelVSmall = TextStyle(
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     letterSpacing: 0.3,
   );
 
   static const TextStyle labelMedium = TextStyle(
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.1,
   );
@@ -55,7 +55,7 @@ class AppTextStyles {
   // ===== Button Text =====
 
   static const TextStyle buttonText = TextStyle(
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.2,
   );

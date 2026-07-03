@@ -90,8 +90,6 @@ StatusConfig statusConfig(String status, bool isDark) {
   }
 }
 
-//  SCREEN
-
 class MyCalendarScreen extends StatefulWidget {
   const MyCalendarScreen({super.key});
 
@@ -108,6 +106,8 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
   List<dynamic> newCalendarData = [];
   DateTime selectedMonth = DateTime.now();
   bool _loading = false;
+  int get daysInMonth =>
+      DateTime(selectedMonth.year, selectedMonth.month + 1, 0).day;
 
   final days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -123,8 +123,6 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     curve: Curves.easeOut,
   );
 
-  //  LOGIC
-
   @override
   void initState() {
     super.initState();
@@ -138,12 +136,14 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     _initialize();
   }
 
+  //DISPOSE
   @override
   void dispose() {
     _fadeCtrl.dispose();
     super.dispose();
   }
 
+  //INITIALIZATION
   void _initialize() {
     _getPrefsData().then((_) => _fetchTimecardData());
   }
@@ -154,6 +154,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     empcode = prefs.getString("employeecode");
   }
 
+  //FETCH TIMECARD DATA FOR CLENDAR
   Future<void> _fetchTimecardData() async {
     setState(() => _loading = true);
     try {
@@ -166,23 +167,31 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
         },
       );
       if (response.statusCode == 200) {
+        final data = response.data["GetTimeCardResult"] ?? [];
         setState(() {
-          newCalendarData = response.data["GetTimeCardResult"];
+          // full API data store
+          newCalendarData = List<dynamic>.from(data);
+
           _loading = false;
         });
         _fadeCtrl
           ..reset()
           ..forward();
       } else {
-        setState(() => _loading = false);
+        setState(() {
+          _loading = false;
+        });
       }
-    } catch (exp) {
-      debugPrint("Error fetching calendar data: $exp");
-      setState(() => _loading = false);
+    } catch (e) {
+      debugPrint("Calendar API Error : $e");
+
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
-  // count only from first day to currnt date
+  //STATUS COUNT AB/P/OD/PL/CL etc.
   int getStatusCount(String status) {
     final today = DateTime.now();
     final todayOnly = DateTime(today.year, today.month, today.day);
@@ -208,23 +217,26 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       }
     }).length;
   }
-  
+
   DateTime? _parseDateFromItem(Map<String, dynamic> item) {
-    final dateStr = item["scheduledateddmm"] ?? "";
-    if (dateStr.isEmpty) return null;
     try {
-      final parts = dateStr.split('/');
-      if (parts.length < 2) return null;
+      final value = item["scheduledate"] ?? "";
+      if (value.isEmpty) return null;
+      final dateOnly = value.split(" ")[0];
+      final parts = dateOnly.split("/");
+      if (parts.length != 3) return null;
       return DateTime(
-        selectedMonth.year,
-        int.parse(parts[1]),
-        int.parse(parts[0]),
+        int.parse(parts[2]), // year
+        int.parse(parts[0]), // month
+        int.parse(parts[1]), // day
       );
-    } catch (_) {
+    } catch (e) {
+      debugPrint("Date Parse Error $e");
       return null;
     }
   }
 
+  //MONTH SELECTION.
   Future<void> _selectMonth() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -241,19 +253,44 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     );
     if (picked != null) {
       setState(() {
-        selectedMonth = picked;
-        startDate = DateFormat(
-          'dd/MM/yyyy',
-        ).format(DateTime(picked.year, picked.month, 1));
+        selectedMonth = DateTime(picked.year, picked.month, 1);
+        startDate = DateFormat('dd/MM/yyyy').format(selectedMonth);
         endDate = DateFormat(
           'dd/MM/yyyy',
         ).format(DateTime(picked.year, picked.month + 1, 0));
+        //CLEAR OLD DATA ON SLECTING NEW MONTH
+        newCalendarData.clear();
       });
       await _fetchTimecardData();
     }
   }
 
-  //  BUILD
+  //API DATA MAP / CLENDAR MAP
+  Map<int, dynamic> get calendarMap {
+    Map<int, dynamic> map = {};
+    for (var item in newCalendarData) {
+      final date = _parseDateFromItem(item);
+      if (date == null) continue;
+      if (date.year == selectedMonth.year &&
+          date.month == selectedMonth.month) {
+        map[date.day] = item;
+      }
+    }
+    return map;
+  }
+  // Map<int, dynamic> get calendarMap {
+  //   Map<int, dynamic> map = {};
+  //   for (var item in newCalendarData) {
+  //     final date = _parseDateFromItem(item);
+  //     if (date == null) continue;
+  //     if (date.year == selectedMonth.year &&
+  //         date.month == selectedMonth.month) {
+  //       map[date.day] = item;
+  //     }
+  //   }
+  //   debugPrint("Calendar Map: $map");
+  //   return map;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -480,10 +517,34 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
                 mainAxisSpacing: 6,
                 childAspectRatio: 0.66,
               ),
-              itemCount: firstWeekday + newCalendarData.length,
+              itemCount: firstWeekday + daysInMonth,
               itemBuilder: (context, index) {
-                if (index < firstWeekday) return const SizedBox();
-                final item = newCalendarData[index - firstWeekday];
+                if (index < firstWeekday) {
+                  return const SizedBox();
+                }
+                final day = index - firstWeekday + 1;
+                final item = calendarMap[day];
+                // No API data
+                if (item == null) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? Colors.white.withOpacity(.04)
+                          : const Color(0xffF8FAFC),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "$day",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white54 : Colors.black54,
+                        ),
+                      ),
+                    ),
+                  );
+                }
                 return _attendanceCard(item, isDark);
               },
             ),
@@ -496,24 +557,21 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
   //  ATTENDANCE CARD
   Widget _attendanceCard(Map<String, dynamic> item, bool isDark) {
     final status = item["empstatus"] ?? "";
-    final dateStr = item["scheduledateddmm"] ?? "";
     final cfg = statusConfig(status, isDark);
-
     final today = DateTime.now();
     final todayOnly = DateTime(today.year, today.month, today.day);
-
+    // final cardDate = _parseDateFromItem(item);
+    // final dayNum = cardDate != null ? cardDate.day.toString() : "—";
+    final cardDate = _parseDateFromItem(item);
+    final dayNum = cardDate != null ? cardDate.day.toString() : "";
     bool isToday = false;
     bool isFuture = false;
-
-    final cardDate = _parseDateFromItem(item);
     if (cardDate != null) {
       isToday = DateUtils.isSameDay(cardDate, todayOnly);
-      isFuture = cardDate.isAfter(todayOnly); 
+      isFuture = cardDate.isAfter(todayOnly);
     }
 
-    final dayNum = dateStr.isNotEmpty ? dateStr.split('/')[0] : "—";
-
-    // Future dates in grey  container
+    // FUTURE DATES IN DISABLED CONTAINERS.
     if (isFuture) {
       return Container(
         decoration: BoxDecoration(
@@ -556,7 +614,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       );
     }
 
-    //Rglar dates
+    // REGULAR DATES
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: BoxDecoration(
@@ -612,7 +670,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
     );
   }
 
-  //  SUMMARY BAR
+  // SUMMARY BAR AT BOTTOM OF CALENDAR
   Widget _attendanceSummaryBar(bool isDark) {
     final summaryItems = [
       _SummaryItem(
@@ -645,8 +703,26 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
         const Color(0xFF475569),
         Icons.weekend_outlined,
       ),
+      _SummaryItem(
+        "C-OFF",
+        getStatusCount("C-OFF"),
+        const Color(0xFF475569),
+        Icons.code_off_outlined,
+      ),
+      _SummaryItem(
+        "WO + 1/2P",
+        getStatusCount("WO + 1/2P"),
+        const Color(0xFF475569),
+        Icons.hourglass_full_sharp,
+      ),
+      _SummaryItem(
+        "WO + P",
+        getStatusCount("WO + P"),
+        const Color(0xFF475569),
+        Icons.weekend_outlined,
+      ),
     ];
-
+  //SCROILLABLE ATTENDANCE SUMMARY BAR 03 JULY 2026
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
       child: Container(
@@ -655,20 +731,18 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
           color: isDark ? DS.cardDark : DS.cardLight,
           borderRadius: BorderRadius.circular(DS.r20),
           border: Border.all(color: isDark ? DS.borderDark : DS.borderLight),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black.withOpacity(0.30)
-                  : Colors.black.withOpacity(0.05),
-              blurRadius: 16,
-              offset: const Offset(0, -4),
-            ),
-          ],
         ),
-        child: Row(
-          children: summaryItems
-              .map((item) => Expanded(child: _summaryTile(item, isDark)))
-              .toList(),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            children: summaryItems.map((item) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: _summaryTile(item, isDark),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -679,8 +753,8 @@ class _MyCalendarScreenState extends State<MyCalendarScreen>
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 38,
-          height: 38,
+          width: 45,
+          height: 45,
           decoration: BoxDecoration(
             color: item.color.withOpacity(0.12),
             shape: BoxShape.circle,

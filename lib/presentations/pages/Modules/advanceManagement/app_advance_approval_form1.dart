@@ -563,7 +563,6 @@
 //   }
 // }
 
-
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -577,8 +576,6 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
 
 class ApprovalFormScreen extends StatefulWidget {
   final int transId;
@@ -634,22 +631,23 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     super.dispose();
   }
 
-  String _parseToApiDate(String? raw) {
-    if (raw == null || raw.isEmpty) return '';
-    final formats = [
-      DateFormat("MMM d, yyyy"),
-      DateFormat("MMM dd, yyyy"),
-      DateFormat("dd MMM, yyyy"),
-      DateFormat("dd/MM/yyyy"),
-      DateFormat("dd/MM/yy"),
-    ];
-    for (final fmt in formats) {
-      try {
-        return DateFormat("dd/MM/yyyy").format(fmt.parseStrict(raw.trim()));
-      } catch (_) {}
-    }
-    return raw;
-  }
+  //NO NEED TO FORMAT DRCTLY FORMATT DATE AT SENDING DATA
+  // String _parseToApiDate(String? raw) {
+  //   if (raw == null || raw.isEmpty) return '';
+  //   final formats = [
+  //     DateFormat("MMM d, yyyy"),
+  //     DateFormat("MMM dd, yyyy"),
+  //     DateFormat("dd MMM, yyyy"),
+  //     DateFormat("dd/MM/yyyy"),
+  //     DateFormat("dd/MM/yy"),
+  //   ];
+  //   for (final fmt in formats) {
+  //     try {
+  //       return DateFormat("dd/MM/yyyy").format(fmt.parseStrict(raw.trim()));
+  //     } catch (_) {}
+  //   }
+  //   return raw;
+  // }
 
   Future<void> getPrefsData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -676,26 +674,36 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
         isLoading = false;
       });
       _fadeCtrl.forward();
+
+      debugPrint("JSON DATA ::: ${jsonEncode(data)}");
     } catch (e) {
       debugPrint("DETAIL API ERROR $e");
       setState(() => isLoading = false);
     }
   }
 
+  //ADVANCE APPROVE OR REJECT PAYLOAD / DATA TO SEND.
   Map<String, dynamic> _buildApprovalPayload(String status) => {
     "EmpPK": data?["EmpPK"],
     "CompanyPK": data?["Companypk"],
     "Status": status,
     "TransID": data?["TransID"],
     "ApprovalReason": approvalReasonController.text,
+    //NULL FOR FIRST APPROVAL
     "NoOfInstallments": null,
     "EffectiveMonthYear": null,
     "EndMonthYear": null,
-    "ApplicationDate": _parseToApiDate(data?["ApplicationDate"]?.toString()),
+    "ApplicationDate": DateFormat(
+      "dd/MM/yyyy",
+    ).format(DateFormat("MMM dd, yyyy").parse(data?["ApplicationDate"])),
+    "CompanyName": data?["CompanyName"],
+    "location": data?["LocationName"],
+    "Department": data?["DepartmentName"],
+    "GrossSalary": data?["GrossSalary"],
     "AdvanceAmount": data?["AdvanceAmount"],
-    "IsFirstApprover": data?["IsFirstApprover"],
-    "IsSecondApprover": data?["IsSecondApprover"],
-    "IsFinalHRApprover": data?["IsFinalHRApprover"],
+    "IsFirstApprover": true,
+    "IsSecondApprover": false,
+    "IsFinalHRApprover": false,
     "ReportingPK": data?["Reportingpk"],
     "Reason": data?["Reason"],
     "CompanyGroup": data?["CompanyGroup"],
@@ -706,7 +714,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
       CommonSnackBar.show(
         context: context,
         title: "Warning",
-        message: "Please enter a reason for approval/rejection.",
+        message: "Please enter a reason for approval/ rejection.",
         type: SnackBarType.warning,
       );
       return false;
@@ -714,7 +722,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     return true;
   }
 
-//APPROVE ADVANCE
+  //APPROVE ADVANCE
   Future<void> _approveAdvance() async {
     if (!_validateReason()) return;
     try {
@@ -748,8 +756,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     }
   }
 
-
-//REJECT ADVANCE
+  //REJECT ADVANCE
   Future<void> _rejectAdvance() async {
     if (!_validateReason()) return;
     try {
@@ -807,6 +814,10 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
         _downloadProgress = 1.0;
       });
       await OpenFile.open(path);
+
+      ///LOGs
+      debugPrint("File size: ${bytes.length} bytes");
+      debugPrint("Header: ${String.fromCharCodes(bytes.take(5))}");
     } catch (e) {
       setState(() => _isDownloading = false);
       debugPrint("Download Error: $e");
@@ -816,6 +827,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
   Future<void> _openDownloadedFile() async {
     if (_downloadedFilePath == null) return;
     await OpenFile.open(_downloadedFilePath!);
+    debugPrint("Download File PAth :::: $_downloadedFilePath");
   }
 
   //  BUILD
@@ -855,7 +867,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  //  PREMIUM HEADER 
+  //  PREMIUM HEADER
   Widget _header(bool isDark) {
     return Container(
       decoration: const BoxDecoration(
@@ -932,7 +944,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     decoration: BoxDecoration(shape: BoxShape.circle, color: color),
   );
 
-  //  INFO CARD 
+  //  INFO CARD
   Widget _infoCard(bool isDark) {
     final d = data!;
     return _sectionCard(
@@ -1032,7 +1044,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     return const Color(0xFFF59E0B);
   }
 
-  //  DOCUMENT CARD 
+  //  DOCUMENT CARD
   Widget _documentCard(bool isDark) {
     final base64 = data?["PathnameBase64"];
     final hasDoc = base64 != null && base64.toString().isNotEmpty;
@@ -1187,7 +1199,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  //  ACTION CARD 
+  //  ACTION CARD
   Widget _actionCard(bool isDark) {
     return _sectionCard(
       isDark: isDark,
@@ -1332,7 +1344,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  //  SECTION CARD 
+  //  SECTION CARD
   Widget _sectionCard({required bool isDark, required List<Widget> children}) {
     return Container(
       decoration: BoxDecoration(
@@ -1382,7 +1394,7 @@ class _ApprovalFormScreenState extends State<ApprovalFormScreen>
     );
   }
 
-  //  STATES 
+  //  STATES
   Widget _loadingState() => const Center(
     child: Column(
       mainAxisSize: MainAxisSize.min,
