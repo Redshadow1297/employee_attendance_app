@@ -1038,6 +1038,7 @@ import 'package:new_design_demo/core/api/api_constants.dart';
 import 'package:new_design_demo/core/app_services/PunchInOut/punch_controller.dart';
 import 'package:new_design_demo/core/app_services/app_permission_services.dart';
 import 'package:new_design_demo/core/app_services/auth_repo.dart';
+import 'package:new_design_demo/core/constants/app_header_delegate.dart';
 import 'package:new_design_demo/core/constants/ds_color_handler.dart';
 import 'package:new_design_demo/core/constants/modulesconfig.dart';
 import 'package:new_design_demo/presentations/common_widgets/alert_box.dart';
@@ -1321,7 +1322,7 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
           slivers: [
             SliverPersistentHeader(
               pinned: true,
-              delegate: _PremiumHeaderDelegate(
+              delegate: PremiumHeaderDelegate(
                 minHeight: 80,
                 maxHeight: DS.headerHeight,
                 child: _buildHeader(isDark),
@@ -2359,35 +2360,3 @@ class _AppDashboardScreenState extends State<AppDashboardScreen>
   }
 }
 
-//  SLIVER HEADER DELEGATE
-class _PremiumHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  const _PremiumHeaderDelegate({
-    required this.minHeight,
-    required this.maxHeight,
-    required this.child,
-  });
-
-  @override
-  double get minExtent => minHeight;
-  @override
-  double get maxExtent => maxHeight;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return SizedBox.expand(child: child);
-  }
-
-  @override
-  bool shouldRebuild(_PremiumHeaderDelegate old) =>
-      minHeight != old.minHeight ||
-      maxHeight != old.maxHeight ||
-      child != old.child;
-}
