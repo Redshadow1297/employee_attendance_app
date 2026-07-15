@@ -24,7 +24,6 @@ Features:
 - Offline attendance support
 - API integration
 - Data synchronization
-- Firebase integration
 - Android & iOS deployment
 
 Tech Stack:
